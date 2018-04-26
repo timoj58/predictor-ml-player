@@ -68,7 +68,7 @@ def _parse_line(line):
 
 def csv_input_fn(csv_path, column_names, batch_size):
     # Create a dataset containing the text lines.
-    dataset = tf.data.TextLineDataset(csv_path).skip(1)
+    dataset = tf.data.TextLineDataset(csv_path)
 
     # Parse each line.
     dataset = dataset.map(_parse_line)
