@@ -1,5 +1,4 @@
 import tensorflow as tf
-
 import requests
 from requests.auth import HTTPDigestAuth
 import json
@@ -7,27 +6,31 @@ import json
 TEAMS_URL = "http://localhost:8090/api/prediction/teams"
 PLAYERS_URL = "http://localhost:8090/api/prediction/players"
 
-teamsResponse = requests.get(TEAMS_URL)
-playersResponse = requests.get(PLAYERS_URL)
 
-teams = teamsResponse.json()
-players = playersResponse.json()
-
-
+def create_vocab(url, filename):
  
-
-
-with open('team-vocab.txt', 'w') as f:
- for team in teams:
-     label = team['label']
+  response = requests.get(url)
+  values = response.json()
+  
+  with open(filename, 'w') as f:
+   for value in values:
+     label = value['label']
      if label is not None:
-       f.write(label.decode('unicode_escape'))
+       f.write(label.encode('unicode_escape')) 
+       f.write('\n')
 
-with open('player-vocab.txt', 'w') as f:
-  for player in players:
-     label = player['label']
-     if label is not None:     
-      f.write(label.decode('unicode_escape'))
+def main(argv):
+
+ create_vocab(TEAMS_URL, 'team-vocab.txt');
+ create_vocab(PLAYERS_URL, 'player-vocab.txt');
+
+
+if __name__ == '__main__':
+    tf.logging.set_verbosity(tf.logging.INFO)
+    tf.app.run(main)
+
+
+
 
 
 
