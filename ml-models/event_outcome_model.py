@@ -2,7 +2,8 @@ import tensorflow as tf
 import requests
 from requests.auth import HTTPDigestAuth
 import json
-import match_result_dataset
+import dataset.match_result_dataset as match_result_dataset
+import featureset.match_result_featureset as match_result_featureset
 
 TEAMS_URL = "http://localhost:8090/api/prediction/teams"
 PLAYERS_URL = "http://localhost:8090/api/prediction/players"
@@ -25,13 +26,7 @@ def create_vocab(url, filename):
 
   return size
 
-def create_category_column(key, filename, filesize):
 
- return tf.feature_column.indicator_column(
-         tf.feature_column.categorical_column_with_vocabulary_file(
-         key=key,
-         vocabulary_file=filename,
-         vocabulary_size=filesize))
 
 
 def main(argv):
@@ -45,52 +40,16 @@ def main(argv):
 
  print('team count {} player count {}'.format(teamCount, playerCount))
 
- # sort out the featulre columns
- feature_columns = []
- 
- feature_columns.append(create_category_column('home', '/home/timmytime/IdeaProjects/predictor-ml-model/res/team-vocab.txt', teamCount))
-
- feature_columns.append(create_category_column('homePlayer1', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('homePlayer2', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('homePlayer3', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('homePlayer4', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('homePlayer5', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('homePlayer6', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('homePlayer7', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('homePlayer8', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('homePlayer9', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('homePlayer10', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('homePlayer11', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
-
- feature_columns.append(create_category_column('homeSub1', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('homeSub2', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('homeSub3', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
-
- feature_columns.append(create_category_column('away', '/home/timmytime/IdeaProjects/predictor-ml-model/res/team-vocab.txt', teamCount))
-
- feature_columns.append(create_category_column('awayPlayer1', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('awayPlayer2', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('awayPlayer3', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('awayPlayer4', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('awayPlayer5', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('awayPlayer6', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('awayPlayer7', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('awayPlayer8', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('awayPlayer9', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('awayPlayer10', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('awayPlayer11', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
-
- feature_columns.append(create_category_column('awaySub1', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('awaySub2', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
- feature_columns.append(create_category_column('awaySub3', '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt', playerCount))
-
- feature_columns.append(tf.feature_column.numeric_column(key='homeWin'))
- feature_columns.append(tf.feature_column.numeric_column(key='awayWin'))
- feature_columns.append(tf.feature_column.numeric_column(key='draw'))
 
  # and the other numerics.  they will be read from a CSV / or direct from mongo more likely.  yes.  from mongo.
  # and review checkpoints, to only train with the newest data?  or build from scratch.  lets see.
  #need to add the label field too.
+
+ feature_columns = match_result_featureset.create_feature_columns(
+    '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab.txt',
+    playerCount,
+    '/home/timmytime/IdeaProjects/predictor-ml-model/res/team-vocab.txt',
+    teamCount)
 
  # Build 2 hidden layer DNN with 10, 10 units respectively.  (from example will enrich at some point).
  classifier = tf.estimator.DNNClassifier(
@@ -109,8 +68,6 @@ def main(argv):
         input_fn=lambda:match_result_dataset.eval_input_fn(test_x, test_y,100))
 
  print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
-
-
 
   # Generate predictions from the model
  expected = [0,1,2]
@@ -132,8 +89,8 @@ def main(argv):
         'homeSub3': ['352a0eef-5b2d-446a-8167-b28ba0f5a6a5','352a0eef-5b2d-446a-8167-b28ba0f5a6a5','352a0eef-5b2d-446a-8167-b28ba0f5a6a5'],
         'away': ['0a64c5c2-108b-4f61-b270-d4c420e5b3d4','0a64c5c2-108b-4f61-b270-d4c420e5b3d4','0a64c5c2-108b-4f61-b270-d4c420e5b3d4'],
         'awayPlayer1': ['e1a0e1a7-9a67-47f0-9297-8c7818096dce','e1a0e1a7-9a67-47f0-9297-8c7818096dce','e1a0e1a7-9a67-47f0-9297-8c7818096dce'],
-        'awayPlayer2': ['7f635732-f0e0-428f-9960-a631471b2a04','7f635732-f0e0-428f-9960-a631471b2a04','7f635732-f0e0-428f-9960-a631471b2a04'],
-        'awayPlayer3': ['6350ffd7-28ec-4615-be77-b1905a4dfd6d','6350ffd7-28ec-4615-be77-b1905a4dfd6d','6350ffd7-28ec-4615-be77-b1905a4dfd6d'],
+        'awayPlayer2': ['7f635732-f0e0-428f-9960-a631471b2a04','7f635732-f0e0-428f-9960-a631471b2a04','6350ffd7-28ec-4615-be77-b1905a4dfd6d'],
+        'awayPlayer3': ['6350ffd7-28ec-4615-be77-b1905a4dfd6d','6350ffd7-28ec-4615-be77-b1905a4dfd6d','7f635732-f0e0-428f-9960-a631471b2a04'],
         'awayPlayer4': ['46392ee7-eea4-440e-879a-090e67759692','46392ee7-eea4-440e-879a-090e67759692','46392ee7-eea4-440e-879a-090e67759692'],
         'awayPlayer5': ['fffdd0a3-493f-4e48-899c-3c4372092589','fffdd0a3-493f-4e48-899c-3c4372092589','fffdd0a3-493f-4e48-899c-3c4372092589'],
         'awayPlayer6': ['3d31f7dd-587e-435f-b2ff-2fd9aeeff45c','3d31f7dd-587e-435f-b2ff-2fd9aeeff45c','3d31f7dd-587e-435f-b2ff-2fd9aeeff45c'],
@@ -145,8 +102,8 @@ def main(argv):
         'awaySub1': ['c6b6e505-a993-4544-a3de-2ef21cbeac96','c6b6e505-a993-4544-a3de-2ef21cbeac96','c6b6e505-a993-4544-a3de-2ef21cbeac96'],
         'awaySub2': ['f58ffc97-161e-4de8-9ca5-280c25c92100','f58ffc97-161e-4de8-9ca5-280c25c92100','f58ffc97-161e-4de8-9ca5-280c25c92100'],
         'awaySub3': ['57bf89fb-0866-4dad-a74c-b31bd3a3f477','57bf89fb-0866-4dad-a74c-b31bd3a3f477','57bf89fb-0866-4dad-a74c-b31bd3a3f477'],
-        'homeWin': [3.0,3.0,3.0],
-        'awayWin':[2.0,2.0,2.0],
+        'homeWin': [3.0,3.0,2.9],
+        'awayWin':[2.0,2.2,3.0],
         'draw':[1.0,1.0,1.0]
     }
 
