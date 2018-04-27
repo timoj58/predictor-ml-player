@@ -1,11 +1,11 @@
 import tensorflow as tf
-import model.player_to_score_model as player_to_score_model
-import dataset.player_to_score_dataset as player_to_score_dataset
+import model.player_model as player_model
+import dataset.player_dataset as player_dataset
 import util.dataset_utils as dataset_utils
 
 def main(argv):
 
-    classifier = player_to_score_model.create()
+    classifier = player_model.create()
 
     # Generate predictions from the model
     expected = [0,0,0]
@@ -55,7 +55,7 @@ def main(argv):
         class_id = pred_dict['class_ids'][0]
         probability = pred_dict['probabilities'][class_id]
 
-        print(template.format(player_to_score_dataset.OUTCOMES[class_id],
+        print(template.format(player_dataset.OUTCOMES[class_id],
                               100 * probability, expec))
 
 

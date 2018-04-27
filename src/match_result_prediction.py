@@ -1,6 +1,6 @@
 import tensorflow as tf
 import model.match_result_model as match_result_model
-import dataset.match_result_dataset as match_result_dataset
+import dataset.match_dataset as match_dataset
 import util.dataset_utils as dataset_utils
 
 def main(argv):
@@ -56,7 +56,7 @@ def main(argv):
         class_id = pred_dict['class_ids'][0]
         probability = pred_dict['probabilities'][class_id]
 
-        print(template.format(match_result_dataset.OUTCOMES[class_id],
+        print(template.format(match_dataset.OUTCOMES[class_id],
                               100 * probability, expec))
    
 

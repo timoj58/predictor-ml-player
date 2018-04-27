@@ -1,4 +1,4 @@
-import dataset.player_to_score_dataset as player_to_score_dataset
+import dataset.player_dataset as player_to_score_dataset
 import featureset.player_to_score_featureset as player_to_score_featureset
 import util.vocab_utils as vocab_utils
 import util.classifier_utils as classifier_utils

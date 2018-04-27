@@ -1,14 +1,14 @@
 import tensorflow as tf
-import model.score_result_model as score_result_model
-import dataset.score_result_dataset as score_result_dataset
+import model.match_score_model as match_score_model
+import dataset.match_dataset as match_dataset
 import util.dataset_utils as dataset_utils
 
 def main(argv):
 
-    classifier = score_result_model.create()
+    classifier = match_score_model.create()
 
     # Generate predictions from the model
-    expected = [0,0,0]
+    expected = [0,1,2]
     predict_x = {
         'home': ['d4a0297e-05db-42cd-af91-30a2e8bc887c','d4a0297e-05db-42cd-af91-30a2e8bc887c','d4a0297e-05db-42cd-af91-30a2e8bc887c'],
         'homePlayer1': ['a070685b-b38f-4e72-8ba5-895828e77abf','a070685b-b38f-4e72-8ba5-895828e77abf','a070685b-b38f-4e72-8ba5-895828e77abf'],
@@ -51,11 +51,15 @@ def main(argv):
     template = ('\nPrediction is "{}" ({:.1f}%), expected "{}"')
 
     for pred_dict, expec in zip(predictions, expected):
-        class_id = pred_dict['class_ids'][0]
-        probability = pred_dict['probabilities'][class_id]
+        #class_id = pred_dict['class_ids'][0]
+        index = 0
+        for probability in pred_dict['probabilities'] :
+         #probability = pred_dict['probabilities'][class_id]
 
-        print(template.format(score_result_dataset.OUTCOMES[class_id],
+          print(template.format(match_dataset.SCORE_OUTCOMES[index],
                               100 * probability, expec))
+
+          index += 1
 
 
 
