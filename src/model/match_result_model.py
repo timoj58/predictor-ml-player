@@ -1,4 +1,3 @@
-import tensorflow as tf
 import dataset.match_result_dataset as match_result_dataset
 import featureset.match_result_featureset as match_result_featureset
 import util.vocab_utils as vocab_utils
