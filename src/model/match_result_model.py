@@ -7,9 +7,10 @@ import util.dataset_utils as dataset_utils
 
 def create():
 
- (train_x, train_y, train_z), (test_x, test_y, test_z) = match_dataset.load_data(
+ (train_x, train_y), (test_x, test_y) = match_dataset.load_data(
                         '/home/timmytime/IdeaProjects/predictor-ml-model/res/train-matches.csv',
-                        '/home/timmytime/IdeaProjects/predictor-ml-model/res/train-matches.csv')
+                        '/home/timmytime/IdeaProjects/predictor-ml-model/res/train-matches.csv',
+                        'outcome', None)
 
  teamCount = vocab_utils.create_vocab(vocab_utils.TEAMS_URL, vocab_utils.TEAMS_FILE);
  playerCount = vocab_utils.create_vocab(vocab_utils.PLAYERS_URL, vocab_utils.PLAYERS_FILE);
