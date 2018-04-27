@@ -1,6 +1,7 @@
 import tensorflow as tf
 import model.match_result_model as match_result_model
 import dataset.match_result_dataset as match_result_dataset
+import util.dataset_utils as dataset_utils
 
 def main(argv):
 
@@ -22,8 +23,8 @@ def main(argv):
         'homePlayer10': ['46bb4880-71c3-44b9-95ea-0a0cbf05809b','46bb4880-71c3-44b9-95ea-0a0cbf05809b','46bb4880-71c3-44b9-95ea-0a0cbf05809b'],
         'homePlayer11': ['bc115d52-4197-4c78-8a2f-286624d501f2','bc115d52-4197-4c78-8a2f-286624d501f2','bc115d52-4197-4c78-8a2f-286624d501f2'],
         'homeSub1': ['d4b77fde-5f7e-440f-8a97-13d40109a337','d4b77fde-5f7e-440f-8a97-13d40109a337','d4b77fde-5f7e-440f-8a97-13d40109a337'],
-        'homeSub2': ['ff4e9833-a1b0-4584-bb6d-e72b0f530cf0','ff4e9833-a1b0-4584-bb6d-e72b0f530cf0','ff4e9833-a1b0-4584-bb6d-e72b0f530cf0'],
-        'homeSub3': ['352a0eef-5b2d-446a-8167-b28ba0f5a6a5','352a0eef-5b2d-446a-8167-b28ba0f5a6a5','352a0eef-5b2d-446a-8167-b28ba0f5a6a5'],
+        'homeSub2': ['ff4e9833-a1b0-4584-bb6d-e72b0f530cf0','ff4e9833-a1b0-4584-bb6d-e72b0f530cf0','352a0eef-5b2d-446a-8167-b28ba0f5a6a5'],
+        'homeSub3': ['352a0eef-5b2d-446a-8167-b28ba0f5a6a5','352a0eef-5b2d-446a-8167-b28ba0f5a6a5','ff4e9833-a1b0-4584-bb6d-e72b0f530cf0'],
         'away': ['0a64c5c2-108b-4f61-b270-d4c420e5b3d4','0a64c5c2-108b-4f61-b270-d4c420e5b3d4','0a64c5c2-108b-4f61-b270-d4c420e5b3d4'],
         'awayPlayer1': ['e1a0e1a7-9a67-47f0-9297-8c7818096dce','e1a0e1a7-9a67-47f0-9297-8c7818096dce','e1a0e1a7-9a67-47f0-9297-8c7818096dce'],
         'awayPlayer2': ['7f635732-f0e0-428f-9960-a631471b2a04','7f635732-f0e0-428f-9960-a631471b2a04','6350ffd7-28ec-4615-be77-b1905a4dfd6d'],
@@ -45,7 +46,7 @@ def main(argv):
     }
 
  predictions = classifier.predict(
-        input_fn=lambda:match_result_dataset.eval_input_fn(predict_x,
+        input_fn=lambda:dataset_utils.eval_input_fn(predict_x,
                                                 labels=None,
                                                 batch_size=100))
 
