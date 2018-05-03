@@ -24,8 +24,7 @@ def create():
     vocab_utils.PLAYERS_FILE,
     playerCount,
     vocab_utils.TEAMS_FILE,
-    teamCount,
-    True)
+    teamCount)
 
  # Build 2 hidden layer DNN with 10, 10 units respectively.  (from example will enrich at some point).
  classifier = classifier_utils.create(feature_columns,3)

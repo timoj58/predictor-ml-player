@@ -7,9 +7,6 @@ CSV_COLUMN_NAMES = ['player','home', 'homePlayer1', 'homePlayer2', 'homePlayer3'
                     'away', 'awayPlayer1', 'awayPlayer2', 'awayPlayer3', 'awayPlayer4', 'awayPlayer5', 'awayPlayer6',
                     'awayPlayer7', 'awayPlayer8', 'awayPlayer9', 'awayPlayer10', 'awayPlayer11',
                     'awaySub1', 'awaySub2', 'awaySub3',
-                    'goalScorerPrice',
-                    'firstGoalScorerPrice',
-                    'lastGoalScorerPrice',
                     'goals',
                     'firstGoal',
                     'lastGoal']

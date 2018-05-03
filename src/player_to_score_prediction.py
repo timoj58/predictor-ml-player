@@ -40,8 +40,7 @@ def main(argv):
         'awayPlayer11': ['378c0da8-5eee-48dc-ab90-8a7ef5c0c413','378c0da8-5eee-48dc-ab90-8a7ef5c0c413','378c0da8-5eee-48dc-ab90-8a7ef5c0c413'],
         'awaySub1': ['c6b6e505-a993-4544-a3de-2ef21cbeac96','c6b6e505-a993-4544-a3de-2ef21cbeac96','c6b6e505-a993-4544-a3de-2ef21cbeac96'],
         'awaySub2': ['f58ffc97-161e-4de8-9ca5-280c25c92100','f58ffc97-161e-4de8-9ca5-280c25c92100','f58ffc97-161e-4de8-9ca5-280c25c92100'],
-        'awaySub3': ['57bf89fb-0866-4dad-a74c-b31bd3a3f477','57bf89fb-0866-4dad-a74c-b31bd3a3f477','57bf89fb-0866-4dad-a74c-b31bd3a3f477'],
-        'price': [9.0,3.0,2.9]
+        'awaySub3': ['57bf89fb-0866-4dad-a74c-b31bd3a3f477','57bf89fb-0866-4dad-a74c-b31bd3a3f477','57bf89fb-0866-4dad-a74c-b31bd3a3f477']
     }
 
     predictions = classifier.predict(
@@ -55,7 +54,7 @@ def main(argv):
         class_id = pred_dict['class_ids'][0]
         probability = pred_dict['probabilities'][class_id]
 
-        print(template.format(player_dataset.OUTCOMES[class_id],
+        print(template.format(player_dataset.GOALS_OUTCOMES[class_id],
                               100 * probability, expec))
 
 

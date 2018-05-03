@@ -8,7 +8,6 @@ CSV_COLUMN_NAMES = ['home', 'homePlayer1', 'homePlayer2', 'homePlayer3', 'homePl
                     'away', 'awayPlayer1', 'awayPlayer2', 'awayPlayer3', 'awayPlayer4', 'awayPlayer5', 'awayPlayer6',
                     'awayPlayer7', 'awayPlayer8', 'awayPlayer9', 'awayPlayer10', 'awayPlayer11',
                     'awaySub1', 'awaySub2', 'awaySub3',
-                    'homeWinPrice', 'drawPrice', 'awayWinPrice', 'correctScorePrice',
                     'outcome', 'scoreOutcome']
 
 OUTCOMES = ['homeWin', 'awayWin', 'draw']

@@ -1,5 +1,5 @@
-import dataset.player_dataset as player_to_score_dataset
-import featureset.player_to_score_featureset as player_to_score_featureset
+import dataset.player_dataset as player_dataset
+import featureset.player_featureset as player_featureset
 import util.vocab_utils as vocab_utils
 import util.classifier_utils as classifier_utils
 import util.dataset_utils as dataset_utils
@@ -7,9 +7,10 @@ import util.dataset_utils as dataset_utils
 
 def create():
 
-    (train_x, train_y), (test_x, test_y) = player_to_score_dataset.load_data(
+    (train_x, train_y), (test_x, test_y) = player_dataset.load_data(
         '/home/timmytime/IdeaProjects/predictor-ml-model/res/train-player-to-score.csv',
-        '/home/timmytime/IdeaProjects/predictor-ml-model/res/train-player-to-score.csv')
+        '/home/timmytime/IdeaProjects/predictor-ml-model/res/train-player-to-score.csv',
+        'goals')
 
     teamCount = vocab_utils.create_vocab(vocab_utils.TEAMS_URL, vocab_utils.TEAMS_FILE);
     playerCount = vocab_utils.create_vocab(vocab_utils.PLAYERS_URL, vocab_utils.PLAYERS_FILE);
@@ -19,14 +20,14 @@ def create():
     # and review checkpoints, to only train with the newest data?  or build from scratch.  lets see.
     #need to add the label field too.
 
-    feature_columns = player_to_score_featureset.create_feature_columns(
+    feature_columns = player_featureset.create_feature_columns(
         vocab_utils.PLAYERS_FILE,
         playerCount,
         vocab_utils.TEAMS_FILE,
         teamCount)
 
     # Build 2 hidden layer DNN with 10, 10 units respectively.  (from example will enrich at some point).
-    classifier = classifier_utils.create(feature_columns, len(player_to_score_dataset.OUTCOMES))
+    classifier = classifier_utils.create(feature_columns, len(player_dataset.GOALS_OUTCOMES))
 
     # Train the Model.
     classifier.train(

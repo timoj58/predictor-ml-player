@@ -39,10 +39,7 @@ def main(argv):
         'awayPlayer11': ['378c0da8-5eee-48dc-ab90-8a7ef5c0c413','378c0da8-5eee-48dc-ab90-8a7ef5c0c413','378c0da8-5eee-48dc-ab90-8a7ef5c0c413'],
         'awaySub1': ['c6b6e505-a993-4544-a3de-2ef21cbeac96','c6b6e505-a993-4544-a3de-2ef21cbeac96','c6b6e505-a993-4544-a3de-2ef21cbeac96'],
         'awaySub2': ['f58ffc97-161e-4de8-9ca5-280c25c92100','f58ffc97-161e-4de8-9ca5-280c25c92100','f58ffc97-161e-4de8-9ca5-280c25c92100'],
-        'awaySub3': ['57bf89fb-0866-4dad-a74c-b31bd3a3f477','57bf89fb-0866-4dad-a74c-b31bd3a3f477','57bf89fb-0866-4dad-a74c-b31bd3a3f477'],
-        'homeWinPrice': [3.0,3.0,2.9],
-        'awayWinPrice':[2.0,2.2,3.0],
-        'drawPrice':[1.0,1.0,1.0]
+        'awaySub3': ['57bf89fb-0866-4dad-a74c-b31bd3a3f477','57bf89fb-0866-4dad-a74c-b31bd3a3f477','57bf89fb-0866-4dad-a74c-b31bd3a3f477']
     }
 
  predictions = classifier.predict(

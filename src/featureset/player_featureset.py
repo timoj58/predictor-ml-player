@@ -20,8 +20,6 @@ def create_feature_columns(player_vocab, player_vocab_count, team_vocab, team_vo
 
     feature_columns.append(tf.feature_column.indicator_column(featureset_utils.create_away_subs(player_vocab, player_vocab_count)))
 
-    feature_columns.append(tf.feature_column.numeric_column(key='price'))
-
     return feature_columns
 
 
