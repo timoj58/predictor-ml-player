@@ -2,15 +2,19 @@ import tensorflow as tf
 import model.player_model as player_model
 import dataset.player_dataset as player_dataset
 import util.dataset_utils as dataset_utils
+import util.model_utils as model_utils
 
 def main(argv):
+
+    model_utils.create_csv(model_utils.PLAYER_MODEL_URL+"7f0946e6-cf47-4278-b777-c11f9e485322", "/home/timmytime/IdeaProjects/predictor-ml-model/res/train-player-7f0946e6-cf47-4278-b777-c11f9e485322.csv")
+
 
     classifier = player_model.create()
 
     # Generate predictions from the model
     expected = [0,0,0]
     predict_x = {
-        'player':['a070685b-b38f-4e72-8ba5-895828e77abf','a070685b-b38f-4e72-8ba5-895828e77abf','a070685b-b38f-4e72-8ba5-895828e77abf'],
+        'player':['7f0946e6-cf47-4278-b777-c11f9e485322','7f0946e6-cf47-4278-b777-c11f9e485322','7f0946e6-cf47-4278-b777-c11f9e485322'],
         'home': ['d4a0297e-05db-42cd-af91-30a2e8bc887c','d4a0297e-05db-42cd-af91-30a2e8bc887c','d4a0297e-05db-42cd-af91-30a2e8bc887c'],
         'homePlayer1': ['a070685b-b38f-4e72-8ba5-895828e77abf','a070685b-b38f-4e72-8ba5-895828e77abf','a070685b-b38f-4e72-8ba5-895828e77abf'],
         'homePlayer2': ['066249dc-0fa5-4c68-b719-ed073c406409','066249dc-0fa5-4c68-b719-ed073c406409','066249dc-0fa5-4c68-b719-ed073c406409'],

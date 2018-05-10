@@ -2,8 +2,12 @@ import tensorflow as tf
 import model.match_score_model as match_score_model
 import dataset.match_dataset as match_dataset
 import util.dataset_utils as dataset_utils
+import util.model_utils as model_utils
 
 def main(argv):
+
+    model_utils.create_csv(model_utils.EVENT_MODEL_URL+"spain_1", "/home/timmytime/IdeaProjects/predictor-ml-model/res/train-matches-spain_1.csv")
+
 
     classifier = match_score_model.create()
 

@@ -8,8 +8,8 @@ import util.dataset_utils as dataset_utils
 def create():
 
     (train_x, train_y), (test_x, test_y) = player_dataset.load_data(
-        '/home/timmytime/IdeaProjects/predictor-ml-model/res/train-player-to-score.csv',
-        '/home/timmytime/IdeaProjects/predictor-ml-model/res/train-player-to-score.csv',
+        '/home/timmytime/IdeaProjects/predictor-ml-model/res/train-player-7f0946e6-cf47-4278-b777-c11f9e485322.csv',
+        '/home/timmytime/IdeaProjects/predictor-ml-model/res/train-player-7f0946e6-cf47-4278-b777-c11f9e485322.csv',
         'goals')
 
     teamCount = vocab_utils.create_vocab(vocab_utils.TEAMS_URL, vocab_utils.TEAMS_FILE);
