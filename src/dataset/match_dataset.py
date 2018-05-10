@@ -29,7 +29,7 @@ def load_data(train_path, test_path, y_name, convert):
 
  if convert is not None:
     for key in train_y:
-        converted_train_y.append(SCORE_OUTCOMES.index(key))
+        converted_train_y.append(convert.index(key))
  else:
         converted_train_y = train_y
 
@@ -40,7 +40,7 @@ def load_data(train_path, test_path, y_name, convert):
 
  if convert is not None:
     for key in test_y:
-        converted_test_y.append(SCORE_OUTCOMES.index(key))
+        converted_test_y.append(convert.index(key))
  else:
     converted_test_y = test_y
 

@@ -2,15 +2,18 @@ import tensorflow as tf
 import model.match_result_model as match_result_model
 import dataset.match_dataset as match_dataset
 import util.dataset_utils as dataset_utils
+import util.model_utils as model_utils
 
 def main(argv):
+
+ model_utils.create_csv(model_utils.EVENT_MODEL_URL+"spain_1", "/home/timmytime/IdeaProjects/predictor-ml-model/res/train-matches-spain_1.csv")
 
  classifier = match_result_model.create()
 
   # Generate predictions from the model
  expected = [0,0,0]
  predict_x = {
-        'home': ['d4a0297e-05db-42cd-af91-30a2e8bc887c','d4a0297e-05db-42cd-af91-30a2e8bc887c','d4a0297e-05db-42cd-af91-30a2e8bc887c'],
+        'home': ['9913dd4b-9332-4465-8c80-11b734250046','9913dd4b-9332-4465-8c80-11b734250046','9913dd4b-9332-4465-8c80-11b734250046'],
         'homePlayer1': ['a070685b-b38f-4e72-8ba5-895828e77abf','a070685b-b38f-4e72-8ba5-895828e77abf','a070685b-b38f-4e72-8ba5-895828e77abf'],
         'homePlayer2': ['066249dc-0fa5-4c68-b719-ed073c406409','066249dc-0fa5-4c68-b719-ed073c406409','066249dc-0fa5-4c68-b719-ed073c406409'],
         'homePlayer3': ['1bc563f8-0dd7-4952-89f3-92d3206a17d2','1bc563f8-0dd7-4952-89f3-92d3206a17d2','1bc563f8-0dd7-4952-89f3-92d3206a17d2'],
