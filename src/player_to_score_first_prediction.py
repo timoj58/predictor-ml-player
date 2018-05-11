@@ -1,5 +1,5 @@
 import tensorflow as tf
-import model.player_goals_model as player_model
+import model.player_score_first_model as player_model
 import dataset.player_dataset as player_dataset
 import util.dataset_utils as dataset_utils
 import util.model_utils as model_utils
@@ -12,7 +12,7 @@ def main(argv):
     classifier = player_model.create()
 
     # Generate predictions from the model
-    expected = [0,0,0]
+    expected = [True,True,True]
     predict_x = {
         'player':['6184e577-c5cb-4cc3-a483-c766fa6deae1','6184e577-c5cb-4cc3-a483-c766fa6deae1','6184e577-c5cb-4cc3-a483-c766fa6deae1'],
         'home': ['6573e03b-9e85-4506-82d0-c3d6be82be48','6573e03b-9e85-4506-82d0-c3d6be82be48','6573e03b-9e85-4506-82d0-c3d6be82be48'],
@@ -55,15 +55,15 @@ def main(argv):
     template = ('\nPrediction is "{}" ({:.1f}%), expected "{}"')
 
     for pred_dict, expec in zip(predictions, expected):
-     #class_id = pred_dict['class_ids'][0]
-     index = 0
-     for probability in pred_dict['probabilities'] :
-        #probability = pred_dict['probabilities'][class_id]
+        #class_id = pred_dict['class_ids'][0]
+        index = 0
+        for probability in pred_dict['probabilities'] :
+            #probability = pred_dict['probabilities'][class_id]
 
-        print(template.format(player_dataset.GOALS_OUTCOMES[index],
-                              100 * probability, expec))
+            print(template.format(player_dataset.FIRST_LAST_OUTCOMES[index],
+                                  100 * probability, expec))
 
-        index += 1
+            index += 1
 
 
 

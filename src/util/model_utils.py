@@ -3,8 +3,7 @@ from requests.auth import HTTPDigestAuth
 import csv
 import auth_utils as auth_utils
 
-PLAYER_ID_URL = "http://localhost:8090/api/prediction/ml-data/players"
-PLAYER_MODEL_URL = "http://localhost:8090/api/prediction/ml-data/player/"
+PLAYER_MODEL_URL = "http://localhost:8090/api/prediction/ml-data/players/"
 EVENT_MODEL_URL = "http://localhost:8090/api/prediction/ml-data/competition/"
 
 def create_csv(url, filename):

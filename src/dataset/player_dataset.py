@@ -14,11 +14,27 @@ CSV_COLUMN_NAMES = ['player','home', 'homePlayer1', 'homePlayer2', 'homePlayer3'
 GOALS_OUTCOMES = [0,1,2,3,4,5,6]
 FIRST_LAST_OUTCOMES = [True, False]
 
-def load_data(train_path, test_path, y_name):
+def load_data(train_path, test_path, y_name, convert):
     train = pd.read_csv(train_path, names=CSV_COLUMN_NAMES, header=None)
     train_x, train_y = train, train.pop(y_name)
+
+    converted_train_y = []
+
+    if convert is not None:
+        for key in train_y:
+            converted_train_y.append(convert.index(key))
+    else:
+        converted_train_y = train_y
 
     test = pd.read_csv(test_path, names=CSV_COLUMN_NAMES, header=None)
     test_x, test_y = test, test.pop(y_name)
 
-    return (train_x, train_y), (test_x, test_y)
+    converted_test_y = []
+
+    if convert is not None:
+        for key in test_y:
+            converted_test_y.append(convert.index(key))
+    else:
+        converted_test_y = test_y
+
+    return (train_x, converted_train_y), (test_x, converted_test_y)
