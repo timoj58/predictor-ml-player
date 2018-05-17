@@ -103,5 +103,7 @@ gen
 # mkdocs documentation
 /site
 
+res/models/*
+
 # mypy
 .mypy_cache/

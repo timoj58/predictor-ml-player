@@ -27,7 +27,8 @@ def create():
         teamCount)
 
     # Build 2 hidden layer DNN with 10, 10 units respectively.  (from example will enrich at some point).
-    classifier = classifier_utils.create(feature_columns, len(player_dataset.FIRST_LAST_OUTCOMES))
+    classifier = classifier_utils.create(feature_columns, len(player_dataset.FIRST_LAST_OUTCOMES),
+                                         '/home/timmytime/IdeaProjects/predictor-ml-model/res/models/player_to_score_first')
 
     # Train the Model.
     classifier.train(

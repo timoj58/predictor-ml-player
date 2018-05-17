@@ -27,7 +27,7 @@ def create():
     teamCount)
 
  # Build 2 hidden layer DNN with 10, 10 units respectively.  (from example will enrich at some point).
- classifier = classifier_utils.create(feature_columns,3)
+ classifier = classifier_utils.create(feature_columns,3, '/home/timmytime/IdeaProjects/predictor-ml-model/res/models/match_result')
  
  # Train the Model.
  classifier.train(
