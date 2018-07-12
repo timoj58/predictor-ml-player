@@ -5,16 +5,19 @@ import util.classifier_utils as classifier_utils
 import util.dataset_utils as dataset_utils
 
 
-def create():
+def create(type, country, train):
 
  (train_x, train_y), (test_x, test_y) = match_dataset.load_data(
-                        '/home/timmytime/IdeaProjects/predictor-ml-model/res/train-matches-spain_1.csv',
-                        '/home/timmytime/IdeaProjects/predictor-ml-model/res/train-matches-spain_1.csv',
+                        '/home/timmytime/IdeaProjects/predictor-ml-model/res/train-matches-'+type+'-'+country+'.csv',
+                        '/home/timmytime/IdeaProjects/predictor-ml-model/res/test-matches-'+type+'-'+country+'.csv',
                         'outcome', match_dataset.OUTCOMES)
 
- teamCount = vocab_utils.create_vocab(vocab_utils.TEAMS_URL, vocab_utils.TEAMS_FILE);
- playerCount = vocab_utils.create_vocab(vocab_utils.PLAYERS_URL, vocab_utils.PLAYERS_FILE);
-
+ print ('player vocab started...')
+ teamCount = vocab_utils.create_vocab(vocab_utils.TEAMS_URL+"?type="+type+"&country="+country, vocab_utils.TEAMS_FILE);
+ print ('player vocab completed')
+ print ('team vocab started...')
+ playerCount = vocab_utils.create_vocab(vocab_utils.PLAYERS_URL+"?type="+type+"&country="+country, vocab_utils.PLAYERS_FILE);
+ print ('team vocab completed')
 
  # and the other numerics.  they will be read from a CSV / or direct from mongo more likely.  yes.  from mongo.
  # and review checkpoints, to only train with the newest data?  or build from scratch.  lets see.
@@ -26,18 +29,20 @@ def create():
     vocab_utils.TEAMS_FILE,
     teamCount)
 
+
  # Build 2 hidden layer DNN with 10, 10 units respectively.  (from example will enrich at some point).
- classifier = classifier_utils.create(feature_columns,3, '/home/timmytime/IdeaProjects/predictor-ml-model/res/models/match_result')
- 
- # Train the Model.
- classifier.train(
+ classifier = classifier_utils.create(feature_columns,3, '/home/timmytime/IdeaProjects/predictor-ml-model/res/models/match_result/'+type+'/'+country)
+
+ if train:
+   # Train the Model.
+   classifier.train(
         input_fn=lambda:dataset_utils.train_input_fn(train_x, train_y,100),steps=1000)
 
- # Evaluate the model.
- eval_result = classifier.evaluate(
+   # Evaluate the model.
+   eval_result = classifier.evaluate(
         input_fn=lambda:dataset_utils.eval_input_fn(test_x, test_y,100))
 
- print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
+   print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
 
  return classifier
 

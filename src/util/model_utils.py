@@ -7,7 +7,8 @@ PLAYER_MODEL_URL = "http://localhost:8090/api/prediction/ml-data/players/"
 EVENT_MODEL_URL = "http://localhost:8090/api/prediction/ml-data/competition/"
 
 def create_csv(url, filename):
-    data = requests.get(url+'/01-01-2016', headers={'application-token': auth_utils.auth()})
+    print ('getting csv data...')
+    data = requests.get(url+'/02-01-2018/12-07-2018', headers={'application-token': auth_utils.auth()})
 
     with open(filename, 'w') as f:
      writer = csv.writer(f)
@@ -15,3 +16,5 @@ def create_csv(url, filename):
 
      for row in reader:
       writer.writerow(row)
+
+    print ('created csv')

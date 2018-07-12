@@ -1,6 +1,7 @@
 import requests
 from requests.auth import HTTPDigestAuth
 import json
+import auth_utils as auth_utils
 
 TEAMS_URL = "http://localhost:8090/api/prediction/teams"
 PLAYERS_URL = "http://localhost:8090/api/prediction/players"
@@ -10,7 +11,7 @@ PLAYERS_FILE = '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab
 
 def create_vocab(url, filename):
 
-    response = requests.get(url)
+    response = requests.get(url,headers={'application-token': auth_utils.auth()})
     values = response.json()
 
     size = 0
