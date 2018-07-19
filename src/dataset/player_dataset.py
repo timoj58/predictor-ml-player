@@ -11,7 +11,7 @@ CSV_COLUMN_NAMES = ['player','home', 'homePlayer1', 'homePlayer2', 'homePlayer3'
                     'firstGoal',
                     'lastGoal']
 
-GOALS_OUTCOMES = [0,1,2,3,4,5,6]
+GOALS_OUTCOMES = [0,1,2,3,4,5,6,7,8,9]
 FIRST_LAST_OUTCOMES = [True, False]
 
 def load_data(train_path, test_path, y_name, convert):

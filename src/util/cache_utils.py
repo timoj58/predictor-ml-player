@@ -30,3 +30,17 @@ def get_countries(url, type):
      countries.append(value['country'])
 
     return countries
+
+def get_teams(url, type, country):
+
+    response = requests.get(url+"?type="+type+"&country="+country, headers={'application-token': auth_utils.auth()})
+    values = response.json()
+
+    teams = []
+
+    for value in values:
+        label = value['id']
+        if label is not None:
+            teams.append(label.encode('unicode_escape'))
+
+    return teams
