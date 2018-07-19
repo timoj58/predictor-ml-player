@@ -13,10 +13,10 @@ def create(type, country, train):
                         'outcome', match_dataset.OUTCOMES)
 
  print ('player vocab started...')
- teamCount = vocab_utils.create_vocab(vocab_utils.TEAMS_URL+"?type="+type+"&country="+country, vocab_utils.TEAMS_FILE);
+ teamCount = vocab_utils.create_vocab(vocab_utils.TEAMS_URL, vocab_utils.TEAMS_FILE, type, country);
  print ('player vocab completed')
  print ('team vocab started...')
- playerCount = vocab_utils.create_vocab(vocab_utils.PLAYERS_URL+"?type="+type+"&country="+country, vocab_utils.PLAYERS_FILE);
+ playerCount = vocab_utils.create_vocab(vocab_utils.PLAYERS_URL,vocab_utils.PLAYERS_FILE, type, country);
  print ('team vocab completed')
 
  # and the other numerics.  they will be read from a CSV / or direct from mongo more likely.  yes.  from mongo.
@@ -24,9 +24,9 @@ def create(type, country, train):
  #need to add the label field too.
 
  feature_columns = match_featureset.create_feature_columns(
-    vocab_utils.PLAYERS_FILE,
+    vocab_utils.PLAYERS_FILE+"-"+type+"-"+country+".txt",
     playerCount,
-    vocab_utils.TEAMS_FILE,
+    vocab_utils.TEAMS_FILE+"-"+type+"-"+country+".txt",
     teamCount)
 
 
@@ -36,18 +36,16 @@ def create(type, country, train):
  if train:
    # Train the Model.
    classifier.train(
-        input_fn=lambda:dataset_utils.train_input_fn(train_x, train_y,100),steps=1000)
+        input_fn=lambda:dataset_utils.train_input_fn(train_x, train_y,50),steps=1000)
 
    # Evaluate the model.
    eval_result = classifier.evaluate(
-        input_fn=lambda:dataset_utils.eval_input_fn(test_x, test_y,100))
+        input_fn=lambda:dataset_utils.eval_input_fn(test_x, test_y,50))
 
    print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
 
+
  return classifier
-
-
-
 
 
 

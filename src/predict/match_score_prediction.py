@@ -1,21 +1,20 @@
 import tensorflow as tf
-import model.player_goals_model as player_model
-import dataset.player_dataset as player_dataset
-import util.dataset_utils as dataset_utils
-import util.model_utils as model_utils
+import src.model.match_score_model as match_score_model
+import src.dataset.match_dataset as match_dataset
+import src.util.dataset_utils as dataset_utils
+import src.util.model_utils as model_utils
 
 def main(argv):
 
-    model_utils.create_csv(model_utils.PLAYER_MODEL_URL+"spain_1", "/home/timmytime/IdeaProjects/predictor-ml-model/res/train-player-spain_1.csv")
+    model_utils.create_csv(model_utils.EVENT_MODEL_URL+"spain_1", "/home/timmytime/IdeaProjects/predictor-ml-model/res/train-matches-spain_1.csv")
 
 
-    classifier = player_model.create()
+    classifier = match_score_model.create()
 
     # Generate predictions from the model
-    expected = [0,0,0]
+    expected = [0,1,2]
     predict_x = {
-        'player':['6184e577-c5cb-4cc3-a483-c766fa6deae1','6184e577-c5cb-4cc3-a483-c766fa6deae1','6184e577-c5cb-4cc3-a483-c766fa6deae1'],
-        'home': ['6573e03b-9e85-4506-82d0-c3d6be82be48','6573e03b-9e85-4506-82d0-c3d6be82be48','6573e03b-9e85-4506-82d0-c3d6be82be48'],
+        'home': ['d4a0297e-05db-42cd-af91-30a2e8bc887c','d4a0297e-05db-42cd-af91-30a2e8bc887c','d4a0297e-05db-42cd-af91-30a2e8bc887c'],
         'homePlayer1': ['a070685b-b38f-4e72-8ba5-895828e77abf','a070685b-b38f-4e72-8ba5-895828e77abf','a070685b-b38f-4e72-8ba5-895828e77abf'],
         'homePlayer2': ['066249dc-0fa5-4c68-b719-ed073c406409','066249dc-0fa5-4c68-b719-ed073c406409','066249dc-0fa5-4c68-b719-ed073c406409'],
         'homePlayer3': ['1bc563f8-0dd7-4952-89f3-92d3206a17d2','1bc563f8-0dd7-4952-89f3-92d3206a17d2','1bc563f8-0dd7-4952-89f3-92d3206a17d2'],
@@ -24,7 +23,7 @@ def main(argv):
         'homePlayer6': ['dd546fa2-1a32-4377-a9ea-f65b15bac150','dd546fa2-1a32-4377-a9ea-f65b15bac150','dd546fa2-1a32-4377-a9ea-f65b15bac150'],
         'homePlayer7': ['831ef8c3-12d4-42da-aaaa-dd72855bc472','831ef8c3-12d4-42da-aaaa-dd72855bc472','831ef8c3-12d4-42da-aaaa-dd72855bc472'],
         'homePlayer8': ['cc7d56c3-7fcc-4d27-8bba-aa4f42de4ffc','cc7d56c3-7fcc-4d27-8bba-aa4f42de4ffc','cc7d56c3-7fcc-4d27-8bba-aa4f42de4ffc'],
-        'homePlayer9': ['6184e577-c5cb-4cc3-a483-c766fa6deae1','6184e577-c5cb-4cc3-a483-c766fa6deae1','6184e577-c5cb-4cc3-a483-c766fa6deae1'],
+        'homePlayer9': ['0a2ef70b-5e76-4803-913e-597d1d9d819b','0a2ef70b-5e76-4803-913e-597d1d9d819b','0a2ef70b-5e76-4803-913e-597d1d9d819b'],
         'homePlayer10': ['46bb4880-71c3-44b9-95ea-0a0cbf05809b','46bb4880-71c3-44b9-95ea-0a0cbf05809b','46bb4880-71c3-44b9-95ea-0a0cbf05809b'],
         'homePlayer11': ['bc115d52-4197-4c78-8a2f-286624d501f2','bc115d52-4197-4c78-8a2f-286624d501f2','bc115d52-4197-4c78-8a2f-286624d501f2'],
         'homeSub1': ['d4b77fde-5f7e-440f-8a97-13d40109a337','d4b77fde-5f7e-440f-8a97-13d40109a337','d4b77fde-5f7e-440f-8a97-13d40109a337'],
@@ -55,15 +54,15 @@ def main(argv):
     template = ('\nPrediction is "{}" ({:.1f}%), expected "{}"')
 
     for pred_dict, expec in zip(predictions, expected):
-     #class_id = pred_dict['class_ids'][0]
-     index = 0
-     for probability in pred_dict['probabilities'] :
-        #probability = pred_dict['probabilities'][class_id]
+        #class_id = pred_dict['class_ids'][0]
+        index = 0
+        for probability in pred_dict['probabilities'] :
+         #probability = pred_dict['probabilities'][class_id]
 
-        print(template.format(player_dataset.GOALS_OUTCOMES[index],
+          print(template.format(match_dataset.SCORE_OUTCOMES[index],
                               100 * probability, expec))
 
-        index += 1
+          index += 1
 
 
 

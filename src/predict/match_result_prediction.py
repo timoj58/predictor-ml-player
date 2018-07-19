@@ -4,17 +4,12 @@ import tensorflow as tf
 import dataset.match_dataset as match_dataset
 import model.match_result_model as match_result_model
 import util.dataset_utils as dataset_utils
-import util.model_utils as model_utils
 
 
+def predict(data, type, country):
 
-def main(argv):
 
-
-    with open('/home/timmytime/IdeaProjects/predictor-ml-model/res/sample.json') as data_file:
-        data = json.load(data_file)
-
-    classifier = match_result_model.create("FOOTBALL", "spain", False)
+    classifier = match_result_model.create(type, country, False)
 
     home = []
     homePlayer1 = []
@@ -127,6 +122,8 @@ def main(argv):
 
     template = ('\nPrediction is "{}" ({:.1f}%)')
 
+    response = {}
+
     for pred_dict in predictions:
      class_id = pred_dict['class_ids'][0]
      #probability = pred_dict['probabilities'][class_id]
@@ -134,13 +131,14 @@ def main(argv):
      index = 0
      for probability in pred_dict['probabilities'] :
          #probability = pred_dict['probabilities'][class_id]
+         item = {}
+         item['label'] = match_dataset.OUTCOMES[index]
+         item['score'] = '{:.1f}'.format(100 * probability)
 
+         response[index] = item
          print(template.format(match_dataset.OUTCOMES[index],
                                100 * probability))
 
          index += 1
 
-
-if __name__ == '__main__':
- tf.logging.set_verbosity(tf.logging.INFO)
- tf.app.run(main)
+    return json.dumps(response)

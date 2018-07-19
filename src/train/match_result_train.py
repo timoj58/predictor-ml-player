@@ -8,7 +8,7 @@ from shutil import copyfile
 import os.path
 
 
-def main(argv):
+def train():
 
     print ('starting...')
 
@@ -31,7 +31,3 @@ def main(argv):
          match_result_model.create(type, country, True)
 
 
-
-if __name__ == '__main__':
-    tf.logging.set_verbosity(tf.logging.INFO)
-    tf.app.run(main)

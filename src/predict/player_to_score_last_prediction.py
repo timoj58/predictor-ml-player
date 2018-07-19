@@ -1,8 +1,8 @@
 import tensorflow as tf
-import model.player_score_last_model as player_model
-import dataset.player_dataset as player_dataset
-import util.dataset_utils as dataset_utils
-import util.model_utils as model_utils
+import src.model.player_score_last_model as player_model
+import src.dataset.player_dataset as player_dataset
+import src.util.dataset_utils as dataset_utils
+import src.util.model_utils as model_utils
 
 def main(argv):
 
