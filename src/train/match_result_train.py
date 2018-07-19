@@ -1,7 +1,8 @@
 import json
 import tensorflow as tf
 
-import model.match_result_model as match_result_model
+import model.match_model as match_model
+import dataset.match_dataset as match_dataset
 import util.model_utils as model_utils
 import util.cache_utils as cache_utils
 from shutil import copyfile
@@ -21,13 +22,13 @@ def train():
      for country in countries:
          print (country)
          model_utils.create_csv(model_utils.EVENT_MODEL_URL + type+"/"+country,
-                           "/home/timmytime/IdeaProjects/predictor-ml-model/res/train-matches-"+type+"-"+country+".csv")
+                           model_utils.MODEL_RES_DIR+"train-matches-"+type+"-"+country+".csv")
 
          ##take a copy of our file if it doesnt exist.
-         if not os.path.isfile("/home/timmytime/IdeaProjects/predictor-ml-model/res/test-matches-"+type+"-"+country+".csv"):
-           copyfile("/home/timmytime/IdeaProjects/predictor-ml-model/res/train-matches-"+type+"-"+country+".csv",
-                    "/home/timmytime/IdeaProjects/predictor-ml-model/res/test-matches-"+type+"-"+country+".csv")
+         if not os.path.isfile(model_utils.MODEL_RES_DIR+"test-matches-"+type+"-"+country+".csv"):
+           copyfile(model_utils.MODEL_RES_DIR+"train-matches-"+type+"-"+country+".csv",
+                    model_utils.MODEL_RES_DIR+"test-matches-"+type+"-"+country+".csv")
 
-         match_result_model.create(type, country, True)
+         match_model.create(type, country, True, 'outcome', match_dataset.OUTCOMES, "match_result")
 
 

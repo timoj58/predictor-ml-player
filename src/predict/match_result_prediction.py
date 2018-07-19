@@ -2,14 +2,14 @@ import json
 import tensorflow as tf
 
 import dataset.match_dataset as match_dataset
-import model.match_result_model as match_result_model
+import model.match_model as match_model
 import util.dataset_utils as dataset_utils
 
 
 def predict(data, type, country):
 
 
-    classifier = match_result_model.create(type, country, False)
+    classifier =  match_model.create(type, country, False, 'outcome', match_dataset.OUTCOMES, 'match_result')
 
     home = []
     homePlayer1 = []
