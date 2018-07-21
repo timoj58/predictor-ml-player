@@ -44,4 +44,4 @@ def process(type, country, player):
         copyfile(model_utils.MODEL_RES_DIR+"train-player-last-goal-"+type+"-"+country+"-"+player+".csv",
                  model_utils.MODEL_RES_DIR+"test-player-last-goal-"+type+"-"+country+"-"+player+".csv")
 
-    player_model.create(type, country,player, True, 'lastGoal', player_dataset.FIRST_LAST_OUTCOMES, "player_last_goal", "player-last-goal-", False)
+    player_model.create(type, country,player, True, 'lastGoal', player_dataset.FIRST_LAST_OUTCOMES, "player_last_goal", "player-last-goal-", True)

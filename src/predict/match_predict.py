@@ -75,14 +75,15 @@ def predict(data, type, country, label, label_values,  model_dir, file_type, out
     awaySub2.append(data['awaySub2'])
     awaySub3.append(data['awaySub3'])
 
-    if outcome is not None:
+    if outcome is True:
+      print(outcome)
       outcome.append(data['outcome'])
 
     print(data)
 
 
     expected = [0]
-    if outcome is not None:
+    if outcome is True:
         predict_x = {
             'home': home,
             'homePlayer1': homePlayer1,

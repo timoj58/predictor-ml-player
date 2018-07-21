@@ -12,4 +12,4 @@ def predict(data, type, country, player):
                                   player_dataset.FIRST_LAST_OUTCOMES,
                                   "player_first_goal",
                                   "player-first-goal-",
-                                  False)
+                                  True)

@@ -19,7 +19,7 @@ def create_feature_columns(player_vocab, player_vocab_count, team_vocab, team_vo
 
  feature_columns.append(tf.feature_column.indicator_column(featureset_utils.create_away_subs(player_vocab, player_vocab_count)))
 
- if outcome is not None:
+ if outcome is True:
   feature_columns.append(featureset_utils.create_vocab_column('outcome', match_dataset.OUTCOMES))
 
  return feature_columns

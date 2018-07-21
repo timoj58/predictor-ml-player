@@ -12,4 +12,4 @@ def predict(data, type, country, player):
                                   player_dataset.GOALS_OUTCOMES,
                                   "player_goals",
                                   "player-goals-",
-                                  None)
+                                  False)
