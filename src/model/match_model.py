@@ -6,7 +6,7 @@ import util.dataset_utils as dataset_utils
 import util.model_utils as model_utils
 
 
-def create(type, country, train, label, label_values, model_dir, file_type):
+def create(type, country, train, label, label_values, model_dir, file_type, outcome):
 
     (train_x, train_y), (test_x, test_y) = match_dataset.load_data(
         model_utils.MODEL_RES_DIR+'train-'+file_type+type+'-'+country+'.csv',
@@ -28,7 +28,8 @@ def create(type, country, train, label, label_values, model_dir, file_type):
         vocab_utils.PLAYERS_FILE+"-"+type+"-"+country+".txt",
         playerCount,
         vocab_utils.TEAMS_FILE+"-"+type+"-"+country+".txt",
-        teamCount)
+        teamCount,
+        outcome)
 
 
     # Build 2 hidden layer DNN with 10, 10 units respectively.  (from example will enrich at some point).

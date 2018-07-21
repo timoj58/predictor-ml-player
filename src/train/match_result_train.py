@@ -29,6 +29,6 @@ def train():
            copyfile(model_utils.MODEL_RES_DIR+"train-matches-"+type+"-"+country+".csv",
                     model_utils.MODEL_RES_DIR+"test-matches-"+type+"-"+country+".csv")
 
-         match_model.create(type, country, True, 'outcome', match_dataset.OUTCOMES, "match_result", "matches-")
+         match_model.create(type, country, True, 'outcome', match_dataset.OUTCOMES, "match_result", "matches-", None)
 
 

@@ -5,10 +5,10 @@ import src.model.match_model as match_model
 import src.util.dataset_utils as dataset_utils
 
 
-def predict(data, type, country, label, label_values,  model_dir, file_type):
+def predict(data, type, country, label, label_values,  model_dir, file_type, outcome):
 
 
-    classifier =  match_model.create(type, country, False, label, label_values, model_dir, file_type)
+    classifier =  match_model.create(type, country, False, label, label_values, model_dir, file_type, outcome)
 
     home = []
     homePlayer1 = []
@@ -40,6 +40,7 @@ def predict(data, type, country, label, label_values,  model_dir, file_type):
     awaySub1 = []
     awaySub2 = []
     awaySub3 = []
+    outcome = []
 
     # Generate predictions from the model
     home.append(data['home'])
@@ -74,11 +75,49 @@ def predict(data, type, country, label, label_values,  model_dir, file_type):
     awaySub2.append(data['awaySub2'])
     awaySub3.append(data['awaySub3'])
 
+    if outcome is not None:
+      outcome.append(data['outcome'])
+
     print(data)
 
 
     expected = [0]
-    predict_x = {
+    if outcome is not None:
+        predict_x = {
+            'home': home,
+            'homePlayer1': homePlayer1,
+            'homePlayer2': homePlayer2,
+            'homePlayer3': homePlayer3,
+            'homePlayer4': homePlayer4,
+            'homePlayer5': homePlayer5,
+            'homePlayer6': homePlayer6,
+            'homePlayer7': homePlayer7,
+            'homePlayer8': homePlayer8,
+            'homePlayer9': homePlayer9,
+            'homePlayer10': homePlayer10,
+            'homePlayer11': homePlayer11,
+            'homeSub1': homeSub1,
+            'homeSub2': homeSub2,
+            'homeSub3': homeSub3,
+            'away': away,
+            'awayPlayer1': awayPlayer1,
+            'awayPlayer2': awayPlayer2,
+            'awayPlayer3': awayPlayer3,
+            'awayPlayer4': awayPlayer4,
+            'awayPlayer5': awayPlayer5,
+            'awayPlayer6': awayPlayer6,
+            'awayPlayer7': awayPlayer7,
+            'awayPlayer8': awayPlayer8,
+            'awayPlayer9': awayPlayer9,
+            'awayPlayer10': awayPlayer10,
+            'awayPlayer11': awayPlayer11,
+            'awaySub1': awaySub1,
+            'awaySub2': awaySub2,
+            'awaySub3': awaySub3,
+            'outcome' : outcome
+        }
+    else:
+     predict_x = {
         'home': home,
         'homePlayer1': homePlayer1,
         'homePlayer2': homePlayer2,
