@@ -40,7 +40,7 @@ def predict(data, type, country, label, label_values,  model_dir, file_type, out
     awaySub1 = []
     awaySub2 = []
     awaySub3 = []
-    outcome = []
+    outcomes = []
 
     # Generate predictions from the model
     home.append(data['home'])
@@ -75,15 +75,13 @@ def predict(data, type, country, label, label_values,  model_dir, file_type, out
     awaySub2.append(data['awaySub2'])
     awaySub3.append(data['awaySub3'])
 
-    if outcome is True:
-      print(outcome)
-      outcome.append(data['outcome'])
-
+    if outcome:
+      outcomes.append(data['outcome'])
     print(data)
 
 
     expected = [0]
-    if outcome is True:
+    if outcome:
         predict_x = {
             'home': home,
             'homePlayer1': homePlayer1,
@@ -115,7 +113,7 @@ def predict(data, type, country, label, label_values,  model_dir, file_type, out
             'awaySub1': awaySub1,
             'awaySub2': awaySub2,
             'awaySub3': awaySub3,
-            'outcome' : outcome
+            'outcome' : outcomes
         }
     else:
      predict_x = {

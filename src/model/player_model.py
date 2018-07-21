@@ -8,7 +8,7 @@ import util.model_utils as model_utils
 
 def create(type, country, player, train, label, label_values, model_dir, file_type, convert):
 
-    if convert is True:
+    if convert:
         convertValue = label_values
     else:
         convertValue = convert

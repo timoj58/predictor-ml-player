@@ -20,7 +20,7 @@ def load_data(train_path, test_path, y_name, convert):
 
     converted_train_y = []
 
-    if convert is not None:
+    if convert:
         for key in train_y:
             converted_train_y.append(convert.index(key))
     else:
@@ -31,7 +31,7 @@ def load_data(train_path, test_path, y_name, convert):
 
     converted_test_y = []
 
-    if convert is not None:
+    if convert:
         for key in test_y:
             converted_test_y.append(convert.index(key))
     else:
