@@ -10,6 +10,10 @@ from shutil import copyfile
 import os.path
 
 
+def train_player(type, country, player):
+    process(type, country, player)
+
+
 def train():
 
     print ('starting...')
@@ -25,14 +29,20 @@ def train():
             teams = cache_utils.get_teams(vocab_utils.TEAMS_URL, type, country)
             for team in teams:
               print(team)
-              model_utils.create_csv(model_utils.PLAYER_BY_TEAM_MODEL_URL + team,
-                                   model_utils.MODEL_RES_DIR+"train-player-first-goal-"+type+"-"+country+"-"+team+".csv")
-
-              ##take a copy of our file if it doesnt exist.
-              if not os.path.isfile(model_utils.MODEL_RES_DIR+"test-player-first-goal-"+type+"-"+country+"-"+team+".csv"):
-                copyfile(model_utils.MODEL_RES_DIR+"train-player-first-goal-"+type+"-"+country+"-"+team+".csv",
-                         model_utils.MODEL_RES_DIR+"test-player-first-goal-"+type+"-"+country+"-"+team+".csv")
-
-              player_model.create(type, country,team, True, 'firstGoal', player_dataset.FIRST_LAST_OUTCOMES, "player_first_goal", "player-first-goal-", False)
+              players = cache_utils.get_players(cache_utils.PLAYERS_BY_TEAM_URL, team)
+              for player in players:
+                print(player)
+                process(type, country, player)
 
 
+def process(type, country, player):
+
+    model_utils.create_csv(model_utils.PLAYER_MODEL_URL + player,
+                           model_utils.MODEL_RES_DIR+"train-player-first-goal-"+type+"-"+country+"-"+player+".csv")
+
+    ##take a copy of our file if it doesnt exist.
+    if not os.path.isfile(model_utils.MODEL_RES_DIR+"test-player-first-goal-"+type+"-"+country+"-"+player+".csv"):
+        copyfile(model_utils.MODEL_RES_DIR+"train-player-first-goal-"+type+"-"+country+"-"+player+".csv",
+                 model_utils.MODEL_RES_DIR+"test-player-first-goal-"+type+"-"+country+"-"+player+".csv")
+
+    player_model.create(type, country,player, True, 'firstGoal', player_dataset.FIRST_LAST_OUTCOMES, "player_first_goal", "player-first-goal-", False)

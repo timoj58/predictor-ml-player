@@ -89,10 +89,23 @@ def train_to_score_first():
 
     return "Done"
 
+# need to also schedule this -- this is for me to get it started.
+@app.route('/train/score-first/<type>/<country>/<player>', methods=['POST'])
+def train_player_to_score_first(type, country, player):
+    player_score_first_train.train_player(type, country, player)
+
+    return "Done"
 
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/score-last', methods=['POST'])
 def train_to_score_last():
     player_score_last_train.train()
+
+    return "Done"
+
+# need to also schedule this -- this is for me to get it started.
+@app.route('/train/score-last/<type>/<country>/<player>', methods=['POST'])
+def train_player_to_score_last(type, country, player):
+    player_score_last_train.train_player(type, country, player)
 
     return "Done"

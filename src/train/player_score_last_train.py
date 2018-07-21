@@ -10,6 +10,9 @@ from shutil import copyfile
 import os.path
 
 
+def train_player(type, country, player):
+    process(type, country, player)
+
 def train():
 
     print ('starting...')
@@ -24,15 +27,21 @@ def train():
             print (country)
             teams = cache_utils.get_teams(vocab_utils.TEAMS_URL, type, country)
             for team in teams:
-                print(team)
-                model_utils.create_csv(model_utils.PLAYER_BY_TEAM_MODEL_URL + team,
-                                   model_utils.MODEL_RES_DIR+"train-player-last-goal-"+type+"-"+country+"-"+team+".csv")
-
-                ##take a copy of our file if it doesnt exist.
-                if not os.path.isfile(model_utils.MODEL_RES_DIR+"test-player-last-goal-"+type+"-"+country+"-"+team+".csv"):
-                 copyfile(model_utils.MODEL_RES_DIR+"train-player-last-goal-"+type+"-"+country+"-"+team+".csv",
-                          model_utils.MODEL_RES_DIR+"test-player-last-goal-"+type+"-"+country+"-"+team+".csv")
-
-                player_model.create(type, country,team, True, 'lastGoal', player_dataset.FIRST_LAST_OUTCOMES, "player_last_goal", "player-last-goal-", False)
+              print(team)
+              players = cache_utils.get_players(cache_utils.PLAYERS_BY_TEAM_URL, team)
+              for player in players:
+                print(player)
+                process(type, country, player)
 
 
+def process(type, country, player):
+
+    model_utils.create_csv(model_utils.PLAYER_MODEL_URL + player,
+                           model_utils.MODEL_RES_DIR+"train-player-last-goal-"+type+"-"+country+"-"+player+".csv")
+
+    ##take a copy of our file if it doesnt exist.
+    if not os.path.isfile(model_utils.MODEL_RES_DIR+"test-player-last-goal-"+type+"-"+country+"-"+player+".csv"):
+        copyfile(model_utils.MODEL_RES_DIR+"train-player-last-goal-"+type+"-"+country+"-"+player+".csv",
+                 model_utils.MODEL_RES_DIR+"test-player-last-goal-"+type+"-"+country+"-"+player+".csv")
+
+    player_model.create(type, country,player, True, 'lastGoal', player_dataset.FIRST_LAST_OUTCOMES, "player_last_goal", "player-last-goal-", False)

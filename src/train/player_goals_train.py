@@ -12,7 +12,7 @@ import os.path
 
 def train_player(type, country, player):
 
-    process(type, country, player, model_utils.PLAYER_MODEL_URL)
+    process(type, country, player)
 
 
 def train():
@@ -33,12 +33,12 @@ def train():
              players = cache_utils.get_players(cache_utils.PLAYERS_BY_TEAM_URL, team)
              for player in players:
               print(player)
-              process(type, country, player, model_utils.PLAYER_MODEL_URL)
+              process(type, country, player)
 
 
-def process(type, country, player, url):
+def process(type, country, player):
 
-    model_utils.create_csv(url +player,
+    model_utils.create_csv(model_utils.PLAYER_MODEL_URL +player,
                            model_utils.MODEL_RES_DIR+"train-player-goals-"+type+"-"+country+"-"+player+".csv")
 
     ##take a copy of our file if it doesnt exist.
