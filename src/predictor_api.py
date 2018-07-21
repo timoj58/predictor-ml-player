@@ -19,62 +19,76 @@ app = Flask(__name__)
 ## needs exception handling etc. for now its ok.
 
 @app.route('/predict/result/<type>/country/<country>',  methods=['POST'])
-def predictResult(type, country):
+def predict_result(type, country):
     print(request.data)
 
     return match_result_prediction.predict(json.loads(request.data), type, country)
 
 @app.route('/predict/score/<type>/country/<country>',  methods=['POST'])
-def predictScore(type, country):
+def predict_score(type, country):
     print(request.data)
 
     return match_score_prediction.predict(json.loads(request.data), type, country)
 
 
-@app.route('/predict/goals/<type>/country/<country>/<team>',  methods=['POST'])
-def predictGoals(type, country, team):
+@app.route('/predict/goals/team/<type>/country/<country>/<team>',  methods=['POST'])
+def predict_goals_team(type, country, team):
     print(request.data)
 
     return player_goals_prediction.predict(json.loads(request.data), type, country, team)
 
+@app.route('/predict/goals/player/<type>/country/<country>/<player>',  methods=['POST'])
+def predict_goals_player(type, country, player):
+    print(request.data)
+
+    return player_goals_prediction.predict(json.loads(request.data), type, country, player)
+
 
 @app.route('/predict/first-goal/<type>/country/<country>/<team>',  methods=['POST'])
-def predictFirstGoal(type, country, team):
+def predict_first_goal(type, country, team):
     print(request.data)
 
     return player_score_first_prediction.predict(json.loads(request.data), type, country, team)
 
 
 @app.route('/predict/last-goal/<type>/country/<country>/<team>',  methods=['POST'])
-def predictLastGoal(type, country, team):
+def predict_last_goal(type, country, team):
     print(request.data)
 
     return player_score_last_prediction.predict(json.loads(request.data), type, country, team)
 
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/results', methods=['POST'])
-def trainResults():
+def train_results():
     match_result_train.train()
 
     return "Done"
 
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/scores', methods=['POST'])
-def trainScores():
+def train_scores():
     match_score_train.train()
 
     return "Done"
 
 # need to also schedule this -- this is for me to get it started.
-@app.route('/train/goals', methods=['POST'])
-def trainGoals():
-    player_goals_train.train()
+@app.route('/train/goals/team/<type>/<country>/<team>', methods=['POST'])
+def train_goals(type, country, team):
+    player_goals_train.train_team(type, country, team)
+
+    return "Done"
+
+
+# need to also schedule this -- this is for me to get it started.
+@app.route('/train/goals/player/<type>/<country>/<player>', methods=['POST'])
+def train_player_goals(type, country, player):
+    player_goals_train.train_player(type, country,player)
 
     return "Done"
 
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/score-first', methods=['POST'])
-def trainToScoreFirst():
+def train_to_score_first():
     player_score_first_train.train()
 
     return "Done"
@@ -82,7 +96,7 @@ def trainToScoreFirst():
 
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/score-last', methods=['POST'])
-def trainToScoreLast():
+def train_to_score_last():
     player_score_last_train.train()
 
     return "Done"

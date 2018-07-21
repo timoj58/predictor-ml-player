@@ -25,7 +25,7 @@ def train():
             teams = cache_utils.get_teams(vocab_utils.TEAMS_URL, type, country)
             for team in teams:
               print(team)
-              model_utils.create_csv(model_utils.PLAYER_MODEL_URL + team,
+              model_utils.create_csv(model_utils.PLAYER_BY_TEAM_MODEL_URL + team,
                                    model_utils.MODEL_RES_DIR+"train-player-first-goal-"+type+"-"+country+"-"+team+".csv")
 
               ##take a copy of our file if it doesnt exist.

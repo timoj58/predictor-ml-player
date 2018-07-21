@@ -6,12 +6,12 @@ import util.dataset_utils as dataset_utils
 import util.model_utils as model_utils
 
 
-def create(type, country, train, label, labelValues, modelDir, fileType):
+def create(type, country, train, label, label_values, model_dir, file_type):
 
     (train_x, train_y), (test_x, test_y) = match_dataset.load_data(
-        model_utils.MODEL_RES_DIR+'train-'+fileType+type+'-'+country+'.csv',
-        model_utils.MODEL_RES_DIR+'test-'+fileType+type+'-'+country+'.csv',
-        label, labelValues)
+        model_utils.MODEL_RES_DIR+'train-'+file_type+type+'-'+country+'.csv',
+        model_utils.MODEL_RES_DIR+'test-'+file_type+type+'-'+country+'.csv',
+        label, label_values)
 
     print ('player vocab started...')
     teamCount = vocab_utils.create_vocab(vocab_utils.TEAMS_URL, vocab_utils.TEAMS_FILE, type, country);
@@ -32,7 +32,7 @@ def create(type, country, train, label, labelValues, modelDir, fileType):
 
 
     # Build 2 hidden layer DNN with 10, 10 units respectively.  (from example will enrich at some point).
-    classifier = classifier_utils.create(feature_columns,len(labelValues), model_utils.MODELS_DIR+modelDir+'/'+type+'/'+country)
+    classifier = classifier_utils.create(feature_columns,len(label_values), model_utils.MODELS_DIR+model_dir+'/'+type+'/'+country)
 
     if train:
         # Train the Model.

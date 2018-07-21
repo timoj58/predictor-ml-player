@@ -5,10 +5,10 @@ import src.model.match_model as match_model
 import src.util.dataset_utils as dataset_utils
 
 
-def predict(data, type, country, label, labelValues,  modelDir, fileType):
+def predict(data, type, country, label, label_values,  model_dir, file_type):
 
 
-    classifier =  match_model.create(type, country, False, label, labelValues, modelDir, fileType)
+    classifier =  match_model.create(type, country, False, label, label_values, model_dir, file_type)
 
     home = []
     homePlayer1 = []
@@ -131,11 +131,11 @@ def predict(data, type, country, label, labelValues,  modelDir, fileType):
         for probability in pred_dict['probabilities'] :
             #probability = pred_dict['probabilities'][class_id]
             item = {}
-            item['label'] = labelValues[index]
+            item['label'] = label_values[index]
             item['score'] = '{:.1f}'.format(100 * probability)
 
             response[index] = item
-            print(template.format(labelValues[index],
+            print(template.format(label_values[index],
                                   100 * probability))
 
             index += 1

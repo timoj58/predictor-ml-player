@@ -6,16 +6,16 @@ import util.dataset_utils as dataset_utils
 import util.model_utils as model_utils
 
 
-def create(type, country, team,  train, label, labelValues, modelDir, fileType, convert):
+def create(type, country, team,  train, label, label_values, model_dir, file_type, convert):
 
     if convert is not None:
-        convertValue = labelValues
+        convertValue = label_values
     else:
         convertValue = convert
 
     (train_x, train_y), (test_x, test_y) = player_dataset.load_data(
-        model_utils.MODEL_RES_DIR+'train-'+fileType+type+'-'+country+'-'+team+'.csv',
-        model_utils.MODEL_RES_DIR+'test-'+fileType+type+'-'+country+'-'+team+'.csv',
+        model_utils.MODEL_RES_DIR+'train-'+file_type+type+'-'+country+'-'+team+'.csv',
+        model_utils.MODEL_RES_DIR+'test-'+file_type+type+'-'+country+'-'+team+'.csv',
         label, convertValue)
 
     print ('player vocab started...')
@@ -37,7 +37,7 @@ def create(type, country, team,  train, label, labelValues, modelDir, fileType, 
 
 
     # Build 2 hidden layer DNN with 10, 10 units respectively.  (from example will enrich at some point).
-    classifier = classifier_utils.create(feature_columns,len(labelValues), model_utils.MODELS_DIR+modelDir+'/'+type+'/'+country+'/'+team)
+    classifier = classifier_utils.create(feature_columns,len(label_values), model_utils.MODELS_DIR+model_dir+'/'+type+'/'+country+'/'+team)
 
     if train:
         # Train the Model.

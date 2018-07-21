@@ -2,6 +2,7 @@ import requests
 from requests.auth import HTTPDigestAuth
 import json
 import auth_utils as auth_utils
+from datetime import date
 
 TEAMS_URL = "http://localhost:8090/api/prediction/teams"
 PLAYERS_URL = "http://localhost:8090/api/prediction/players"
@@ -16,7 +17,7 @@ def create_vocab(url, filename, type, country):
 
     size = 0
 
-    with open(filename+"-"+type+"-"+country+".txt", 'w') as f:
+    with open(filename+"-"+type+"-"+country+ ".txt", 'w') as f:
         for value in values:
             label = value['id']
             if label is not None:
