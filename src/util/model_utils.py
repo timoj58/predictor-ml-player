@@ -3,7 +3,6 @@ from requests.auth import HTTPDigestAuth
 import csv
 import auth_utils as auth_utils
 
-PLAYER_BY_TEAM_MODEL_URL = "http://localhost:8090/api/prediction/ml-data/players/team/"
 PLAYER_MODEL_URL = "http://localhost:8090/api/prediction/ml-data/players/player/"
 EVENT_MODEL_URL = "http://localhost:8090/api/prediction/ml-data/competition/"
 

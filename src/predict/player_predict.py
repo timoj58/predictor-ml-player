@@ -5,10 +5,10 @@ import src.model.player_model as player_model
 import src.util.dataset_utils as dataset_utils
 
 
-def predict(data, type, country, team, label, label_values,  model_dir, file_type, convert):
+def predict(data, type, country, player, label, label_values,  model_dir, file_type, convert):
 
 
-    classifier =  player_model.create(type, country, team, False, label, label_values, model_dir, file_type, convert)
+    classifier =  player_model.create(type, country, player, False, label, label_values, model_dir, file_type, convert)
 
     player = []
     home = []

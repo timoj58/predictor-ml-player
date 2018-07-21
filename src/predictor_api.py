@@ -31,31 +31,27 @@ def predict_score(type, country):
     return match_score_prediction.predict(json.loads(request.data), type, country)
 
 
-@app.route('/predict/goals/team/<type>/country/<country>/<team>',  methods=['POST'])
-def predict_goals_team(type, country, team):
-    print(request.data)
-
-    return player_goals_prediction.predict(json.loads(request.data), type, country, team)
-
-@app.route('/predict/goals/player/<type>/country/<country>/<player>',  methods=['POST'])
+@app.route('/predict/goals/<type>/country/<country>/<player>',  methods=['POST'])
 def predict_goals_player(type, country, player):
     print(request.data)
 
     return player_goals_prediction.predict(json.loads(request.data), type, country, player)
 
 
-@app.route('/predict/first-goal/<type>/country/<country>/<team>',  methods=['POST'])
-def predict_first_goal(type, country, team):
+@app.route('/predict/first-goal/<type>/country/<country>/<player>',  methods=['POST'])
+def predict_first_goal(type, country, player):
     print(request.data)
 
-    return player_score_first_prediction.predict(json.loads(request.data), type, country, team)
+    return player_score_first_prediction.predict(json.loads(request.data), type, country, player)
 
 
-@app.route('/predict/last-goal/<type>/country/<country>/<team>',  methods=['POST'])
-def predict_last_goal(type, country, team):
+@app.route('/predict/last-goal/<type>/country/<country>/<player>',  methods=['POST'])
+def predict_last_goal(type, country, player):
     print(request.data)
 
-    return player_score_last_prediction.predict(json.loads(request.data), type, country, team)
+    return player_score_last_prediction.predict(json.loads(request.data), type, country, player)
+
+
 
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/results', methods=['POST'])
@@ -71,16 +67,16 @@ def train_scores():
 
     return "Done"
 
+
 # need to also schedule this -- this is for me to get it started.
-@app.route('/train/goals/team/<type>/<country>/<team>', methods=['POST'])
-def train_goals(type, country, team):
-    player_goals_train.train_team(type, country, team)
+@app.route('/train/goals', methods=['POST'])
+def train_goals():
+    player_goals_train.train()
 
     return "Done"
 
-
 # need to also schedule this -- this is for me to get it started.
-@app.route('/train/goals/player/<type>/<country>/<player>', methods=['POST'])
+@app.route('/train/goals/<type>/<country>/<player>', methods=['POST'])
 def train_player_goals(type, country, player):
     player_goals_train.train_player(type, country,player)
 

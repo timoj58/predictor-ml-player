@@ -15,10 +15,6 @@ def train_player(type, country, player):
     process(type, country, player, model_utils.PLAYER_MODEL_URL)
 
 
-def train_team(type, country, team):
-
-    process(type, country, team, model_utils.PLAYER_BY_TEAM_MODEL_URL)
-
 def train():
 
     print ('starting...')
@@ -34,18 +30,21 @@ def train():
           teams = cache_utils.get_teams(vocab_utils.TEAMS_URL, type, country)
           for team in teams:
              print(team)
-             process(type, country, team, model_utils.PLAYER_BY_TEAM_MODEL_URL)
+             players = cache_utils.get_players(cache_utils.PLAYERS_BY_TEAM_URL, team)
+             for player in players:
+              print(player)
+              process(type, country, player, model_utils.PLAYER_MODEL_URL)
 
 
-def process(type, country, team, url):
+def process(type, country, player, url):
 
-    model_utils.create_csv(url +team,
-                           model_utils.MODEL_RES_DIR+"train-player-goals-"+type+"-"+country+"-"+team+".csv")
+    model_utils.create_csv(url +player,
+                           model_utils.MODEL_RES_DIR+"train-player-goals-"+type+"-"+country+"-"+player+".csv")
 
     ##take a copy of our file if it doesnt exist.
-    if not os.path.isfile(model_utils.MODEL_RES_DIR+"test-player-goals-"+type+"-"+country+"-"+team+".csv"):
-        copyfile(model_utils.MODEL_RES_DIR+"train-player-goals-"+type+"-"+country+"-"+team+".csv",
-                 model_utils.MODEL_RES_DIR+"test-player-goals-"+type+"-"+country+"-"+team+".csv")
+    if not os.path.isfile(model_utils.MODEL_RES_DIR+"test-player-goals-"+type+"-"+country+"-"+player+".csv"):
+        copyfile(model_utils.MODEL_RES_DIR+"train-player-goals-"+type+"-"+country+"-"+player+".csv",
+                 model_utils.MODEL_RES_DIR+"test-player-goals-"+type+"-"+country+"-"+player+".csv")
 
-    player_model.create(type, country, team, True, 'goals', player_dataset.GOALS_OUTCOMES, "player_goals", "player-goals-", None)
+    player_model.create(type, country, player, True, 'goals', player_dataset.GOALS_OUTCOMES, "player_goals", "player-goals-", None)
 
