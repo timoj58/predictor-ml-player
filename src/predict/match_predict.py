@@ -1,12 +1,11 @@
 import json
 import tensorflow as tf
 
-import src.model.match_model as match_model
-import src.util.dataset_utils as dataset_utils
+import model.match_model as match_model
+import util.dataset_utils as dataset_utils
 
 
 def predict(data, type, country, label, label_values,  model_dir, file_type, outcome):
-
 
     classifier =  match_model.create(type, country, False, label, label_values, model_dir, file_type, outcome)
 
@@ -153,9 +152,9 @@ def predict(data, type, country, label, label_values,  model_dir, file_type, out
 
 
     predictions = classifier.predict(
-        input_fn=lambda: dataset_utils.eval_input_fn(predict_x,
+         input_fn=lambda: dataset_utils.eval_input_fn(predict_x,
                                                      labels=None,
-                                                     batch_size=100))
+                                                     batch_size=1))
 
     template = ('\nPrediction is "{}" ({:.1f}%)')
 

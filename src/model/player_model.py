@@ -41,12 +41,13 @@ def create(type, country, player, train, label, label_values, model_dir, file_ty
 
     if train:
         # Train the Model.
+        print(len(train_y))
         classifier.train(
-            input_fn=lambda:dataset_utils.train_input_fn(train_x, train_y,50),steps=1000)
+            input_fn=lambda:dataset_utils.train_input_fn(train_x, train_y, len(train_y)),steps=1000)
 
-        # Evaluate the model.
+        # Evaluate the model.  w dont really care about this given we cant set up different data.
         eval_result = classifier.evaluate(
-            input_fn=lambda:dataset_utils.eval_input_fn(test_x, test_y,50))
+            input_fn=lambda:dataset_utils.eval_input_fn(test_x, test_y,len(test_y)))
 
         print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
 

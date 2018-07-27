@@ -1,0 +1,20 @@
+dir:
+ models: "/home/timmytime/IdeaProjects/predictor-ml-model/res/"
+
+vocab:
+ team_vocab_url: "http://localhost:8090/api/prediction/teams"
+ player_vocab_url: "http://localhost:8090/api/prediction/players"
+ team_vocab_file: "/home/timmytime/IdeaProjects/predictor-ml-model/res/team-vocab"
+ player_vocab_file: "/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab"
+
+analysis: 
+ player_model_url: "http://localhost:8090/api/prediction/ml-data/players/player/"
+ team_model_url: "http://localhost:8090/api/prediction/ml-data/competition/"
+ types_url: "http://localhost:8090/api/prediction/cache/types"
+ countries_url: "http://localhost:8090/api/prediction/cache/countries"
+ players_by_team_url: "http://localhost:8090/api/prediction/teams/<team>/players"
+
+auth:
+ username: "timmytime"
+ password: "testing"
+ url: "http://ec2-107-23-133-24.compute-1.amazonaws.com:8091/api/prediction/authenticate"

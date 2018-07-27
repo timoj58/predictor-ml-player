@@ -1,5 +1,5 @@
 import player_predict as player_predict
-import src.dataset.player_dataset as player_dataset
+import dataset.player_dataset as player_dataset
 
 
 def predict(data, type, country, player):

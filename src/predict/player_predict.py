@@ -1,8 +1,8 @@
 import json
 import tensorflow as tf
 
-import src.model.player_model as player_model
-import src.util.dataset_utils as dataset_utils
+import model.player_model as player_model
+import util.dataset_utils as dataset_utils
 
 
 def predict(data, type, country, player, label, label_values,  model_dir, file_type, convert):
@@ -118,9 +118,9 @@ def predict(data, type, country, player, label, label_values,  model_dir, file_t
 
 
     predictions = classifier.predict(
-        input_fn=lambda: dataset_utils.eval_input_fn(predict_x,
+         input_fn=lambda: dataset_utils.eval_input_fn(predict_x,
                                                      labels=None,
-                                                     batch_size=100))
+                                                     batch_size=1))
 
     template = ('\nPrediction is "{}" ({:.1f}%)')
 

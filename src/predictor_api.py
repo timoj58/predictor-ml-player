@@ -1,15 +1,15 @@
 from flask import Flask
 from flask import request
-import src.predict.match_result_prediction as match_result_prediction
-import src.predict.match_score_prediction as match_score_prediction
-import src.train.match_result_train as match_result_train
-import src.train.match_score_train as match_score_train
-import src.train.player_goals_train as player_goals_train
-import src.train.player_score_first_train as player_score_first_train
-import src.train.player_score_last_train as player_score_last_train
-import src.predict.player_goals_prediction as player_goals_prediction
-import src.predict.player_score_first_prediction as player_score_first_prediction
-import src.predict.player_score_last_prediction as player_score_last_prediction
+import predict.match_result_prediction as match_result_prediction
+import predict.match_score_prediction as match_score_prediction
+import train.match_result_train as match_result_train
+import train.match_score_train as match_score_train
+import train.player_goals_train as player_goals_train
+import train.player_score_first_train as player_score_first_train
+import train.player_score_last_train as player_score_last_train
+import predict.player_goals_prediction as player_goals_prediction
+import predict.player_score_first_prediction as player_score_first_prediction
+import predict.player_score_last_prediction as player_score_last_prediction
 
 
 import json

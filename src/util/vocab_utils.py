@@ -3,12 +3,13 @@ from requests.auth import HTTPDigestAuth
 import json
 import auth_utils as auth_utils
 from datetime import date
+import config_utils as config_utils
 
-TEAMS_URL = "http://localhost:8090/api/prediction/teams"
-PLAYERS_URL = "http://localhost:8090/api/prediction/players"
+TEAMS_URL = config_utils.get_vocab_cfg()['team_vocab_url']
+PLAYERS_URL = config_utils.get_vocab_cfg()['player_vocab_url']
 
-TEAMS_FILE = '/home/timmytime/IdeaProjects/predictor-ml-model/res/team-vocab'
-PLAYERS_FILE = '/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab'
+TEAMS_FILE = config_utils.get_vocab_cfg()['team_vocab_file']
+PLAYERS_FILE = config_utils.get_vocab_cfg()['player_vocab_file']
 
 def create_vocab(url, filename, type, country):
 

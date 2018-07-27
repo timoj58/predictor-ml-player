@@ -2,10 +2,11 @@ import requests
 from requests.auth import HTTPDigestAuth
 import json
 import auth_utils as auth_utils
+import config_utils as config_utils
 
-TYPES_URL = "http://localhost:8090/api/prediction/cache/types"
-COUNTRIES_URL = "http://localhost:8090/api/prediction/cache/countries"
-PLAYERS_BY_TEAM_URL = "http://localhost:8090/api/prediction/teams/<team>/players"
+TYPES_URL = config_utils.get_analysis_cfg()['types_url']
+COUNTRIES_URL = config_utils.get_analysis_cfg()['countries_url']
+PLAYERS_BY_TEAM_URL = config_utils.get_analysis_cfg()['players_by_team_url']
 
 
 def get_types(url):
