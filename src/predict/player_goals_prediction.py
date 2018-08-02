@@ -1,10 +1,10 @@
-import player_predict as player_predict
+from predict.player_predict import predict as predict_process
 import dataset.player_dataset as player_dataset
 
 
 def predict(data, type, country, player):
 
-    return player_predict.predict(data,
+    return predict_process(data,
                                   type,
                                   country,
                                   player,

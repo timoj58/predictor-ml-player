@@ -76,7 +76,7 @@ def predict(data, type, country, label, label_values,  model_dir, file_type, out
 
     if outcome:
       outcomes.append(data['outcome'])
-    print(data)
+    #print(data)
 
 
     expected = [0]
@@ -148,7 +148,7 @@ def predict(data, type, country, label, label_values,  model_dir, file_type, out
         'awaySub3': awaySub3
     }
 
-    print(predict_x)
+    #print(predict_x)
 
 
     predictions = classifier.predict(

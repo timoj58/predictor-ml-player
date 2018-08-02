@@ -10,7 +10,6 @@ def predict(data, type, country, player, label, label_values,  model_dir, file_t
 
     classifier =  player_model.create(type, country, player, False, label, label_values, model_dir, file_type, convert)
 
-    player = []
     home = []
     homePlayer1 = []
     homePlayer2 = []
@@ -43,7 +42,6 @@ def predict(data, type, country, player, label, label_values,  model_dir, file_t
     awaySub3 = []
 
     # Generate predictions from the model
-    player.append(data['player'])
     home.append(data['home'])
     homePlayer1.append(data['homePlayer1'])
     homePlayer2.append(data['homePlayer2'])
@@ -81,7 +79,6 @@ def predict(data, type, country, player, label, label_values,  model_dir, file_t
 
     expected = [0]
     predict_x = {
-        'player': player,
         'home': home,
         'homePlayer1': homePlayer1,
         'homePlayer2': homePlayer2,

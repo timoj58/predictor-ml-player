@@ -1,29 +1,53 @@
 import requests
 from requests.auth import HTTPDigestAuth
 import json
-import auth_utils as auth_utils
+from util.auth_utils import auth
 from datetime import date
-import config_utils as config_utils
+from util.config_utils import get_vocab_cfg
+from util.file_utils import is_on_file
+from util.file_utils import put_aws_file
+from util.file_utils import get_aws_file
+from util.file_utils import write_filenames_index_from_filename
+import datetime
 
-TEAMS_URL = config_utils.get_vocab_cfg()['team_vocab_url']
-PLAYERS_URL = config_utils.get_vocab_cfg()['player_vocab_url']
+TEAMS_URL = get_vocab_cfg()['team_vocab_url']
+PLAYERS_URL = get_vocab_cfg()['player_vocab_url']
+PLAYERS_BY_COUNTRY_URL = get_vocab_cfg()['player_by_country_vocab_url']
 
-TEAMS_FILE = config_utils.get_vocab_cfg()['team_vocab_file']
-PLAYERS_FILE = config_utils.get_vocab_cfg()['player_vocab_file']
 
-def create_vocab(url, filename, type, country):
+TEAMS_FILE = get_vocab_cfg()['team_vocab_file']
+PLAYERS_FILE = get_vocab_cfg()['player_vocab_file']
+PLAYERS_BY_COUNTRY_FILE = get_vocab_cfg()['player_by_country_vocab_file']
 
-    response = requests.get(url+"?type="+type+"&country="+country,headers={'application-token': auth_utils.auth()})
+
+def create_vocab(url, filename, type, country, player_id):
+  if url == PLAYERS_URL:
+    url = url+"?player-id="+player_id
+    filename =  filename+"-"+type+"-"+player_id+"-"+str(datetime.date.today())+ ".txt"
+  else:
+    url = url+"?type="+type+"&country="+country
+    filename =  filename+"-"+type+"-"+country+"-"+str(datetime.date.today())+ ".txt"
+
+  if not is_on_file(filename):
+
+    response = requests.get(url,headers={'application-token': auth()})
     values = response.json()
 
-    size = 0
 
-    with open(filename+"-"+type+"-"+country+ ".txt", 'w') as f:
+    with open(filename, 'w') as f:
         for value in values:
             label = value['id']
+           # print(label)
             if label is not None:
-                f.write(label.encode('unicode_escape'))
+                f.write(label)
                 f.write('\n')
-                size += 1
 
-    return size
+    put_aws_file('', filename)
+    write_filenames_index_from_filename(filename)
+
+  else:
+    #need to load the file from aws potentially
+    get_aws_file('', filename, '')
+
+  return filename
+

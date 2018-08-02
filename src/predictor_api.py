@@ -60,6 +60,14 @@ def train_results():
 
     return "Done"
 
+
+# need to also schedule this -- this is for me to get it started.
+@app.route('/train/results/<type>/<country>', methods=['POST'])
+def train_country_results(type, country):
+    match_result_train.train_country(type, country)
+
+    return "Done"
+
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/scores', methods=['POST'])
 def train_scores():
@@ -67,6 +75,13 @@ def train_scores():
 
     return "Done"
 
+
+# need to also schedule this -- this is for me to get it started.
+@app.route('/train/scores/<type>/<country>', methods=['POST'])
+def train_country_scores(type, country):
+    match_score_train.train_country(type, country)
+
+    return "Done"
 
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/goals', methods=['POST'])

@@ -1,17 +1,18 @@
 import requests
 from requests.auth import HTTPDigestAuth
 import json
-import auth_utils as auth_utils
-import config_utils as config_utils
+from util.auth_utils import auth
+from util.config_utils import get_analysis_cfg
 
-TYPES_URL = config_utils.get_analysis_cfg()['types_url']
-COUNTRIES_URL = config_utils.get_analysis_cfg()['countries_url']
-PLAYERS_BY_TEAM_URL = config_utils.get_analysis_cfg()['players_by_team_url']
+TYPES_URL = get_analysis_cfg()['types_url']
+COUNTRIES_URL = get_analysis_cfg()['countries_url']
+PLAYERS_BY_TEAM_URL = get_analysis_cfg()['players_by_team_url']
+COMPETITIONS_BY_COUNTRY_URL = get_analysis_cfg()['comps_by_country_url']
 
 
 def get_types(url):
 
-    response = requests.get(url, headers={'application-token': auth_utils.auth()})
+    response = requests.get(url, headers={'application-token': auth()})
     values = response.json()
 
     types = []
@@ -23,7 +24,7 @@ def get_types(url):
 
 def get_countries(url, type):
 
-    response = requests.get(url+"?type="+type, headers={'application-token': auth_utils.auth()})
+    response = requests.get(url+"?type="+type, headers={'application-token': auth()})
     values = response.json()
 
     countries = []
@@ -35,7 +36,7 @@ def get_countries(url, type):
 
 def get_teams(url, type, country):
 
-    response = requests.get(url+"?type="+type+"&country="+country, headers={'application-token': auth_utils.auth()})
+    response = requests.get(url+"?type="+type+"&country="+country, headers={'application-token': auth()})
     values = response.json()
 
     teams = []
@@ -47,9 +48,14 @@ def get_teams(url, type, country):
 
     return teams
 
+
+def get_competitions_per_country(url, type, country):
+    response = requests.get(url+"?type="+type+"&country="+country, headers={'application-token': auth()})
+    return response.json()['count']
+
 def get_players(url, team):
 
-    response = requests.get(url.replace("<team>", team), headers={'application-token': auth_utils.auth()})
+    response = requests.get(url.replace("<team>", team), headers={'application-token': auth()})
     values = response.json()
 
     teams = []

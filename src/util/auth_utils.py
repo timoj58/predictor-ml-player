@@ -1,10 +1,10 @@
 import requests
 from requests.auth import HTTPDigestAuth
 import json
-import config_utils as config_utils
+from util.config_utils import get_auth_cfg
 
 def auth():
-    auth_details = config_utils.get_auth_cfg()
+    auth_details = get_auth_cfg()
     # sort this into a config etc for now its for testing
     payload = {'username': auth_details['username'], 'password': auth_details['password']}
     headers = {'content-type': 'application/json'}

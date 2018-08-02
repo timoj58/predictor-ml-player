@@ -1,10 +1,10 @@
-import match_predict as match_predict
+from predict.match_predict import predict as predict_process
 import dataset.match_dataset as match_dataset
 
 
 def predict(data, type, country):
 
-    return match_predict.predict(
+    return predict_process(
         data,
         type,
         country,
