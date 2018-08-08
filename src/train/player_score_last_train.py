@@ -9,6 +9,15 @@ import util.vocab_utils as vocab_utils
 from shutil import copyfile
 from util.file_utils import is_on_file
 from util.file_utils import get_aws_file
+from util.file_utils import put_aws_file
+from util.config_utils import get_analysis_cfg
+from util.config_utils import get_dir_cfg
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+local_dir = get_dir_cfg()['local']
 
 
 def train_player(type, country, player):
@@ -16,34 +25,44 @@ def train_player(type, country, player):
 
 def train():
 
-    print ('starting...')
+    logger.info ('starting...')
 
     # so get types.
     types = cache_utils.get_types(cache_utils.TYPES_URL)
 
     for type in types:
-        print (type)
+        logger.info (type)
         countries = cache_utils.get_countries(cache_utils.COUNTRIES_URL, type)
         for country in countries:
-            print (country)
+            logger.info (country)
             teams = cache_utils.get_teams(vocab_utils.TEAMS_URL, type, country)
             for team in teams:
-              print(team)
+              logger.info(team)
               players = cache_utils.get_players(cache_utils.PLAYERS_BY_TEAM_URL, team)
               for player in players:
-                print(player)
+                logger.info(player)
                 process(type, country, player)
 
 
 def process(type, country, player):
-    model_utils.create_csv(model_utils.PLAYER_MODEL_URL + player,
-                           model_utils.MODEL_RES_DIR+"train-player-last-goal-"+type+"-"+country+"-"+player+".csv", "/01-08-2009/13-07-2018")
-
-    ##take a copy of our file if it doesnt exist.
-    if not is_on_file(model_utils.MODEL_RES_DIR+"test-player-last-goal-"+type+"-"+country+"-"+player+".csv"):
-        copyfile(model_utils.MODEL_RES_DIR+"train-player-last-goal-"+type+"-"+country+"-"+player+".csv",
-                 model_utils.MODEL_RES_DIR+"test-player-last-goal-"+type+"-"+country+"-"+player+".csv")
+    if get_analysis_cfg()['historic']:
+        range = model_utils.player_historic_range
     else:
+        range = model_utils.real_time_range[0]
+
+
+    has_data = model_utils.create_csv(model_utils.PLAYER_MODEL_URL + player,
+                                      local_dir+"train-player-last-goal-"+type+"-"+country+"-"+player+".csv", range)
+
+    if has_data:
+     ##take a copy of our file if it doesnt exist.
+     if not is_on_file(local_dir+"test-player-last-goal-"+type+"-"+country+"-"+player+".csv"):
+        copyfile(local_dir+"train-player-last-goal-"+type+"-"+country+"-"+player+".csv",
+                 local_dir+"test-player-last-goal-"+type+"-"+country+"-"+player+".csv")
+        put_aws_file(local_dir+"test-player-lat-goal-"+type+"-"+country+".csv")
+     else:
         get_aws_file('',  "test-player-last-goal-"+type+"-"+country+"-"+player+".csv")
 
-    player_model.create(type, country,player, True, 'lastGoal', player_dataset.FIRST_LAST_OUTCOMES, "player_last_goal", "player-last-goal-", True)
+     player_model.create(type, country,player, True, 'lastGoal', player_dataset.FIRST_LAST_OUTCOMES, "player_last_goal", "player-last-goal-", True)
+    else:
+        logger.info ('no data to train')

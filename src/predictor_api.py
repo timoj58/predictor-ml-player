@@ -10,42 +10,58 @@ import train.player_score_last_train as player_score_last_train
 import predict.player_goals_prediction as player_goals_prediction
 import predict.player_score_first_prediction as player_score_first_prediction
 import predict.player_score_last_prediction as player_score_last_prediction
-
+from util.config_utils import get_dir_cfg
 
 import json
+import logging
+import threading
 
 app = Flask(__name__)
 
-## needs exception handling etc. for now its ok.
+logging.basicConfig(filename=get_dir_cfg()['local']+'predictor.log',level=logging.INFO)
 
-@app.route('/predict/result/<type>/country/<country>',  methods=['POST'])
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
+
+# should handle errors at some point
+def done_response():
+    item = {}
+    item['status'] = 'Done'
+    return item
+
+@app.route('/info')
+def test_app():
+    return json.dumps(done_response())
+
+
+@app.route('/predict/result/<type>/<country>',  methods=['POST'])
 def predict_result(type, country):
     print(request.data)
 
     return match_result_prediction.predict(json.loads(request.data), type, country)
 
-@app.route('/predict/score/<type>/country/<country>',  methods=['POST'])
+@app.route('/predict/score/<type>/<country>',  methods=['POST'])
 def predict_score(type, country):
     print(request.data)
 
     return match_score_prediction.predict(json.loads(request.data), type, country)
 
 
-@app.route('/predict/goals/<type>/country/<country>/<player>',  methods=['POST'])
+@app.route('/predict/goals/<type>/<country>/<player>',  methods=['POST'])
 def predict_goals_player(type, country, player):
     print(request.data)
 
     return player_goals_prediction.predict(json.loads(request.data), type, country, player)
 
 
-@app.route('/predict/first-goal/<type>/country/<country>/<player>',  methods=['POST'])
+@app.route('/predict/first-goal/<type>/<country>/<player>',  methods=['POST'])
 def predict_first_goal(type, country, player):
     print(request.data)
 
     return player_score_first_prediction.predict(json.loads(request.data), type, country, player)
 
 
-@app.route('/predict/last-goal/<type>/country/<country>/<player>',  methods=['POST'])
+@app.route('/predict/last-goal/<type>/<country>/<player>',  methods=['POST'])
 def predict_last_goal(type, country, player):
     print(request.data)
 
@@ -56,71 +72,91 @@ def predict_last_goal(type, country, player):
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/results', methods=['POST'])
 def train_results():
-    match_result_train.train()
+    thread = threading.Thread(target=match_result_train.train,
+                              args=())
+    thread.start()
 
-    return "Done"
+    return json.dumps(done_response())
 
 
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/results/<type>/<country>', methods=['POST'])
 def train_country_results(type, country):
-    match_result_train.train_country(type, country)
+    thread = threading.Thread(target=match_result_train.train_country,
+                          args=(type, country))
+    thread.start()
 
-    return "Done"
+    return json.dumps(done_response())
 
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/scores', methods=['POST'])
 def train_scores():
-    match_score_train.train()
+    thread = threading.Thread(target=match_score_train.train,
+                              args=())
+    thread.start()
 
-    return "Done"
+    return json.dumps(done_response())
 
 
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/scores/<type>/<country>', methods=['POST'])
 def train_country_scores(type, country):
-    match_score_train.train_country(type, country)
+    thread = threading.Thread(target=match_score_train.train_country,
+                              args=(type, country))
+    thread.start()
 
-    return "Done"
+    return json.dumps(done_response())
 
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/goals', methods=['POST'])
 def train_goals():
-    player_goals_train.train()
+    thread = threading.Thread(target=player_goals_train.train,
+                              args=())
+    thread.start()
 
-    return "Done"
+    return json.dumps(done_response())
 
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/goals/<type>/<country>/<player>', methods=['POST'])
 def train_player_goals(type, country, player):
-    player_goals_train.train_player(type, country,player)
+    thread = threading.Thread(target=player_goals_train.train_player,
+                              args=(type, country,player))
+    thread.start()
 
-    return "Done"
+    return json.dumps(done_response())
 
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/score-first', methods=['POST'])
 def train_to_score_first():
-    player_score_first_train.train()
+    thread = threading.Thread(target=player_score_first_train.train,
+                              args=())
+    thread.start()
 
-    return "Done"
+    return json.dumps(done_response())
 
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/score-first/<type>/<country>/<player>', methods=['POST'])
 def train_player_to_score_first(type, country, player):
-    player_score_first_train.train_player(type, country, player)
+    thread = threading.Thread(target=player_score_first_train.train_player,
+                              args=(type, country, player))
+    thread.start()
 
-    return "Done"
+    return json.dumps(done_response())
 
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/score-last', methods=['POST'])
 def train_to_score_last():
-    player_score_last_train.train()
+    thread = threading.Thread(target=player_score_last_train.train,
+                              args=())
+    thread.start()
 
-    return "Done"
+    return json.dumps(done_response())
 
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/score-last/<type>/<country>/<player>', methods=['POST'])
 def train_player_to_score_last(type, country, player):
-    player_score_last_train.train_player(type, country, player)
+    thread = threading.Thread(target=player_score_last_train.train_player,
+                              args=(type, country, player))
+    thread.start()
 
-    return "Done"
+    return json.dumps(done_response())

@@ -3,11 +3,14 @@ from requests.auth import HTTPDigestAuth
 import json
 from util.auth_utils import auth
 from util.config_utils import get_analysis_cfg
+from util.config_utils import get_dir_cfg
 
-TYPES_URL = get_analysis_cfg()['types_url']
-COUNTRIES_URL = get_analysis_cfg()['countries_url']
-PLAYERS_BY_TEAM_URL = get_analysis_cfg()['players_by_team_url']
-COMPETITIONS_BY_COUNTRY_URL = get_analysis_cfg()['comps_by_country_url']
+docker_host = get_dir_cfg()['docker_host']
+
+TYPES_URL = docker_host+get_analysis_cfg()['types_url']
+COUNTRIES_URL = docker_host+get_analysis_cfg()['countries_url']
+PLAYERS_BY_TEAM_URL = docker_host+get_analysis_cfg()['players_by_team_url']
+COMPETITIONS_BY_COUNTRY_URL = docker_host+get_analysis_cfg()['comps_by_country_url']
 
 
 def get_types(url):
