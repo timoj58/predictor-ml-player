@@ -51,25 +51,32 @@ def create_vocab(url, filename, type, country, player_id):
     if is_on_file(previous_filename):
       logger.info('vocab '+previous_filename+' is on file')
       # now load the new file to memory.  and only add in values that arent in the list to the end.
-      with open(previous_filename) as f:
+      with open(previous_filename, 'r') as f:
         previous = f.read().splitlines()
-      #now check
+      # now write all these to new file.  stupid tensorflow order issue
       with open(filename, 'w') as f:
-        for value in values:
-             label = value['id']
-             # print(label)
-             if label is not None:
-                if value not in previous:
-                 logger.info('adding a new entry to file')
-                 f.write(label)
-                 f.write('\n')
+          logger.info('adding old records to new file')
+          for value in previous:
+             f.write(value.strip('\n'))
+             f.write('\n') 
+      #now append any new ones
+      with open(filename, 'a') as f:
+          logger.info('now trying to append any new entries')
+          for value in values:
+              label = value['id']
+              if label is not None:
+                  if value+'\n' not in previous:
+                      logger.info('adding a new entry to file '+label)
+                      f.write(label)
+                      f.write('\n')
+
+      logger.info('finished fecking about with vocab')
 
     else:
         logger.info('vocab '+previous_filename+' is not on file')
         with open(filename, 'w') as f:
             for value in values:
                 label = value['id']
-                # print(label)
                 if label is not None:
                     f.write(label)
                     f.write('\n')

@@ -56,8 +56,13 @@ def write_filenames_index(path):
    logger.info("index for "+path)
    indexes = get_indexes(path)
    files = os.listdir(path)
-   with open(path+'/index.txt', 'w') as f:
-    for file in files:
+
+   mode = 'w'
+   if os.path.isfile(path+'/index.txt'):
+    mode = 'a'
+
+   with open(path+'/index.txt', mode) as f:
+     for file in files:
       if not os.path.isdir(path+'/'+file):
        if file != "index.txt": #dont log the index...doh.
         if file not in indexes:

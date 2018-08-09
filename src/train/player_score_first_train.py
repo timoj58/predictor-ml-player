@@ -20,11 +20,11 @@ logger = logging.getLogger(__name__)
 local_dir = get_dir_cfg()['local']
 
 
-def train_player(type, country, player):
+def train_player(type, country, player, receipt):
     process(type, country, player)
 
 
-def train():
+def train(receipt):
 
     logger.info ('starting...')
 

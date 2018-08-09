@@ -21,7 +21,11 @@ analysis:
  comps_by_country_url: ":8090/api/prediction/cache/competition-count"
  historic: True
 
+receipt:
+ train_receipt_url: ":8090/api/prediction/ml-data/train/receipt"
+ predict_receipt_url: ":8090/api/prediction/ml-data/predict/receipt"
+
 auth:
- username: "**"
- password: "**"
- url: "http://ec2-54-208-219-223.compute-1.amazonaws.com:8091/api/prediction/authenticate"
+ username: ""
+ password: ""
+ url: "http://ec2-54-85-206-187.compute-1.amazonaws.com:8091/api/prediction/authenticate"

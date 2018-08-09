@@ -2,7 +2,7 @@ from predict.player_predict import predict as predict_process
 import dataset.player_dataset as player_dataset
 
 
-def predict(data, type, country, player):
+def predict(data, type, country, player, receipt):
 
     return predict_process(data,
                                   type,

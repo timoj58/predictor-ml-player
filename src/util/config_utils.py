@@ -15,3 +15,6 @@ def get_analysis_cfg():
 
 def get_auth_cfg():
     return cfg['auth']
+
+def get_receipt_cfg():
+    return cfg['receipt']

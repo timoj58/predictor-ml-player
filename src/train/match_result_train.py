@@ -5,6 +5,7 @@ import model.match_model as match_model
 import dataset.match_dataset as match_dataset
 import util.model_utils as model_utils
 import util.cache_utils as cache_utils
+import util.receipt_utils as receipt_utils
 from shutil import copyfile
 from util.file_utils import is_on_file
 from util.file_utils import get_aws_file
@@ -20,7 +21,7 @@ logger = logging.getLogger(__name__)
 local_dir = get_dir_cfg()['local']
 
 
-def train():
+def train(receipt):
 
     logger.info ('starting...')
 
@@ -32,9 +33,11 @@ def train():
      countries = cache_utils.get_countries(cache_utils.COUNTRIES_URL, type)
      for country in countries:
          logger.info (country)
-         train_country(type, country)
+         train_country(type, country, None)
 
-def train_country(type, country):
+     receipt_utils.put_receipt(receipt_utils.TRAIN_RECEIPT_URL, receipt, None)
+
+def train_country(type, country, receipt):
 
    competition_count = cache_utils.get_competitions_per_country(cache_utils.COMPETITIONS_BY_COUNTRY_URL, type, country)
 
@@ -62,3 +65,7 @@ def train_country(type, country):
      match_model.create(type, country, True, 'outcome', match_dataset.OUTCOMES, "match_result", "matches-", False)
     else:
         logger.info ('no data to train')
+
+    if receipt is not None:
+        receipt_utils.put_receipt(receipt_utils.TRAIN_RECEIPT_URL, receipt, None)
+
