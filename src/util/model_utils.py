@@ -1,14 +1,15 @@
 import requests
 from requests.auth import HTTPDigestAuth
-import csv
+from util.file_utils import write_csv
 from util.auth_utils import auth
 from util.config_utils import get_analysis_cfg
-from util.file_utils import put_aws_file
+from util.file_utils import put_aws_file_with_path
 from util.file_utils import write_filenames_index_from_filename
 import datetime
 from datetime import date, timedelta
 import logging
 from util.config_utils import get_dir_cfg
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -34,24 +35,17 @@ real_time_range = ['/'+ datetime.date.today().strftime('%d-%m-%Y')
 
 player_historic_range = '/01-08-2009/13-07-2018'
 
-def create_csv(url, filename, range):
+def create_csv(url, filename, range, aws_path):
     logger.info ('getting csv data...')
-
-    has_data = False
 
     data = requests.get(url+range, headers={'application-token': auth()})
 
-    with open(filename, 'w') as f:
-     writer = csv.writer(f)
-     reader = csv.reader(data.text.splitlines())
-
-     for row in reader:
-      writer.writerow(row)
-      has_data = True
+    has_data = write_csv(filename, data)
 
     if has_data:
       logger.info ('created csv')
-      put_aws_file(filename)
+      head, tail = os.path.split(filename)
+      put_aws_file_with_path(aws_path,tail)
       write_filenames_index_from_filename(filename)
 
 

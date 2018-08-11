@@ -11,5 +11,5 @@ def predict(data, type, country, receipt):
         'scoreOutcome',
         match_dataset.SCORE_OUTCOMES,
         "match_score",
-        "scores-",
-        True)
+        True,
+        receipt)

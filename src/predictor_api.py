@@ -15,13 +15,24 @@ from util.config_utils import get_dir_cfg
 import json
 import logging
 import threading
+import traceback
 
 app = Flask(__name__)
 
-logging.basicConfig(filename=get_dir_cfg()['local']+'predictor.log',level=logging.INFO)
+logging.basicConfig(filename=get_dir_cfg()['local']+'predictor.log',level=logging.NOTSET)
+logger = logging.getLogger(__name__)
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
+
+
+##doesnt seem to do anything, should catch interrupted tho.
+def process(thread):
+    try:
+     thread.start()
+    except Exception as e:
+      logger.error(traceback.format_exc())
 
 # should handle errors at some point
 def done_response():
@@ -36,36 +47,46 @@ def test_app():
 
 @app.route('/predict/result/<type>/<country>/<receipt>',  methods=['POST'])
 def predict_result(type, country, receipt):
-    print(request.data)
+    thread = threading.Thread(target=match_result_prediction.predict,
+                              args=(json.loads(request.data), type, country, receipt))
+    process(thread)
 
-    return match_result_prediction.predict(json.loads(request.data), type, country)
+    return json.dumps(done_response())
 
 @app.route('/predict/score/<type>/<country>/<receipt>',  methods=['POST'])
 def predict_score(type, country,receipt):
-    print(request.data)
+    thread = threading.Thread(target=match_score_prediction.predict,
+                              args=(json.loads(request.data), type, country, receipt))
+    process(thread)
 
-    return match_score_prediction.predict(json.loads(request.data), type, country)
+    return json.dumps(done_response())
 
 
 @app.route('/predict/goals/<type>/<country>/<player>/<receipt>',  methods=['POST'])
 def predict_goals_player(type, country, player, receipt):
-    print(request.data)
+    thread = threading.Thread(target=player_goals_prediction.predict,
+                              args=(json.loads(request.data), type, country, player, receipt))
+    process(thread)
 
-    return player_goals_prediction.predict(json.loads(request.data), type, country, player)
+    return json.dumps(done_response())
 
 
 @app.route('/predict/first-goal/<type>/<country>/<player>/<receipt>',  methods=['POST'])
 def predict_first_goal(type, country, player, receipt):
-    print(request.data)
+    thread = threading.Thread(target=player_score_first_prediction.v,
+                              args=(json.loads(request.data), type, country, player, receipt))
+    process(thread)
 
-    return player_score_first_prediction.predict(json.loads(request.data), type, country, player)
+    return json.dumps(done_response())
 
 
 @app.route('/predict/last-goal/<type>/<country>/<player>/<receipt>',  methods=['POST'])
 def predict_last_goal(type, country, player, receipt):
-    print(request.data)
+    thread = threading.Thread(target=player_score_last_prediction.predict,
+                              args=(json.loads(request.data), type, country, player, receipt))
+    process(thread)
 
-    return player_score_last_prediction.predict(json.loads(request.data), type, country, player)
+    return json.dumps(done_response())
 
 
 
@@ -74,7 +95,7 @@ def predict_last_goal(type, country, player, receipt):
 def train_results(receipt):
     thread = threading.Thread(target=match_result_train.train,
                               args=(receipt))
-    thread.start()
+    process(thread)
 
     return json.dumps(done_response())
 
@@ -84,7 +105,7 @@ def train_results(receipt):
 def train_country_results(type, country, receipt):
     thread = threading.Thread(target=match_result_train.train_country,
                           args=(type, country, receipt))
-    thread.start()
+    process(thread)
 
     return json.dumps(done_response())
 
@@ -93,7 +114,7 @@ def train_country_results(type, country, receipt):
 def train_scores(receipt):
     thread = threading.Thread(target=match_score_train.train,
                               args=(receipt))
-    thread.start()
+    process(thread)
 
     return json.dumps(done_response())
 
@@ -103,7 +124,7 @@ def train_scores(receipt):
 def train_country_scores(type, country, receipt):
     thread = threading.Thread(target=match_score_train.train_country,
                               args=(type, country, receipt))
-    thread.start()
+    process(thread)
 
     return json.dumps(done_response())
 
@@ -112,7 +133,7 @@ def train_country_scores(type, country, receipt):
 def train_goals(receipt):
     thread = threading.Thread(target=player_goals_train.train,
                               args=(receipt))
-    thread.start()
+    process(thread)
 
     return json.dumps(done_response())
 
@@ -121,7 +142,7 @@ def train_goals(receipt):
 def train_player_goals(type, country, player, receipt):
     thread = threading.Thread(target=player_goals_train.train_player,
                               args=(type, country,player, receipt))
-    thread.start()
+    process(thread)
 
     return json.dumps(done_response())
 
@@ -130,7 +151,7 @@ def train_player_goals(type, country, player, receipt):
 def train_to_score_first(receipt):
     thread = threading.Thread(target=player_score_first_train.train,
                               args=(receipt))
-    thread.start()
+    process(thread)
 
     return json.dumps(done_response())
 
@@ -139,7 +160,7 @@ def train_to_score_first(receipt):
 def train_player_to_score_first(type, country, player, receipt):
     thread = threading.Thread(target=player_score_first_train.train_player,
                               args=(type, country, player, receipt))
-    thread.start()
+    process(thread)
 
     return json.dumps(done_response())
 
@@ -148,7 +169,7 @@ def train_player_to_score_first(type, country, player, receipt):
 def train_to_score_last(receipt):
     thread = threading.Thread(target=player_score_last_train.train,
                               args=(receipt))
-    thread.start()
+    process(thread)
 
     return json.dumps(done_response())
 
@@ -157,6 +178,6 @@ def train_to_score_last(receipt):
 def train_player_to_score_last(type, country, player, receipt):
     thread = threading.Thread(target=player_score_last_train.train_player,
                               args=(type, country, player, receipt))
-    thread.start()
+    process(thread)
 
     return json.dumps(done_response())

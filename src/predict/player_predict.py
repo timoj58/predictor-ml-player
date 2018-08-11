@@ -1,14 +1,13 @@
 import json
-import tensorflow as tf
-
+import util.receipt_utils as receipt_utils
 import model.player_model as player_model
 import util.dataset_utils as dataset_utils
 
 
-def predict(data, type, country, player, label, label_values,  model_dir, file_type, convert):
+def predict(data, type, country, player, label, label_values,  model_dir, convert, receipt):
 
 
-    classifier =  player_model.create(type, country, player, False, label, label_values, model_dir, file_type, convert)
+    classifier =  player_model.create(type, country, player, False, label, label_values, model_dir,'','', convert)
 
     home = []
     homePlayer1 = []
@@ -74,8 +73,6 @@ def predict(data, type, country, player, label, label_values,  model_dir, file_t
     awaySub2.append(data['awaySub2'])
     awaySub3.append(data['awaySub3'])
 
-    print(data)
-
 
     expected = [0]
     predict_x = {
@@ -140,4 +137,4 @@ def predict(data, type, country, player, label, label_values,  model_dir, file_t
 
             index += 1
 
-    return json.dumps(response)
+    receipt_utils.put_receipt(receipt_utils.PREDICT_RECEIPT_URL, receipt,json.dumps(response))

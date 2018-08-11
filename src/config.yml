@@ -3,14 +3,13 @@ base:
  aws_url: ""
  local: "/home/timmytime/IdeaProjects/predictor-ml-model/res/"
  docker_host: "http://localhost"
+ train_path: "train/<type>/<key>/"
+ vocab_path: "vocab/<type>/<key>/"
 
 vocab:
  team_vocab_url: ":8090/api/prediction/teams"
  player_by_country_vocab_url: ":8090/api/prediction/players/by-country-dict"
  player_vocab_url: ":8090/api/prediction/players/by-player-dict"
- team_vocab_file: "/home/timmytime/IdeaProjects/predictor-ml-model/res/team-vocab"
- player_vocab_file: "/home/timmytime/IdeaProjects/predictor-ml-model/res/player-vocab"
- player_by_country_vocab_file: "/home/timmytime/IdeaProjects/predictor-ml-model/res/player-by-country-vocab"
 
 analysis: 
  player_model_url: ":8090/api/prediction/ml-data/players/player/"

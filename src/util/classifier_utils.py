@@ -15,12 +15,14 @@ def create(feature_columns, classes, model_dir):
     logger.info ('model dir for classifier '+local_dir+model_dir)
 
     indexes = get_indexes(local_dir+model_dir)
-    for index in indexes:
-        get_aws_file(model_dir+'/', index)
+    for attribute, value in indexes.items():
+       if(value['active'] == True):
+        get_aws_file(model_dir+'/', attribute)
 
     indexes = get_indexes(local_dir+model_dir+'/eval')
-    for index in indexes:
-        get_aws_file(model_dir+'/eval/', index)
+    for attribute, value in indexes.items():
+        if(value['active'] == True):
+         get_aws_file(model_dir+'/eval/', attribute)
 
 
     # Build 2 hidden layer DNN with 10, 10 units respectively.  (from example will enrich at some point).

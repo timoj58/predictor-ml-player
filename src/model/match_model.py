@@ -3,7 +3,6 @@ import featureset.match_featureset as match_featureset
 import util.vocab_utils as vocab_utils
 import util.classifier_utils as classifier_utils
 import util.dataset_utils as dataset_utils
-import util.model_utils as model_utils
 from util.file_utils import on_finish
 from util.config_utils import get_dir_cfg
 import logging
@@ -11,15 +10,10 @@ import logging
 logger = logging.getLogger(__name__)
 local_dir = get_dir_cfg()['local']
 
-def create(type, country, train, label, label_values, model_dir, file_type, outcome):
+def create(type, country, train, label, label_values, model_dir, test_filename, train_filename, outcome):
 
     aws_model_dir = 'models/'+model_dir+'/'+type+'/'+country
     tf_models_dir = local_dir+'/'+aws_model_dir
-
-    (train_x, train_y), (test_x, test_y) = match_dataset.load_data(
-        local_dir+'train-'+file_type+type+'-'+country+'.csv',
-        local_dir+'test-'+file_type+type+'-'+country+'.csv',
-        label, label_values)
 
     logger.info('team vocab started...')
     team_file = vocab_utils.create_vocab(vocab_utils.TEAMS_URL, vocab_utils.TEAMS_FILE, type, country, None);
@@ -39,6 +33,10 @@ def create(type, country, train, label, label_values, model_dir, file_type, outc
 
     if train:
 
+        (train_x, train_y), (test_x, test_y) = match_dataset.load_data(
+            local_dir+train_filename,
+            local_dir+test_filename,
+            label, label_values)
 
         logger.info(len(train_y))
         # Train the Model.

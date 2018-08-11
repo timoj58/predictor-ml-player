@@ -1,15 +1,13 @@
-import json
-import tensorflow as tf
-
 import model.player_model as player_model
 import dataset.player_dataset as player_dataset
 import util.model_utils as model_utils
 import util.cache_utils as cache_utils
 import util.vocab_utils as vocab_utils
+import util.receipt_utils as receipt_utils
 from shutil import copyfile
 from util.file_utils import is_on_file
 from util.file_utils import get_aws_file
-from util.file_utils import put_aws_file
+from util.file_utils import put_aws_file_with_path
 from util.config_utils import get_analysis_cfg
 from util.config_utils import get_dir_cfg
 import logging
@@ -22,6 +20,8 @@ local_dir = get_dir_cfg()['local']
 
 def train_player(type, country, player, receipt):
     process(type, country, player)
+    receipt_utils.put_receipt(receipt_utils.TRAIN_RECEIPT_URL, receipt, None)
+
 
 def train(receipt):
 
@@ -43,26 +43,36 @@ def train(receipt):
                 logger.info(player)
                 process(type, country, player)
 
+    receipt_utils.put_receipt(receipt_utils.TRAIN_RECEIPT_URL, receipt, None)
+
 
 def process(type, country, player):
+
+    train_path = get_dir_cfg()['train_path']
+    train_path = train_path.replace('<type>', type)
+    train_path = train_path.replace('<key>', country)+player+"/"
+
     if get_analysis_cfg()['historic']:
         range = model_utils.player_historic_range
     else:
         range = model_utils.real_time_range[0]
 
+    train_filename = "train-player-last-goal"+range.replace('/','-')+".csv"
+    test_filename = "test-player-last-goal"+range.replace('/','-')+".csv"
 
     has_data = model_utils.create_csv(model_utils.PLAYER_MODEL_URL + player,
-                                      local_dir+"train-player-last-goal-"+type+"-"+country+"-"+player+".csv", range)
+                                      local_dir+train_path+train_filename, range)
 
     if has_data:
      ##take a copy of our file if it doesnt exist.
-     if not is_on_file(local_dir+"test-player-last-goal-"+type+"-"+country+"-"+player+".csv"):
-        copyfile(local_dir+"train-player-last-goal-"+type+"-"+country+"-"+player+".csv",
-                 local_dir+"test-player-last-goal-"+type+"-"+country+"-"+player+".csv")
-        put_aws_file(local_dir+"test-player-lat-goal-"+type+"-"+country+".csv")
+     if not is_on_file(local_dir+train_path+test_filename):
+        copyfile(local_dir+train_path+train_filename,
+                 local_dir+train_path+test_filename)
+        put_aws_file_with_path(train_path, test_filename)
      else:
-        get_aws_file('',  "test-player-last-goal-"+type+"-"+country+"-"+player+".csv")
+        get_aws_file(train_path, test_filename)
 
-     player_model.create(type, country,player, True, 'lastGoal', player_dataset.FIRST_LAST_OUTCOMES, "player_last_goal", "player-last-goal-", True)
+     player_model.create(type, country,player, True, 'lastGoal', player_dataset.FIRST_LAST_OUTCOMES, "player_last_goal",
+                         train_path+train_filename, train_path+test_filename, True)
     else:
         logger.info ('no data to train')

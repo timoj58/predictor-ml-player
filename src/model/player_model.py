@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 local_dir = get_dir_cfg()['local']
 
 
-def create(type, country, player, train, label, label_values, model_dir, file_type, convert):
+def create(type, country, player, train, label, label_values, model_dir, train_filename, test_filename, convert):
 
     aws_model_dir = 'models/'+model_dir+'/'+type+'/'+country+'/'+player
     tf_models_dir = local_dir+'/'+aws_model_dir
@@ -22,10 +22,6 @@ def create(type, country, player, train, label, label_values, model_dir, file_ty
     else:
         convertValue = convert
 
-    (train_x, train_y), (test_x, test_y) = player_dataset.load_data(
-        local_dir+'train-'+file_type+type+'-'+country+'-'+player+'.csv',
-        local_dir+'test-'+file_type+type+'-'+country+'-'+player+'.csv',
-        label, convertValue)
 
     logger.info ('team vocab started...')
     team_file = vocab_utils.create_vocab(vocab_utils.TEAMS_URL, vocab_utils.TEAMS_FILE, type, country, None);
@@ -45,6 +41,11 @@ def create(type, country, player, train, label, label_values, model_dir, file_ty
     classifier = classifier_utils.create(feature_columns,len(label_values), aws_model_dir)
 
     if train:
+        (train_x, train_y), (test_x, test_y) = player_dataset.load_data(
+            local_dir+train_filename,
+            local_dir+test_filename,
+            label, convertValue)
+
         # Train the Model.
         logger.info(len(train_y))
         classifier.train(

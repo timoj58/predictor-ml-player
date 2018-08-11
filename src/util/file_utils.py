@@ -1,8 +1,11 @@
 from util.config_utils import get_dir_cfg
+from util.index_utils import process_index, read_index
 import os.path
 import os
 import requests
 import logging
+import csv
+
 
 logger = logging.getLogger(__name__)
 
@@ -28,25 +31,21 @@ def clear_directory(path):
    if aws:
     for file in os.listdir(path):
       if not os.path.isdir(path+'/'+file):
-       if file != "index.txt": #dont delete the index...doh.
+       if file != "index.json": #dont delete the index...doh.
         logger.info(' deleting '+file)
         file_path = os.path.join(path, file)
         os.unlink(file_path)
 
 
 def get_indexes(path):
-    if  os.path.isfile(path+'/index.txt'):
-     file = open(path+'/index.txt', 'r')
-     return file.readlines()
-    return []
+    if  os.path.isfile(path+'/index.json'):
+     logger.info('we have an index file')
+     return read_index(path)
+    return {}
 
 def is_in_index(path, filename):
-    onfile = False
-    indexes = get_indexes(path)
-    for index in indexes:
-       if index.strip('\n') == filename:
-           onfile = True
-    return onfile
+    index = read_index(path)
+    return index.get(filename)
 
 def write_filenames_index_from_filename(filename):
     head, tail = os.path.split(filename)
@@ -54,26 +53,13 @@ def write_filenames_index_from_filename(filename):
 
 def write_filenames_index(path):
    logger.info("index for "+path)
-   indexes = get_indexes(path)
+   index = get_indexes(path)
    files = os.listdir(path)
 
-   mode = 'w'
-   if os.path.isfile(path+'/index.txt'):
-    mode = 'a'
-
-   with open(path+'/index.txt', mode) as f:
-     for file in files:
-      if not os.path.isdir(path+'/'+file):
-       if file != "index.txt": #dont log the index...doh.
-        if file not in indexes:
-         logger.info(file)
-         f.write(file)
-         f.write('\n')
-
+   process_index(index, files, path)
 
 def get_aws_file(path, filename):
    if aws:
-    filename = filename.strip('\n')
     logger.info('getting aws file '+aws_url+filename)
     response = requests.get(aws_url+path+filename, headers={})
     with open(local_dir+path+filename, 'wb') as f:
@@ -83,8 +69,9 @@ def get_aws_file(path, filename):
 def put_aws_files_from_dir(path):
   logger.info('getting indexes for '+local_dir+path)
   indexes = get_indexes(local_dir+path)
-  for index in indexes:
-      put_aws_file_with_path(path, index.strip('\n'))
+  for attribute, value in indexes.items():
+     if value['active'] == True:
+      put_aws_file_with_path(path, attribute)
 
 def put_aws_file_with_path(aws_path, filename):
     if aws:
@@ -108,6 +95,26 @@ def is_on_file(filename):
     else:
         head, tail = os.path.split(filename)
         return is_in_index(head, tail)
+
+
+def make_dir(filename):
+    if not os.path.exists(os.path.dirname(filename)):
+        os.makedirs(os.path.dirname(filename))
+
+
+def write_csv(filename, data):
+
+    make_dir(filename)
+    has_data = False
+    with open(filename, 'w') as f:
+     writer = csv.writer(f)
+     reader = csv.reader(data.text.splitlines())
+
+     for row in reader:
+      writer.writerow(row)
+      has_data = True
+
+    return has_data
 
 
 

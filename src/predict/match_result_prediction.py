@@ -4,13 +4,13 @@ import dataset.match_dataset as match_dataset
 
 def predict(data, type, country, receipt):
 
-    return predict_process(
+    predict_process(
         data,
         type,
         country,
         'outcome',
         match_dataset.OUTCOMES,
         "match_result",
-        "matches-",
-        False)
+        False,
+        receipt)
 

@@ -4,12 +4,12 @@ import dataset.player_dataset as player_dataset
 
 def predict(data, type, country, player, receipt):
 
-    return predict_process(data,
-                                  type,
-                                  country,
-                                  player,
-                                  'firstGoal',
-                                  player_dataset.FIRST_LAST_OUTCOMES,
-                                  "player_first_goal",
-                                  "player-first-goal-",
-                                  True)
+     predict_process(data,
+                     type,
+                     country,
+                     player,
+                     'firstGoal',
+                     player_dataset.FIRST_LAST_OUTCOMES,
+                     "player_first_goal",
+                     True,
+                     receipt)

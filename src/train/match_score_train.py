@@ -1,6 +1,3 @@
-import json
-import tensorflow as tf
-
 import model.match_model as match_model
 import dataset.match_dataset as match_dataset
 import util.model_utils as model_utils
@@ -9,7 +6,7 @@ import util.receipt_utils as receipt_utils
 from shutil import copyfile
 from util.file_utils import is_on_file
 from util.file_utils import get_aws_file
-from util.file_utils import put_aws_file
+from util.file_utils import put_aws_file_with_path
 from util.config_utils import get_analysis_cfg
 from util.config_utils import get_dir_cfg
 import logging
@@ -38,6 +35,11 @@ def train(receipt):
 
 
 def train_country(type, country, receipt):
+
+    train_path = get_dir_cfg()['train_path']
+    train_path = train_path.replace('<type>', type)
+    train_path = train_path.replace('<key>', country)
+
     competition_count = cache_utils.get_competitions_per_country(cache_utils.COMPETITIONS_BY_COUNTRY_URL, type, cache_utils)
 
     if get_analysis_cfg()['historic']:
@@ -50,21 +52,26 @@ def train_country(type, country, receipt):
 
     for data in data_range:
 
+     train_filename = "train-scores"+data.replace('/','-')+".csv"
+     test_filename = "test-scores"+data.replace('/','-')+".csv"
+
+
      has_data = model_utils.create_csv(model_utils.EVENT_MODEL_URL + type+"/"+country,
-                                       local_dir+"train-scores-"+type+"-"+country+".csv",data)
+                                       local_dir+train_path+train_filename,data, train_path)
 
      if has_data:
       ##take a copy of our file if it doesnt exist.
-      if not is_on_file(local_dir+"test-scores-"+type+"-"+country+".csv"):
-        copyfile(local_dir+"train-scores-"+type+"-"+country+".csv",
-                 local_dir+"test-scores-"+type+"-"+country+".csv")
-        put_aws_file(local_dir+"test-scores-"+type+"-"+country+".csv")
+      if not is_on_file(local_dir+train_path+test_filename):
+        copyfile(local_dir+train_path+train_filename,
+                 local_dir+train_path+test_filename)
+        put_aws_file_with_path(train_path,test_filename)
       else:
-        get_aws_file('',  "test-scores-"+type+"-"+country+".csv")
+        get_aws_file(train_path,  test_filename)
 
-      match_model.create(type, country, True,'scoreOutcome', match_dataset.SCORE_OUTCOMES, "match_score", "scores-", True)
+      match_model.create(type, country, True,'scoreOutcome', match_dataset.SCORE_OUTCOMES,
+                         "match_score", local_dir+train_path+train_filename, local_dir+train_path+test_filename, True)
      else:
          logger.info ('no data to train')
 
-     if receipt is not None:
-       receipt_utils.put_receipt(receipt_utils.TRAIN_RECEIPT_URL, receipt, None)
+    if receipt is not None:
+     receipt_utils.put_receipt(receipt_utils.TRAIN_RECEIPT_URL, receipt, None)
