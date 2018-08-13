@@ -7,7 +7,7 @@ import util.receipt_utils as receipt_utils
 from shutil import copyfile
 from util.file_utils import is_on_file
 from util.file_utils import get_aws_file
-from util.file_utils import put_aws_file
+from util.file_utils import put_aws_file_with_path
 from util.config_utils import get_analysis_cfg
 from util.config_utils import get_dir_cfg
 import logging
@@ -57,16 +57,18 @@ def process(type, country, player):
         range = model_utils.real_time_range[0]
 
     train_filename = "train-player-first-goal"+range.replace('/','-')+".csv"
-    test_filename = "test-player-first-goal"+range.replace('/','-')+".csv"
+    test_filename = "test-player-first-goal.csv"
+    train_file_path = local_dir+train_path+train_filename
+    test_file_path = local_dir+train_path+test_filename
 
     has_data = model_utils.create_csv(model_utils.PLAYER_MODEL_URL + player,
-                                      local_dir+train_path+train_filename, range)
+                                      train_file_path, range)
 
     if has_data:
      ##take a copy of our file if it doesnt exist.
-     if not is_on_file(local_dir+train_path+test_filename):
-        copyfile(local_dir+train_path+train_filename,
-                 local_dir+train_path+test_filename)
+     if not is_on_file(test_file_path):
+        copyfile(train_file_path,
+                 test_file_path)
         put_aws_file_with_path(train_path, test_filename)
      else:
         get_aws_file(train_path,  test_filename)

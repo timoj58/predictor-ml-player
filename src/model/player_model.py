@@ -5,8 +5,10 @@ import util.classifier_utils as classifier_utils
 import util.dataset_utils as dataset_utils
 import util.model_utils as model_utils
 from util.file_utils import on_finish
+from util.file_utils import clear_directory
 from util.config_utils import get_dir_cfg
 import logging
+import os.path
 
 logger = logging.getLogger(__name__)
 local_dir = get_dir_cfg()['local']
@@ -59,6 +61,11 @@ def create(type, country, player, train, label, label_values, model_dir, train_f
 
     #probably can tidy this all up.  in one call.
     on_finish(tf_models_dir, aws_model_dir)
+    #also get rid of the vocab files and training / testing files.
+    #vocab
+    clear_directory(os.path.dirname(team_file))
+    #training
+    clear_directory(os.path.dirname(local_dir+train_filename))
 
     return classifier
 

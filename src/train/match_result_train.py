@@ -6,6 +6,7 @@ import util.receipt_utils as receipt_utils
 from shutil import copyfile
 from util.file_utils import is_on_file
 from util.file_utils import get_aws_file
+from util.file_utils import write_filenames_index_from_filename
 from util.file_utils import put_aws_file_with_path
 from util.config_utils import get_analysis_cfg
 from util.config_utils import get_dir_cfg
@@ -43,27 +44,31 @@ def train_country(type, country, receipt):
    competition_count = cache_utils.get_competitions_per_country(cache_utils.COMPETITIONS_BY_COUNTRY_URL, type, country)
 
    if get_analysis_cfg()['historic']:
-    data_range = model_utils.data_ranges
+    data_range = model_utils.create_range(2)
 
     if competition_count > 2:
-       data_range = model_utils.data_ranges_4
+       data_range = model_utils.create_range(1)
+
    else:
        data_range = model_utils.real_time_range
 
    for data in data_range:
 
     train_filename = "train-matches"+data.replace('/','-')+".csv"
-    test_filename = "test-matches"+data.replace('/','-')+".csv"
+    test_filename = "test-matches.csv"
+    train_file_path = local_dir+train_path+train_filename
+    test_file_path = local_dir+train_path+test_filename
 
     has_data = model_utils.create_csv(model_utils.EVENT_MODEL_URL + type+"/"+country,
-                                      local_dir+train_path+train_filename, data, train_path)
+                                      train_file_path, data, train_path)
 
     if has_data:
      ##take a copy of our file if it doesnt exist.
-     if not is_on_file(local_dir+train_path+test_filename):
-         copyfile(local_dir+train_path+train_filename,
-                  local_dir+train_path+test_filename)
+     if not is_on_file(test_file_path):
+         copyfile(train_file_path,
+                  test_file_path)
          put_aws_file_with_path(train_path,test_filename)
+         write_filenames_index_from_filename(test_file_path)
      else:
         get_aws_file(train_path,  test_filename)
 

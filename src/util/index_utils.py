@@ -1,5 +1,9 @@
 import json
 import os.path
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 
 def write_index(index, path):
@@ -16,6 +20,12 @@ def read_index(path):
 def process_index(index, filenames, path):
     #
     if index is not None:
+     # need to check if a file is no longer in files, but is in index.  if so.  we turn it off.
+     for attribute, value in index.items():
+      if attribute not in filenames:
+         logger.info('setting '+attribute+" to active = false")
+         index[attribute]['active'] = False
+
      for file in filenames:
         if index.get(file) is not None:
          if 'train' in path:   #train is never active again.  vocab to fix.  its on day..
@@ -30,7 +40,7 @@ def process_index(index, filenames, path):
      for file in filenames:
       add_to_index(index, file, path)
 
-    print(index)
+    logger.info(index)
 
     write_index(index, path)
 

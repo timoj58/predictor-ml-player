@@ -5,6 +5,18 @@ base:
  docker_host: "http://localhost"
  train_path: "train/<type>/<key>/"
  vocab_path: "vocab/<type>/<key>/"
+ batch_size: 100
+ steps: 1000
+ start_day: 1
+ start_month: 1
+ start_year: 2012
+ end_day: 14
+ end_month: 7
+ end_year: 2018
+ hash_bins: 5000
+ hidden_units: [1024, 512, 256]
+ aws_debug: False
+
 
 vocab:
  team_vocab_url: ":8090/api/prediction/teams"

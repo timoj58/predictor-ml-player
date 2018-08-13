@@ -62,6 +62,8 @@ def create_vocab(url, filename, type, country, player_id):
 
     if is_on_file(previous_filename):
       logger.info('vocab '+previous_filename+' is on file')
+      head, tail = os.path.split(previous_filename)
+      get_aws_file(head.replace(local_dir,'')+'/',tail)
       # now load the new file to memory.  and only add in values that arent in the list to the end.
       patch_vocab(filename, previous_filename, values)
     else:

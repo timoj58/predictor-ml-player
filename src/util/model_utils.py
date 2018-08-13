@@ -3,6 +3,7 @@ from requests.auth import HTTPDigestAuth
 from util.file_utils import write_csv
 from util.auth_utils import auth
 from util.config_utils import get_analysis_cfg
+from util.config_utils import get_analysis_cfg
 from util.file_utils import put_aws_file_with_path
 from util.file_utils import write_filenames_index_from_filename
 import datetime
@@ -10,6 +11,7 @@ from datetime import date, timedelta
 import logging
 from util.config_utils import get_dir_cfg
 import os
+import calendar
 
 logger = logging.getLogger(__name__)
 
@@ -19,21 +21,45 @@ docker_host = get_dir_cfg()['docker_host']
 PLAYER_MODEL_URL = docker_host+get_analysis_cfg()['player_model_url']
 EVENT_MODEL_URL = docker_host+get_analysis_cfg()['team_model_url']
 
-data_ranges = ['/01-08-2009/01-08-2010','/01-08-2010/01-08-2011','/01-08-2011/01-08-2012','/01-08-2012/01-08-2013',
-               '/01-08-2013/01-08-2014','/01-08-2014/01-08-2015','/01-08-2015/01-08-2016','/01-08-2016/01-08-2017',
-               '/01-08-2017/01-08-2018']
-
-data_ranges_4 = ['/01-08-2009/01-01-2010','/01-01-2010/01-08-2010','/01-08-2010/01-01-2011','/01-01-2011/01-08-2011',
-               '/01-08-2011/01-01-2012','/01-01-2012/01-08-2012','/01-08-2012/01-01-2013','/01-01-2013/01-08-2013',
-               '/01-08-2013/01-01-2014','/01-01-2014/01-08-2014', '/01-08-2014/01-01-2015', '/01-01-2015/01-08-2015',
-                 '/01-08-2015/01-01-2016', '/01-01-2016/01-08-2016', '/01-08-2016/01-01-2017', '/01-01-2017/01-08-2017',
-                 '/01-08-2017/01-01-2018', '/01-01-2018/01-08-2018']
-
 real_time_range = ['/'+ datetime.date.today().strftime('%d-%m-%Y')
                     +'/'
                    + (datetime.date.today() + timedelta(1)).strftime('%d-%m-%Y')]
 
-player_historic_range = '/01-08-2009/13-07-2018'
+player_historic_range = '/01-08-2009/14-07-2018'
+
+
+def create_range(increment):
+    end_date = datetime.date(get_dir_cfg()['end_year'], get_dir_cfg()['end_month'], get_dir_cfg()['end_day'])
+    start_date = datetime.date(get_dir_cfg()['start_year'], get_dir_cfg()['start_month'], get_dir_cfg()['start_day'])
+
+    ranges = []
+
+    no_of_months = diff_month(start_date, end_date) / increment
+
+    temp_end_date = start_date
+
+    for month in range(0, int(no_of_months)):
+
+       temp_end_date = add_months(temp_end_date, increment)
+       ranges.append('/'+start_date.strftime('%d-%m-%Y')+'/'+temp_end_date.strftime('%d-%m-%Y'))
+       start_date = temp_end_date
+
+    ##number of months between dates
+    ranges.append('/'+temp_end_date.strftime('%d-%m-%Y')+'/'+end_date.strftime('%d-%m-%Y'))
+
+    return ranges
+
+def diff_month(d2, d1):
+    return (d1.year - d2.year) * 12 + d1.month - d2.month
+
+
+def add_months(sourcedate,months):
+    month = sourcedate.month - 1 + months
+    year = sourcedate.year + month // 12
+    month = month % 12 + 1
+    day = min(sourcedate.day,calendar.monthrange(year,month)[1])
+    return datetime.date(year,month,day)
+
 
 def create_csv(url, filename, range, aws_path):
     logger.info ('getting csv data...')

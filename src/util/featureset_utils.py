@@ -1,4 +1,5 @@
 import tensorflow as tf
+from util.config_utils import get_dir_cfg
 
 
 def create_vocab_column(key, vocab):
@@ -47,7 +48,7 @@ def create_home_players(player_vocab):
     [home_player1_fc, home_player2_fc, home_player3_fc,home_player4_fc,
      home_player5_fc,home_player6_fc,home_player7_fc,home_player8_fc,
      home_player9_fc,home_player10_fc,home_player11_fc,
-     home_sub1_fc, home_sub2_fc, home_sub3_fc], 5000)
+     home_sub1_fc, home_sub2_fc, home_sub3_fc], get_dir_cfg()['hash_bins'])
 
 
 
@@ -73,7 +74,7 @@ def create_away_players(player_vocab):
     [away_player1_fc, away_player2_fc, away_player3_fc,away_player4_fc,
      away_player5_fc,away_player6_fc,away_player7_fc,away_player8_fc,
      away_player9_fc,away_player10_fc,away_player11_fc,
-     away_sub1_fc,away_sub2_fc,away_sub3_fc], 5000)
+     away_sub1_fc,away_sub2_fc,away_sub3_fc], get_dir_cfg()['hash_bins'])
 
 
 def create_teams(team_vocab):
