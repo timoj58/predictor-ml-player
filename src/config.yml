@@ -5,17 +5,54 @@ base:
  docker_host: "http://localhost"
  train_path: "train/<type>/<key>/"
  vocab_path: "vocab/<type>/<key>/"
- batch_size: 100
- steps: 1000
- start_day: 1
- start_month: 1
- start_year: 2012
- end_day: 14
- end_month: 7
- end_year: 2018
- hash_bins: 5000
- hidden_units: [1024, 512, 256]
- aws_debug: False
+ country_results_train_history_file: "country-matches-train-history.json"
+ country_scores_train_history_file: "country-scores-train-history.json"
+ players_goals_train_history_file: "players-goals-train-history.json"
+ players_first_goal_train_history_file: "players-first-goal-train-history.json"
+ players_last_goal_train_history_file: "players-last-goal-train-history.json"
+
+learning:
+
+ default:
+         batch_size: 100
+         steps: 1000
+         months_per_cycle: 4
+         start_day: 1
+         start_month: 1
+         start_year: 2012
+         end_day: 14
+         end_month: 7
+         end_year: 2018
+         hash_bins: 25000
+         hidden_units: [10, 20, 10]
+         aws_debug: False
+         historic: True
+
+ england:
+         start_day: 1
+         start_month: 1
+         start_year: 2012
+         end_day: 14
+         end_month: 8
+         end_year: 2018
+         hash_bins: 25000
+         hidden_units: [10, 20, 10]
+         aws_debug: True
+
+ player:
+           batch_size: 100
+           steps: 1000
+           months_per_cycle: 4
+           start_day: 1
+           start_month: 1
+           start_year: 2012
+           end_day: 14
+           end_month: 7
+           end_year: 2018
+           hash_bins: 25000
+           hidden_units: [10, 20, 10]
+           aws_debug: False
+           historic: True
 
 
 vocab:
@@ -30,7 +67,6 @@ analysis:
  countries_url: ":8090/api/prediction/cache/countries"
  players_by_team_url: ":8090/api/prediction/teams/<team>/players"
  comps_by_country_url: ":8090/api/prediction/cache/competition-count"
- historic: True
 
 receipt:
  train_receipt_url: ":8090/api/prediction/ml-data/train/receipt"

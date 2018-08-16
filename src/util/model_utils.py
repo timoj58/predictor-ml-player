@@ -6,16 +6,21 @@ from util.config_utils import get_analysis_cfg
 from util.config_utils import get_analysis_cfg
 from util.file_utils import put_aws_file_with_path
 from util.file_utils import write_filenames_index_from_filename
+from util.dataset_utils import eval_input_fn
 import datetime
 from datetime import date, timedelta
 import logging
 from util.config_utils import get_dir_cfg
+from util.file_utils import clear_directory
+from util.file_utils import on_finish
 import os
 import calendar
+import json
 
 logger = logging.getLogger(__name__)
 
 docker_host = get_dir_cfg()['docker_host']
+local_dir = get_dir_cfg()['local']
 
 
 PLAYER_MODEL_URL = docker_host+get_analysis_cfg()['player_model_url']
@@ -28,9 +33,11 @@ real_time_range = ['/'+ datetime.date.today().strftime('%d-%m-%Y')
 player_historic_range = '/01-08-2009/14-07-2018'
 
 
-def create_range(increment):
-    end_date = datetime.date(get_dir_cfg()['end_year'], get_dir_cfg()['end_month'], get_dir_cfg()['end_day'])
-    start_date = datetime.date(get_dir_cfg()['start_year'], get_dir_cfg()['start_month'], get_dir_cfg()['start_day'])
+def create_range(increment, learning_cfg):
+
+
+    end_date = datetime.date(learning_cfg['end_year'], learning_cfg['end_month'], learning_cfg['end_day'])
+    start_date = datetime.date(learning_cfg['start_year'], learning_cfg['start_month'], learning_cfg['start_day'])
 
     ranges = []
 
@@ -76,3 +83,48 @@ def create_csv(url, filename, range, aws_path):
 
 
     return has_data
+
+def tidy_up(tf_models_dir, aws_model_dir, team_file, train_filename):
+    #probably can tidy this all up.  in one call.
+    if aws_model_dir is not None:
+        on_finish(tf_models_dir, aws_model_dir)
+    else:
+        clear_directory(tf_models_dir)
+    #also get rid of the vocab files and training / testing files.
+    #vocab
+    if team_file is not None:
+        clear_directory(os.path.dirname(team_file))
+    #training
+    if train_filename is not None:
+        clear_directory(os.path.dirname(local_dir+train_filename))
+
+
+def predict(classifier, predict_x, label_values):
+    logger.info('predict data '+json.dumps(predict_x))
+    predictions = classifier.predict(
+        input_fn=lambda: eval_input_fn(predict_x,
+                                                     labels=None,
+                                                     batch_size=1))
+    template = ('\nPrediction is "{}" ({:.1f}%)')
+
+    response = {}
+
+    for pred_dict in predictions:
+        class_id = pred_dict['class_ids'][0]
+        #probability = pred_dict['probabilities'][class_id]
+
+        index = 0
+        for probability in pred_dict['probabilities'] :
+            #probability = pred_dict['probabilities'][class_id]
+            item = {}
+            item['label'] = label_values[index]
+            item['score'] = '{:.1f}'.format(100 * probability)
+
+            response[index] = item
+            logger.info(template.format(label_values[index],
+                                        100 * probability))
+
+            index += 1
+
+    return response
+

@@ -5,11 +5,11 @@ import dataset.match_dataset as match_dataset
 def predict(data, type, country, receipt):
 
     return predict_process(
-        data,
-        type,
-        country,
-        'scoreOutcome',
-        match_dataset.SCORE_OUTCOMES,
-        "match_score",
-        True,
-        receipt)
+        data=data,
+        type=type,
+        country=country,
+        label='scoreOutcome',
+        label_values=match_dataset.SCORE_OUTCOMES,
+        model_dir="match_score",
+        outcome=True,
+        receipt=receipt)

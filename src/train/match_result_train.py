@@ -1,15 +1,10 @@
-import model.match_model as match_model
-import dataset.match_dataset as match_dataset
 import util.model_utils as model_utils
 import util.cache_utils as cache_utils
 import util.receipt_utils as receipt_utils
-from shutil import copyfile
-from util.file_utils import is_on_file
-from util.file_utils import get_aws_file
-from util.file_utils import write_filenames_index_from_filename
-from util.file_utils import put_aws_file_with_path
-from util.config_utils import get_analysis_cfg
+import util.training_utils as training_utils
+import util.train_history_utils as train_history_utils
 from util.config_utils import get_dir_cfg
+from util.config_utils import get_learning_cfg
 import logging
 
 logger = logging.getLogger(__name__)
@@ -36,46 +31,32 @@ def train(receipt):
 
 def train_country(type, country, receipt):
 
+   learning_cfg = get_learning_cfg(country)
 
    train_path = get_dir_cfg()['train_path']
    train_path = train_path.replace('<type>', type)
    train_path = train_path.replace('<key>', country)
 
+   history = train_history_utils.init_history('in progress',learning_cfg)
+
    competition_count = cache_utils.get_competitions_per_country(cache_utils.COMPETITIONS_BY_COUNTRY_URL, type, country)
 
-   if get_analysis_cfg()['historic']:
-    data_range = model_utils.create_range(2)
+   if learning_cfg['historic']:
+    data_range = model_utils.create_range(int(learning_cfg['months_per_cycle']), learning_cfg)
 
     if competition_count > 2:
-       data_range = model_utils.create_range(1)
+       data_range = model_utils.create_range(int(learning_cfg['months_per_cycle']/2), learning_cfg)
 
    else:
        data_range = model_utils.real_time_range
 
-   for data in data_range:
-
-    train_filename = "train-matches"+data.replace('/','-')+".csv"
-    test_filename = "test-matches.csv"
-    train_file_path = local_dir+train_path+train_filename
-    test_file_path = local_dir+train_path+test_filename
-
-    has_data = model_utils.create_csv(model_utils.EVENT_MODEL_URL + type+"/"+country,
-                                      train_file_path, data, train_path)
-
-    if has_data:
-     ##take a copy of our file if it doesnt exist.
-     if not is_on_file(test_file_path):
-         copyfile(train_file_path,
-                  test_file_path)
-         put_aws_file_with_path(train_path,test_filename)
-         write_filenames_index_from_filename(test_file_path)
-     else:
-        get_aws_file(train_path,  test_filename)
-
-     match_model.create(type, country, True, 'outcome', match_dataset.OUTCOMES, "match_result", train_path+train_filename, train_path+test_filename, False)
-    else:
-        logger.info ('no data to train')
-
-   if receipt is not None:
-    receipt_utils.put_receipt(receipt_utils.TRAIN_RECEIPT_URL, receipt, None)
-
+   training_utils.train_match(
+                        type=type,
+                        country=country,
+                        data_range=data_range,
+                        filename_prefix="matches",
+                        label='outcome',
+                        model_dir="match_result",
+                        train_path=train_path,
+                        receipt=receipt,
+                        history=history)

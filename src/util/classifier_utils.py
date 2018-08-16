@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 local_dir = get_dir_cfg()['local']
 
 
-def create(feature_columns, classes, model_dir):
+def create(feature_columns, classes, model_dir, learning_cfg):
 
     logger.info ('model dir for classifier '+local_dir+model_dir)
 
@@ -29,7 +29,7 @@ def create(feature_columns, classes, model_dir):
 
     return tf.estimator.DNNClassifier(
         feature_columns=feature_columns,
-        hidden_units=get_dir_cfg()['hidden_units'],
+        hidden_units=learning_cfg['hidden_units'],
         n_classes=classes,
         model_dir=local_dir+model_dir)
 

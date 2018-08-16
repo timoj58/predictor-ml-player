@@ -1,8 +1,7 @@
-import json
 import util.receipt_utils as receipt_utils
 import model.match_model as match_model
-import util.dataset_utils as dataset_utils
 from util.config_utils import get_dir_cfg
+from util.model_utils import predict
 import logging
 
 local_dir = get_dir_cfg()['local']
@@ -11,7 +10,19 @@ logger = logging.getLogger(__name__)
 
 def predict(data, type, country, label, label_values,  model_dir, outcome, receipt):
 
-    classifier =  match_model.create(type, country, False, label, label_values, model_dir, '','', outcome)
+#def create(type, country, train, label, label_values, model_dir, train_filename, test_filename, outcome, previous_vocab_date):
+
+    classifier =  match_model.create(
+                   type=type,
+                   country=country,
+                   train=False,
+                   label=label,
+                   label_values=label_values,
+                   model_dir=model_dir,
+                   train_filename='',
+                   test_filename='',
+                   outcome=outcome,
+                   previous_vocab_date="14-08-2018")
 
     home = []
     homePlayer1 = []
@@ -153,7 +164,10 @@ def predict(data, type, country, label, label_values,  model_dir, outcome, recei
     }
 
 
-    response = match_model.predict(classifier, predict_x, label_values)
+    response = predict(
+        classifier=classifier,
+        predict_x=predict_x,
+        label_values=label_values)
 
 
     match_model.tidy_up(local_dir+'/models/'+model_dir+'/'+type+'/'+country,None, None, None)

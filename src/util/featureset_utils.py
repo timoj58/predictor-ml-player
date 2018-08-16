@@ -26,7 +26,7 @@ def create_category_column(key, filename):
         vocabulary_file=filename,
         vocabulary_size=None)
 
-def create_home_players(player_vocab):
+def create_home_players(player_vocab, learning_cfg):
 
  home_player1_fc = create_category_column('homePlayer1', player_vocab)
  home_player2_fc = create_category_column('homePlayer2', player_vocab)
@@ -48,11 +48,11 @@ def create_home_players(player_vocab):
     [home_player1_fc, home_player2_fc, home_player3_fc,home_player4_fc,
      home_player5_fc,home_player6_fc,home_player7_fc,home_player8_fc,
      home_player9_fc,home_player10_fc,home_player11_fc,
-     home_sub1_fc, home_sub2_fc, home_sub3_fc], get_dir_cfg()['hash_bins'])
+     home_sub1_fc, home_sub2_fc, home_sub3_fc], learning_cfg['hash_bins'])
 
 
 
-def create_away_players(player_vocab):
+def create_away_players(player_vocab, learning_cfg):
 
  away_player1_fc = create_category_column('awayPlayer1', player_vocab)
  away_player2_fc = create_category_column('awayPlayer2', player_vocab)
@@ -74,7 +74,7 @@ def create_away_players(player_vocab):
     [away_player1_fc, away_player2_fc, away_player3_fc,away_player4_fc,
      away_player5_fc,away_player6_fc,away_player7_fc,away_player8_fc,
      away_player9_fc,away_player10_fc,away_player11_fc,
-     away_sub1_fc,away_sub2_fc,away_sub3_fc], get_dir_cfg()['hash_bins'])
+     away_sub1_fc,away_sub2_fc,away_sub3_fc], learning_cfg['hash_bins'])
 
 
 def create_teams(team_vocab):

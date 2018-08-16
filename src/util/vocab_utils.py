@@ -32,7 +32,7 @@ PLAYERS_FILE = 'player-vocab'
 PLAYERS_BY_COUNTRY_FILE = 'player-by-country-vocab'
 
 
-def create_vocab(url, filename, type, country, player_id):
+def create_vocab(url, filename, type, country, player_id, previous_vocab_date):
 
   vocab_path = get_dir_cfg()['vocab_path']
 
@@ -41,7 +41,7 @@ def create_vocab(url, filename, type, country, player_id):
     vocab_path = vocab_path.replace('<type>', type)
     vocab_path = vocab_path.replace('<key>', player_id)
 
-    previous_filename = local_dir+vocab_path+filename+"-"+str(datetime.date.today() - timedelta(1))+".txt"
+    previous_filename = local_dir+vocab_path+filename+"-"+previous_vocab_date+".txt"
     filename =  local_dir+vocab_path+filename+"-"+str(datetime.date.today())+".txt"
   else:
     url = url+"?type="+type+"&country="+country
@@ -49,7 +49,7 @@ def create_vocab(url, filename, type, country, player_id):
     vocab_path = vocab_path.replace('<type>', type)
     vocab_path = vocab_path.replace('<key>', country)
 
-    previous_filename =  local_dir+vocab_path+filename+"-"+str(datetime.date.today() - timedelta(1))+".txt"
+    previous_filename =  local_dir+vocab_path+filename+"-"+previous_vocab_date+".txt"
     filename =  local_dir+vocab_path+filename+"-"+str(datetime.date.today())+".txt"
 
   logger.info('checking for '+filename)

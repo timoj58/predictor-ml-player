@@ -23,8 +23,9 @@ def process_index(index, filenames, path):
      # need to check if a file is no longer in files, but is in index.  if so.  we turn it off.
      for attribute, value in index.items():
       if attribute not in filenames:
-         logger.info('setting '+attribute+" to active = false")
-         index[attribute]['active'] = False
+         if index[attribute]['active'] == True:
+          logger.info('setting '+attribute+" to active = false")
+          index[attribute]['active'] = False
 
      for file in filenames:
         if index.get(file) is not None:

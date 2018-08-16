@@ -1,13 +1,23 @@
 import json
 import util.receipt_utils as receipt_utils
 import model.player_model as player_model
-import util.dataset_utils as dataset_utils
-
+from util.model_utils import predict
 
 def predict(data, type, country, player, label, label_values,  model_dir, convert, receipt):
 
 
-    classifier =  player_model.create(type, country, player, False, label, label_values, model_dir,'','', convert)
+    classifier =  player_model.create(
+        type=type,
+        country=country,
+        player=player,
+        train=False,
+        label=label,
+        label_values=label_values,
+        model_dir=model_dir,
+        train_filename='',
+        test_filename='',
+        convert=convert,
+        previous_vocab_date="14-08-2018")
 
     home = []
     homePlayer1 = []
@@ -108,33 +118,10 @@ def predict(data, type, country, player, label, label_values,  model_dir, conver
         'awaySub3': awaySub3
     }
 
-    print(predict_x)
 
+    response = predict(
+        classifier=classifier,
+        predict_x=predict_x,
+        label_values=label_values)
 
-    predictions = classifier.predict(
-         input_fn=lambda: dataset_utils.eval_input_fn(predict_x,
-                                                     labels=None,
-                                                     batch_size=1))
-
-    template = ('\nPrediction is "{}" ({:.1f}%)')
-
-    response = {}
-
-    for pred_dict in predictions:
-        class_id = pred_dict['class_ids'][0]
-        #probability = pred_dict['probabilities'][class_id]
-
-        index = 0
-        for probability in pred_dict['probabilities'] :
-            #probability = pred_dict['probabilities'][class_id]
-            item = {}
-            item['label'] = label_values[index]
-            item['score'] = '{:.1f}'.format(100 * probability)
-
-            response[index] = item
-            print(template.format(label_values[index],
-                                  100 * probability))
-
-            index += 1
-
-    receipt_utils.put_receipt(receipt_utils.PREDICT_RECEIPT_URL, receipt,json.dumps(response))
+    receipt_utils.put_receipt(receipt_utils.PREDICT_RECEIPT_URL, receipt,response)
