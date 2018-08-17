@@ -1,7 +1,7 @@
 import json
 import util.receipt_utils as receipt_utils
 import model.player_model as player_model
-from util.model_utils import predict
+import util.model_utils as model_utils
 
 def predict(data, type, country, player, label, label_values,  model_dir, convert, receipt):
 
@@ -17,7 +17,7 @@ def predict(data, type, country, player, label, label_values,  model_dir, conver
         train_filename='',
         test_filename='',
         convert=convert,
-        previous_vocab_date="14-08-2018")
+        previous_vocab_date="XX-XX-XXXX")
 
     home = []
     homePlayer1 = []
@@ -119,7 +119,7 @@ def predict(data, type, country, player, label, label_values,  model_dir, conver
     }
 
 
-    response = predict(
+    response = model_utils.predict(
         classifier=classifier,
         predict_x=predict_x,
         label_values=label_values)

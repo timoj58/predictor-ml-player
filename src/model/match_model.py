@@ -73,7 +73,7 @@ def create(type, country, train, label, label_values, model_dir, train_filename,
 
         # Train the Model.
         classifier.train(
-            input_fn=lambda:dataset_utils.train_input_fn(train_x, train_y,len(train_y)),steps=learning_cfg['steps'])
+            input_fn=lambda:dataset_utils.train_input_fn(train_x, train_y,learning_cfg['batch_size']),steps=learning_cfg['steps'])
 
         # Evaluate the model.   not much use anymore.  but could use the first test file.  makes sense
         eval_result = classifier.evaluate(

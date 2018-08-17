@@ -1,7 +1,7 @@
 import util.receipt_utils as receipt_utils
 import model.match_model as match_model
 from util.config_utils import get_dir_cfg
-from util.model_utils import predict
+import util.model_utils as model_utils
 import logging
 
 local_dir = get_dir_cfg()['local']
@@ -22,7 +22,7 @@ def predict(data, type, country, label, label_values,  model_dir, outcome, recei
                    train_filename='',
                    test_filename='',
                    outcome=outcome,
-                   previous_vocab_date="14-08-2018")
+                   previous_vocab_date="XX-XX-XXXX")
 
     home = []
     homePlayer1 = []
@@ -164,7 +164,7 @@ def predict(data, type, country, label, label_values,  model_dir, outcome, recei
     }
 
 
-    response = predict(
+    response = model_utils.predict(
         classifier=classifier,
         predict_x=predict_x,
         label_values=label_values)

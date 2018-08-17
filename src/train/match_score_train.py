@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 local_dir = get_dir_cfg()['local']
+history_file = get_dir_cfg()['country_scores_train_history_file']
 
 
 def train(receipt):
@@ -38,6 +39,7 @@ def train_country(type, country, receipt):
     train_path = train_path.replace('<type>', type)
     train_path = train_path.replace('<key>', country)
 
+    previous_vocab_date=train_history_utils.get_previous_vocab_date(history_file, country)
     history = train_history_utils.init_history('in progress',learning_cfg)
 
     competition_count = cache_utils.get_competitions_per_country(cache_utils.COMPETITIONS_BY_COUNTRY_URL, type, cache_utils)
@@ -61,5 +63,6 @@ def train_country(type, country, receipt):
                          model_dir="match_score",
                          train_path=train_path,
                          receipt=receipt,
-                         history=history)
+                         history=history,
+                         previous_vocab_date=previous_vocab_date)
 

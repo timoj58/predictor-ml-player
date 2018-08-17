@@ -31,7 +31,7 @@ def get_range_details(range):
 
     return int(start[0]), int(start[1]), int(start[2]), int(end[0]), int(end[1]), int(end[2])
 
-def train_match(type, country, data_range, filename_prefix, label, model_dir, train_path, receipt, history):
+def train_match(type, country, data_range, filename_prefix, label, model_dir, train_path, receipt, history, previous_vocab_date):
 
   for data in data_range:
 
@@ -67,14 +67,14 @@ def train_match(type, country, data_range, filename_prefix, label, model_dir, tr
             train_filename=train_path+train_filename,
             test_filename=train_path+test_filename,
             outcome=False,
-            previous_vocab_date="15-08-2018")
+            previous_vocab_date=previous_vocab_date)
     else:
         logger.info ('no data to train')
 
     #write the history...
     start_day, start_month, start_year, end_day, end_month, end_year = get_range_details(data)
     history = train_history_utils.create_history('Success - Partial', start_day, start_month, start_year, end_day, end_month, end_year, history['vocab_date'])
-    train_history_utils.add_history("country-"+filename_prefix+"_train_history.json", country, history)
+    train_history_utils.add_history("country-"+filename_prefix+"-train-history.json", country, history)
 
   if receipt is not None:
     receipt_utils.put_receipt(receipt_utils.TRAIN_RECEIPT_URL, receipt, None)
@@ -83,7 +83,7 @@ def train_match(type, country, data_range, filename_prefix, label, model_dir, tr
   train_history_utils.add_history("country_"+filename_prefix+"-train_history.json", country, history)
 
 
-def train_player(type, country, player, range, filename_prefix, label, model_dir, train_path, history):
+def train_player(type, country, player, range, filename_prefix, label, model_dir, train_path, history, previous_vocab_date):
 
     train_filename = "train-"+filename_prefix+range.replace('/','-')+".csv"
     test_filename = "test-"+filename_prefix+".csv"
@@ -119,9 +119,9 @@ def train_player(type, country, player, range, filename_prefix, label, model_dir
             train_filename=train_path+train_filename,
             test_filename=train_path+test_filename,
             convert=True,
-            previous_vocab_date="15-08-2018")
+            previous_vocab_date=previous_vocab_date)
     else:
         logger.info ('no data to train')
 
     history['status'] = "Success - Full"
-    train_history_utils.add_history("players-"+filename_prefix+"-train_history.json", country, history)
+    train_history_utils.add_history("players-"+filename_prefix+"-train-history.json", country, history)
