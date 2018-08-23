@@ -31,6 +31,21 @@ def get_range_details(range):
 
     return int(start[0]), int(start[1]), int(start[2]), int(end[0]), int(end[1]), int(end[2])
 
+
+def get_next_in_range(range, data):
+
+    next = False
+
+    for val in range:
+
+        if next:
+            return val
+
+        if val == data:
+            next = True
+
+    return data
+
 def train_match(type, country, data_range, filename_prefix, label, model_dir, train_path, receipt, history, previous_vocab_date):
 
   for data in data_range:
@@ -47,15 +62,28 @@ def train_match(type, country, data_range, filename_prefix, label, model_dir, tr
         range=data,
         aws_path=train_path)
 
+    has_test_data = model_utils.create_csv(
+        url=model_utils.EVENT_MODEL_URL + type+"/"+country,
+        filename=test_file_path,
+        range=get_next_in_range(data_range,data),
+        aws_path=train_path)
+
+    if has_data == True and has_test_data == False:
+        copyfile(train_file_path,
+                 test_file_path)
+        put_aws_file_with_path(train_path,test_filename)
+        write_filenames_index_from_filename(test_file_path)
+
+
     if has_data:
         ##take a copy of our file if it doesnt exist.
-        if not is_on_file(test_file_path):
-            copyfile(train_file_path,
-                     test_file_path)
-            put_aws_file_with_path(train_path,test_filename)
-            write_filenames_index_from_filename(test_file_path)
-        else:
-            get_aws_file(train_path,  test_filename)
+        #if not is_on_file(test_file_path):
+        #    copyfile(train_file_path,
+        #             test_file_path)
+        #    put_aws_file_with_path(train_path,test_filename)
+        #    write_filenames_index_from_filename(test_file_path)
+        # else:
+        #    get_aws_file(train_path,  test_filename)
 
         match_model.create(
             type=type,
