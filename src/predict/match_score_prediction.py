@@ -12,4 +12,5 @@ def predict(data, type, country, receipt):
         label_values=match_dataset.SCORE_OUTCOMES,
         model_dir="match_score",
         outcome=True,
+        previous_vocab_date="XX-XX-XXXX",
         receipt=receipt)

@@ -22,15 +22,18 @@ def get_receipt_cfg():
 def get_learning_cfg(country):
     learning = cfg['learning']
     default = learning['default']
+    response = {}
 
+    for attribute, value in default.items():
+        response[attribute] = value
 
     #if has_key(country, learning):
     if country in learning:
      country = learning[country]
      # for any key we have, update the default.
      for attribute, value in country.items():
-         default[attribute] = value
+         response[attribute] = value
 
-    return default
+    return response
 
 

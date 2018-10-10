@@ -1,78 +1,124 @@
 base:
- aws: False
- aws_url: ""
- local: "/home/timmytime/IdeaProjects/predictor-ml-model/res/"
- docker_host: "http://localhost"
- train_path: "train/<type>/<key>/"
- vocab_path: "vocab/<type>/<key>/"
- country_results_train_history_file: "country-matches-train-history.json"
- country_scores_train_history_file: "country-scores-train-history.json"
- players_goals_train_history_file: "players-goals-train-history.json"
- players_first_goal_train_history_file: "players-first-goal-train-history.json"
- players_last_goal_train_history_file: "players-last-goal-train-history.json"
+  aws: False
+  aws_url: ""
+  local: "/home/timmytime/IdeaProjects/predictor-ml-model/res/"
+  docker_host: "http://ec2-34-229-85-188.compute-1.amazonaws.com"
+  train_path: "train/<type>/<key>/"
+  vocab_path: "vocab/<type>/<key>/"
+  country_results_train_history_file: "country-matches-train-history.json"
+  country_scores_train_history_file: "country-scores-train-history.json"
+  players_goals_train_history_file: "players-goals-train-history.json"
+  players_first_goal_train_history_file: "players-first-goal-train-history.json"
+  players_last_goal_train_history_file: "players-last-goal-train-history.json"
 
 learning:
 
- default:
-         batch_size: 100
-         steps: 1000
-         months_per_cycle: 4
-         start_day: 1
-         start_month: 1
-         start_year: 2012
-         end_day: 14
-         end_month: 7
-         end_year: 2018
-         hash_bins: 25000
-         hidden_units: [10, 20, 10]
-         aws_debug: False
-         historic: True
+  default:
+    batch_size: 100
+    steps: 1000
+    months_per_cycle: 2
+    start_day: 28
+    start_month: 9
+    start_year: 2018
+    end_day: 4
+    end_month: 10
+    end_year: 2018
+    hash_bins: 10000
+    hidden_units: [10, 20, 10]
+    aws_debug: False
+    historic: True
+    evaluate: False
 
- england:
-         start_day: 1
-         start_month: 1
-         start_year: 2012
-         end_day: 14
-         end_month: 8
-         end_year: 2018
-         hash_bins: 25000
-         hidden_units: [10, 20, 10]
-         aws_debug: True
+  england:
+    batch_size: 250
+    months_per_cycle: 4
+    hash_bins: 25000
+    hidden_units: [10, 20, 10]
+    start_day: 4
+    start_month: 10
+    start_year: 2018
 
- player:
-           batch_size: 100
-           steps: 1000
-           months_per_cycle: 4
-           start_day: 1
-           start_month: 1
-           start_year: 2012
-           end_day: 14
-           end_month: 7
-           end_year: 2018
-           hash_bins: 25000
-           hidden_units: [10, 20, 10]
-           aws_debug: False
-           historic: True
+
+  spain:
+    batch_size: 150
+
+  france:
+    batch_size: 150
+
+  scotland:
+    batch_size: 200
+    months_per_cycle: 4
+  italy:
+    batch_size: 150
+    start_day: 1
+    start_month: 8
+    start_year: 2009
+    evaluate: True
+
+  german:
+    batch_size: 150
+    start_day: 1
+    start_month: 8
+    start_year: 2009
+    evaluate: True
+
+  greece:
+    months_per_cycle: 4
+
+  holland:
+    months_per_cycle: 4
+  denmark:
+    months_per_cycle: 4
+  sweden:
+    months_per_cycle: 4
+  norway:
+    months_per_cycle: 4
+  turkey:
+    months_per_cycle: 4
+  russia:
+    months_per_cycle: 4
+    start_day: 4
+    start_month: 10
+    start_year: 2018
+  portugal:
+    months_per_cycle: 4
+  belgium:
+    months_per_cycle: 4
+
+  player:
+    batch_size: 100
+    steps: 1000
+    months_per_cycle: 4
+    start_day: 1
+    start_month: 1
+    start_year: 2012
+    end_day: 14
+    end_month: 7
+    end_year: 2018
+    hash_bins: 25000
+    hidden_units: [10, 20, 10]
+    aws_debug: False
+    historic: True
 
 
 vocab:
- team_vocab_url: ":8090/api/prediction/teams"
- player_by_country_vocab_url: ":8090/api/prediction/players/by-country-dict"
- player_vocab_url: ":8090/api/prediction/players/by-player-dict"
+  team_vocab_url: ":8090/api/prediction/teams"
+  player_by_country_vocab_url: ":8090/api/prediction/players/by-country-dict"
+  player_vocab_url: ":8090/api/prediction/players/by-player-dict"
 
-analysis: 
- player_model_url: ":8090/api/prediction/ml-data/players/player/"
- team_model_url: ":8090/api/prediction/ml-data/competition/"
- types_url: ":8090/api/prediction/cache/types"
- countries_url: ":8090/api/prediction/cache/countries"
- players_by_team_url: ":8090/api/prediction/teams/<team>/players"
- comps_by_country_url: ":8090/api/prediction/cache/competition-count"
+analysis:
+  player_model_url: ":8090/api/prediction/ml-data/players/player/"
+  team_model_url: ":8090/api/prediction/ml-data/competition/"
+  types_url: ":8090/api/prediction/cache/types"
+  countries_url: ":8090/api/prediction/cache/countries"
+  players_by_team_url: ":8090/api/prediction/teams/<team>/players"
+  comps_by_country_url: ":8090/api/prediction/cache/competition-count"
 
 receipt:
- train_receipt_url: ":8090/api/prediction/ml-data/train/receipt"
- predict_receipt_url: ":8090/api/prediction/ml-data/predict/receipt"
+  train_receipt_url: ":8090/api/prediction/ml-data/train/receipt"
+  predict_receipt_url: ":8090/api/prediction/ml-data/predict/receipt"
 
 auth:
- username: ""
- password: ""
- url: "http://ec2-54-85-206-187.compute-1.amazonaws.com:8091/api/prediction/authenticate"
+  username: "timmytime"
+  password: "testing"
+  url: "http://ec2-34-229-85-188.compute-1.amazonaws.com:8091/api/prediction/authenticate"

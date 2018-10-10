@@ -23,6 +23,8 @@ def create(type, country, train, label, label_values, model_dir, train_filename,
 
     learning_cfg = get_learning_cfg(country)
 
+    logger.info(learning_cfg)
+
     logger.info('team vocab started...')
     team_file = vocab_utils.create_vocab(
         url=vocab_utils.TEAMS_URL,
@@ -30,7 +32,7 @@ def create(type, country, train, label, label_values, model_dir, train_filename,
         type=type,
         country=country,
         player_id=None,
-        previous_vocab_date=previous_vocab_date);
+        previous_vocab_date="XX-XX-XXXX");
     logger.info('team vocab completed')
     logger.info ('player vocab started...')
     player_file = vocab_utils.create_vocab(
@@ -75,18 +77,19 @@ def create(type, country, train, label, label_values, model_dir, train_filename,
         classifier.train(
             input_fn=lambda:dataset_utils.train_input_fn(train_x, train_y,learning_cfg['batch_size']),steps=learning_cfg['steps'])
 
-        # Evaluate the model.   not much use anymore.  but could use the first test file.  makes sense
-        eval_result = classifier.evaluate(
-            input_fn=lambda:dataset_utils.eval_input_fn(test_x, test_y,learning_cfg['batch_size']))
+        if learning_cfg['evaluate']:
+         # Evaluate the model.   not much use anymore.  but could use the first test file.  makes sense
+         eval_result = classifier.evaluate(
+             input_fn=lambda:dataset_utils.eval_input_fn(test_x, test_y,learning_cfg['batch_size']))
 
-        logger.info('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
+         logger.info('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
 
-        if learning_cfg['aws_debug']:
-         with open(local_dir+'sample.json') as f:
-          sample = json.load(f)
+         if learning_cfg['aws_debug']:
+          with open(local_dir+'sample.json') as f:
+           sample = json.load(f)
 
 
-         predict(
+          predict(
              classifier=classifier,
              predict_x=sample,
              label_values=label_values)
