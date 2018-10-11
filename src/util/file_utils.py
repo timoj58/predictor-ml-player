@@ -5,6 +5,7 @@ import os
 import requests
 import logging
 import csv
+import time
 
 
 logger = logging.getLogger(__name__)
@@ -79,7 +80,8 @@ def put_aws_file_with_path(aws_path, filename):
         logger.info('putting file to aws - '+aws_url+aws_path+tail)
 
         with open(local_dir+aws_path+filename,'rb') as filedata:
-          requests.put(aws_url+aws_path+tail, data=filedata, headers={})
+          s3_call_with_error_handling(aws_url+aws_path+tail, filedata)
+          #requests.put(aws_url+aws_path+tail, data=filedata, headers={})
 
 
 def put_aws_file(filename):
@@ -87,7 +89,8 @@ def put_aws_file(filename):
      head, tail = os.path.split(filename)
      logger.info('putting file to aws - '+aws_url+tail)
      with open(filename, 'rb') as filedata:
-         requests.put(aws_url+tail, data=filedata, headers={})
+         s3_call_with_error_handling(aws_url+tail, filedata)
+         #requests.put(aws_url+tail, data=filedata, headers={})
 
 def is_on_file(filename):
     if aws is False:
@@ -115,6 +118,37 @@ def write_csv(filename, data):
       has_data = True
 
     return has_data
+
+
+def put_file(url, filedata):
+    try:
+        requests.put(url, data=filedata, headers={})
+        return None
+    except requests.exceptions.HTTPError as err:
+        logger.info('put failed')
+        return err
+    except requests.exceptions.ConnectionError as conn_err:
+        logger.info('put failed')
+        return conn_err
+
+
+def s3_call_with_error_handling(url, filedata):
+    retry_count = 0
+
+    result = False
+
+    while retry_count < 3 and result is not None:
+        result = put_file(url, filedata)
+        if result is not None:
+            time.sleep(1)
+
+        retry_count = retry_count + 1
+
+    if result is not None:
+        raise result
+
+
+
 
 
 
