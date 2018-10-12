@@ -50,7 +50,10 @@ def train_country(type, country, receipt):
        data_range = model_utils.create_range(int(learning_cfg['months_per_cycle']/2), learning_cfg)
 
    else:
-       data_range = model_utils.real_time_range
+       data_range = model_utils.real_time_range(
+           start_day=train_history_utils.get_history(filename=history_file, key='end_day'),
+           start_month=train_history_utils.get_history(filename=history_file, key='end_month'),
+           start_year=train_history_utils.get_history(filename=history_file, key='end_year'))
 
    training_utils.train_match(
                         type=type,

@@ -26,11 +26,16 @@ local_dir = get_dir_cfg()['local']
 PLAYER_MODEL_URL = docker_host+get_analysis_cfg()['player_model_url']
 EVENT_MODEL_URL = docker_host+get_analysis_cfg()['team_model_url']
 
-real_time_range = ['/'+ datetime.date.today().strftime('%d-%m-%Y')
-                    +'/'
-                   + (datetime.date.today() + timedelta(1)).strftime('%d-%m-%Y')]
-
 player_historic_range = '/01-08-2009/14-07-2018'
+
+
+def real_time_range(start_day, start_month, start_year):
+
+    start_date = datetime.date(start_year, start_month, start_day)
+
+    return ['/'+ start_date.strftime('%d-%m-%Y')
+     +'/'
+     + (datetime.date.today()).strftime('%d-%m-%Y')]
 
 
 def create_range(increment, learning_cfg):

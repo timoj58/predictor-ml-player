@@ -108,7 +108,7 @@ def train_match(type, country, data_range, filename_prefix, label, model_dir, tr
     receipt_utils.put_receipt(receipt_utils.TRAIN_RECEIPT_URL, receipt, None)
 
   history['status'] = "Success - Full"
-  train_history_utils.add_history("country_"+filename_prefix+"-train_history.json", country, history)
+  train_history_utils.add_history("country-"+filename_prefix+"-train-history.json", country, history)
 
 
 def train_player(type, country, player, range, filename_prefix, label, model_dir, train_path, history, previous_vocab_date):

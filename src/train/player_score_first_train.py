@@ -56,7 +56,10 @@ def process(type, country, player):
     if learning_cfg['historic']:
         range = model_utils.player_historic_range
     else:
-        range = model_utils.real_time_range[0]
+        range = model_utils.real_time_range(
+            start_day=train_history_utils.get_history(filename=history_file, key='end_day'),
+            start_month=train_history_utils.get_history(filename=history_file, key='end_month'),
+            start_year=train_history_utils.get_history(filename=history_file, key='end_year'))
 
 
     training_utils.train_player(
