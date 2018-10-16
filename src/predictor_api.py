@@ -4,6 +4,7 @@ import predict.match_result_prediction as match_result_prediction
 import predict.match_score_prediction as match_score_prediction
 import train.match_result_train as match_result_train
 import train.match_score_train as match_score_train
+import train.match_goals_train as match_goals_train
 import train.player_goals_train as player_goals_train
 import train.player_score_first_train as player_score_first_train
 import train.player_score_last_train as player_score_last_train
@@ -127,6 +128,27 @@ def train_country_scores(type, country, receipt):
     process(thread)
 
     return json.dumps(done_response())
+
+
+
+@app.route('/train/total-goals/<receipt>', methods=['POST'])
+def train_total_goals(receipt):
+    thread = threading.Thread(target=match_goals_train.train,
+                              args=(receipt))
+    process(thread)
+
+    return json.dumps(done_response())
+
+
+# need to also schedule this -- this is for me to get it started.
+@app.route('/train/total-goals/<type>/<country>/<receipt>', methods=['POST'])
+def train_country_total_goals(type, country, receipt):
+    thread = threading.Thread(target=match_goals_train.train_country,
+                              args=(type, country, receipt))
+    process(thread)
+
+    return json.dumps(done_response())
+
 
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/goals/<receipt>', methods=['POST'])

@@ -45,7 +45,7 @@ def train(receipt):
 
 def process(type, country, player):
 
-    learning_cfg = get_learning_cfg('player')
+    learning_cfg = get_learning_cfg('player', 'player_last_goal')
 
     train_path = get_dir_cfg()['train_path']
     train_path = train_path.replace('<type>', type)

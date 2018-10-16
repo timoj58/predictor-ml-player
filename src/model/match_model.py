@@ -21,7 +21,7 @@ def create(type, country, train, label, label_values, model_dir, train_filename,
     aws_model_dir = 'models/'+model_dir+'/'+type+'/'+country
     tf_models_dir = local_dir+'/'+aws_model_dir
 
-    learning_cfg = get_learning_cfg(country)
+    learning_cfg = get_learning_cfg(country, model_dir)
 
     logger.info(learning_cfg)
 
@@ -66,6 +66,7 @@ def create(type, country, train, label, label_values, model_dir, train_filename,
 
     if train:
 
+        logger.info(label_values)
 
         (train_x, train_y), (test_x, test_y) = match_dataset.load_data(
             train_path=local_dir+train_filename,

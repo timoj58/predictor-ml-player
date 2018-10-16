@@ -1,5 +1,5 @@
 import util.receipt_utils as receipt_utils
-import dataset.match_dataset as match_dataset
+import util.cache_utils as cache_utils
 import dataset.player_dataset as player_dataset
 import util.model_utils as model_utils
 import model.match_model as match_model
@@ -19,6 +19,30 @@ import logging
 logger = logging.getLogger(__name__)
 local_dir = get_dir_cfg()['local']
 
+
+def create_train_path(type, country):
+    train_path = get_dir_cfg()['train_path']
+    train_path = train_path.replace('<type>', type)
+    train_path = train_path.replace('<key>', country)
+
+    return train_path
+
+def create_data_range(learning_cfg, history_file, type, country):
+    competition_count = cache_utils.get_competitions_per_country(cache_utils.COMPETITIONS_BY_COUNTRY_URL, type, country)
+
+    if learning_cfg['historic']:
+      data_range = model_utils.create_range(int(learning_cfg['months_per_cycle']), learning_cfg)
+
+      if competition_count > 2:
+        data_range = model_utils.create_range(int(learning_cfg['months_per_cycle']/2), learning_cfg)
+
+    else:
+     data_range = model_utils.real_time_range(
+        start_day=train_history_utils.get_history(filename=history_file, key=country)['end_day'],
+        start_month=train_history_utils.get_history(filename=history_file, key=country)['end_month'],
+        start_year=train_history_utils.get_history(filename=history_file, key=country)['end_year'])
+
+    return data_range
 
 def get_range_details(range):
 
@@ -46,7 +70,7 @@ def get_next_in_range(range, data):
 
     return data
 
-def train_match(type, country, data_range, filename_prefix, label, model_dir, train_path, receipt, history, previous_vocab_date):
+def train_match(type, country, data_range, filename_prefix, label, label_values, model_dir, train_path, receipt, history, previous_vocab_date, show_outcome):
 
   for data in data_range:
 
@@ -90,11 +114,11 @@ def train_match(type, country, data_range, filename_prefix, label, model_dir, tr
             country=country,
             train=True,
             label=label,
-            label_values=match_dataset.OUTCOMES,
+            label_values=label_values,
             model_dir=model_dir,
             train_filename=train_path+train_filename,
             test_filename=train_path+test_filename,
-            outcome=False,
+            outcome=show_outcome,
             previous_vocab_date=previous_vocab_date)
     else:
         logger.info ('no data to train')

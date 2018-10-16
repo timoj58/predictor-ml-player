@@ -19,8 +19,7 @@ def create(type, country, player, train, label, label_values, model_dir, train_f
     aws_model_dir = 'models/'+model_dir+'/'+type+'/'+country+'/'+player
     tf_models_dir = local_dir+'/'+aws_model_dir
 
-    learning_cfg = get_learning_cfg('player')
-
+    learning_cfg = get_learning_cfg('player', model_dir)
 
     if convert:
         convertValue = label_values

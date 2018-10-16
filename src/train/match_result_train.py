@@ -1,5 +1,6 @@
 import util.model_utils as model_utils
 import util.cache_utils as cache_utils
+import dataset.match_dataset as match_dataset
 import util.receipt_utils as receipt_utils
 import util.training_utils as training_utils
 import util.train_history_utils as train_history_utils
@@ -32,37 +33,21 @@ def train(receipt):
 
 def train_country(type, country, receipt):
 
-   learning_cfg = get_learning_cfg(country)
-
-   train_path = get_dir_cfg()['train_path']
-   train_path = train_path.replace('<type>', type)
-   train_path = train_path.replace('<key>', country)
+   learning_cfg = get_learning_cfg(country, "match_result")
 
    previous_vocab_date=train_history_utils.get_previous_vocab_date(history_file, country)
    history = train_history_utils.init_history('in progress',learning_cfg)
 
-   competition_count = cache_utils.get_competitions_per_country(cache_utils.COMPETITIONS_BY_COUNTRY_URL, type, country)
-
-   if learning_cfg['historic']:
-    data_range = model_utils.create_range(int(learning_cfg['months_per_cycle']), learning_cfg)
-
-    if competition_count > 2:
-       data_range = model_utils.create_range(int(learning_cfg['months_per_cycle']/2), learning_cfg)
-
-   else:
-       data_range = model_utils.real_time_range(
-           start_day=train_history_utils.get_history(filename=history_file, key='end_day'),
-           start_month=train_history_utils.get_history(filename=history_file, key='end_month'),
-           start_year=train_history_utils.get_history(filename=history_file, key='end_year'))
-
    training_utils.train_match(
                         type=type,
                         country=country,
-                        data_range=data_range,
+                        data_range=training_utils.create_data_range(learning_cfg=learning_cfg, history_file=history_file, type=type, country=country),
                         filename_prefix="matches",
                         label='outcome',
+                        label_values=match_dataset.OUTCOMES,
                         model_dir="match_result",
-                        train_path=train_path,
+                        train_path=training_utils.create_train_path(type, country),
                         receipt=receipt,
                         history=history,
-                        previous_vocab_date=previous_vocab_date)
+                        previous_vocab_date=previous_vocab_date,
+                        show_outcome=False)

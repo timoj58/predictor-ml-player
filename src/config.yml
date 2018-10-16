@@ -7,99 +7,105 @@ base:
   vocab_path: "vocab/<type>/<key>/"
   country_results_train_history_file: "country-matches-train-history.json"
   country_scores_train_history_file: "country-scores-train-history.json"
+  country_goals_train_history_file: "country-goals-train-history.json"
   players_goals_train_history_file: "players-goals-train-history.json"
   players_first_goal_train_history_file: "players-first-goal-train-history.json"
   players_last_goal_train_history_file: "players-last-goal-train-history.json"
 
 learning:
 
-  default:
-    batch_size: 100
-    steps: 1000
-    months_per_cycle: 2
-    start_day: 28
-    start_month: 9
-    start_year: 2018
-    end_day: 4
-    end_month: 10
-    end_year: 2018
-    hash_bins: 10000
-    hidden_units: [10, 20, 10]
-    aws_debug: False
-    historic: True
-    evaluate: False
+  match_result:
 
-  england:
-    batch_size: 250
-    months_per_cycle: 4
-    hash_bins: 25000
-    hidden_units: [10, 20, 10]
-    start_day: 4
-    start_month: 10
-    start_year: 2018
+   default:
+     batch_size: 100
+     steps: 1000
+     months_per_cycle: 2
+     start_day: 28
+     start_month: 9
+     start_year: 2018
+     end_day: 4
+     end_month: 10
+     end_year: 2018
+     hash_bins: 10000
+     hidden_units: [10, 20, 10]
+     aws_debug: False
+     historic: True
+     evaluate: False
 
+   england:
+     batch_size: 250
+     months_per_cycle: 4
+     hash_bins: 25000
+     hidden_units: [10, 20, 10]
+     start_day: 4
+     start_month: 10
+     start_year: 2018
 
-  spain:
-    batch_size: 150
+   spain:
+     batch_size: 150
 
-  france:
-    batch_size: 150
+   france:
+     batch_size: 150
 
-  scotland:
-    batch_size: 200
-    months_per_cycle: 4
-  italy:
-    batch_size: 150
-    start_day: 1
-    start_month: 8
-    start_year: 2009
-    evaluate: True
+   scotland:
+     batch_size: 200
+     months_per_cycle: 4
+   italy:
+     batch_size: 150
+     start_day: 1
+     start_month: 8
+     start_year: 2009
+     evaluate: True
 
-  german:
-    batch_size: 150
-    start_day: 1
-    start_month: 8
-    start_year: 2009
-    evaluate: True
+   german:
+     batch_size: 150
+     start_day: 1
+     start_month: 8
+     start_year: 2009
+     evaluate: True
 
-  greece:
-    months_per_cycle: 4
+   greece:
+     months_per_cycle: 4
 
-  holland:
-    months_per_cycle: 4
-  denmark:
-    months_per_cycle: 4
-  sweden:
-    months_per_cycle: 4
-  norway:
-    months_per_cycle: 4
-  turkey:
-    months_per_cycle: 4
-  russia:
-    months_per_cycle: 4
-    start_day: 4
-    start_month: 10
-    start_year: 2018
-  portugal:
-    months_per_cycle: 4
-  belgium:
-    months_per_cycle: 4
+   holland:
+     months_per_cycle: 4
+   denmark:
+     months_per_cycle: 4
+   sweden:
+     months_per_cycle: 4
+   norway:
+     months_per_cycle: 4
+   turkey:
+     months_per_cycle: 4
+   russia:
+     months_per_cycle: 4
+     start_day: 4
+     start_month: 10
+     start_year: 2018
+   portugal:
+     months_per_cycle: 4
+   belgium:
+     months_per_cycle: 4
 
-  player:
-    batch_size: 100
-    steps: 1000
-    months_per_cycle: 4
-    start_day: 1
-    start_month: 1
-    start_year: 2012
-    end_day: 14
-    end_month: 7
-    end_year: 2018
-    hash_bins: 25000
-    hidden_units: [10, 20, 10]
-    aws_debug: False
-    historic: True
+  match_score:
 
+  match_goals:
+
+  player_goals:
+   player:
+     batch_size: 100
+     steps: 1000
+     months_per_cycle: 4
+     start_day: 1
+     start_month: 1
+     start_year: 2012
+     end_day: 14
+     end_month: 7
+     end_year: 2018
+     hash_bins: 25000
+     hidden_units: [10, 20, 10]
+     aws_debug: False
+     historic: True
 
 vocab:
   team_vocab_url: ":8090/api/prediction/teams"

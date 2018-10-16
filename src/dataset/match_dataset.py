@@ -8,9 +8,11 @@ CSV_COLUMN_NAMES = ['home', 'homePlayer1', 'homePlayer2', 'homePlayer3', 'homePl
                     'away', 'awayPlayer1', 'awayPlayer2', 'awayPlayer3', 'awayPlayer4', 'awayPlayer5', 'awayPlayer6',
                     'awayPlayer7', 'awayPlayer8', 'awayPlayer9', 'awayPlayer10', 'awayPlayer11',
                     'awaySub1', 'awaySub2', 'awaySub3',
-                    'outcome', 'scoreOutcome']
+                    'outcome', 'scoreOutcome', 'goals']
 
 OUTCOMES = ['homeWin', 'awayWin', 'draw']
+
+GOALS = [0,1,2,3,4,5,6,7,8,9,10,11,12]
 
 SCORE_OUTCOMES = ['0-0', '1-1', '2-2', '3-3', '4-4', '5-5', '6-6', '1-0', '2-0', '3-0', '4-0', '5-0', '6-0', '7-0', '8-0','9-0','10-0',
                   '0-1', '0-2', '0-3', '0-4', '0-5', '0-6', '0-7', '0-8', '0-9','0-10',

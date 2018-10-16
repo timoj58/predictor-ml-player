@@ -20,10 +20,18 @@ local_dir = get_dir_cfg()['local']
 def on_finish(tf_models_dir, aws_model_dir):
     logger.info(' write index '+tf_models_dir)
     write_filenames_index(tf_models_dir)
-    write_filenames_index(tf_models_dir+'/eval')
+    try:
+     write_filenames_index(tf_models_dir+'/eval')
+    except Exception as e:
+      logger.info('eval dir not created')
+
     logger.info(' put aws files '+aws_model_dir)
     put_aws_files_from_dir(aws_model_dir+'/')
-    put_aws_files_from_dir(aws_model_dir+'/eval/')
+    try:
+     put_aws_files_from_dir(aws_model_dir+'/eval/')
+    except Exception as e:
+        logger.info('eval dir not created')
+
     logger.info(' clearing directory')
     clear_directory(tf_models_dir)
 
