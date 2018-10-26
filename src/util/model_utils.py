@@ -13,6 +13,8 @@ import logging
 from util.config_utils import get_dir_cfg
 from util.file_utils import clear_directory
 from util.file_utils import on_finish
+from util.file_utils import is_on_file
+from util.file_utils import get_aws_file
 import os
 import calendar
 import json
@@ -74,20 +76,26 @@ def add_months(sourcedate,months):
 
 
 def create_csv(url, filename, range, aws_path):
-    logger.info ('getting csv data...')
 
-    data = requests.get(url+range, headers={'application-token': auth()})
+    logger.info ('getting csv data...'+filename)
+    if is_on_file(filename):
+        logger.info("csv file already created "+filename)
+        head, tail = os.path.split(filename)
+        get_aws_file(head.replace(local_dir,'')+'/',tail)
+        return True
+    else:
 
-    has_data = write_csv(filename, data)
+     data = requests.get(url+range, headers={'application-token': auth()})
+     has_data = write_csv(filename, data)
 
-    if has_data:
+     if has_data:
       logger.info ('created csv')
       head, tail = os.path.split(filename)
       put_aws_file_with_path(aws_path,tail)
       write_filenames_index_from_filename(filename)
 
+     return has_data
 
-    return has_data
 
 def tidy_up(tf_models_dir, aws_model_dir, team_file, train_filename):
     #probably can tidy this all up.  in one call.

@@ -70,9 +70,9 @@ def write_filenames_index(path):
 def get_aws_file(path, filename):
    if aws:
     logger.info('getting aws file '+aws_url+filename)
-    response = requests.get(aws_url+path+filename, headers={})
+    response = get_file(url=aws_url+path+filename, retry_count=3)
     with open(local_dir+path+filename, 'wb') as f:
-     f.write(response.content)
+      f.write(response.content)
 
 
 def put_aws_files_from_dir(path):
@@ -139,6 +139,25 @@ def put_file(url, filedata):
         logger.info('put failed')
         return conn_err
 
+
+def get_file(url, retry_count):
+    try:
+        response = requests.get(url, headers={})
+        return response
+    except requests.exceptions.HTTPError as err:
+        logger.info('put failed')
+        time.sleep(1)
+        if retry_count > 0:
+            return get_file(url, retry_count - 1)
+        else:
+            raise err
+    except requests.exceptions.ConnectionError as conn_err:
+        logger.info('put failed')
+        time.sleep(1)
+        if retry_count > 0:
+            return get_file(url, retry_count - 1)
+        else:
+            raise conn_err
 
 def s3_call_with_error_handling(url, filedata):
     retry_count = 0

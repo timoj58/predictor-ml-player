@@ -35,14 +35,13 @@ def train_country(type, country, receipt):
 
    learning_cfg = get_learning_cfg(country, "match_result")
 
-   previous_vocab_date=train_history_utils.get_previous_vocab_date(history_file, country)
+   previous_vocab_date=train_history_utils.get_previous_vocab_date(country)
    history = train_history_utils.init_history('in progress',learning_cfg)
 
    training_utils.train_match(
                         type=type,
                         country=country,
                         data_range=training_utils.create_data_range(learning_cfg=learning_cfg, history_file=history_file, type=type, country=country),
-                        filename_prefix="matches",
                         label='outcome',
                         label_values=match_dataset.OUTCOMES,
                         model_dir="match_result",
@@ -50,4 +49,5 @@ def train_country(type, country, receipt):
                         receipt=receipt,
                         history=history,
                         previous_vocab_date=previous_vocab_date,
-                        show_outcome=False)
+                        show_outcome=False,
+                        history_file=history_file)

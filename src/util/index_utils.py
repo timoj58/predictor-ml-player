@@ -41,8 +41,6 @@ def process_index(index, filenames, path):
      for file in filenames:
       add_to_index(index, file, path)
 
-    logger.info(index)
-
     write_index(index, path)
 
 def add_to_index(index, file, path):

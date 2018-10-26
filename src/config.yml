@@ -11,6 +11,7 @@ base:
   players_goals_train_history_file: "players-goals-train-history.json"
   players_first_goal_train_history_file: "players-first-goal-train-history.json"
   players_last_goal_train_history_file: "players-last-goal-train-history.json"
+  vocab_history_file:  ""
 
 learning:
 

@@ -37,7 +37,7 @@ def train_country(type, country, receipt):
     learning_cfg = get_learning_cfg(country, "match_score")
 
 
-    previous_vocab_date=train_history_utils.get_previous_vocab_date(history_file, country)
+    previous_vocab_date=train_history_utils.get_previous_vocab_date(country)
     history = train_history_utils.init_history('in progress',learning_cfg)
 
 
@@ -46,7 +46,6 @@ def train_country(type, country, receipt):
                          type=type,
                          country=country,
                          data_range=training_utils.create_data_range(learning_cfg=learning_cfg, history_file=history_file, type=type, country=country),
-                         filename_prefix="scores",
                          label='scoreOutcome',
                          label_values=match_dataset.SCORE_OUTCOMES,
                          model_dir="match_score",
@@ -54,5 +53,6 @@ def train_country(type, country, receipt):
                          receipt=receipt,
                          history=history,
                          previous_vocab_date=previous_vocab_date,
-                         show_outcome=True)
+                         show_outcome=True,
+                         history_file=history_file)
 

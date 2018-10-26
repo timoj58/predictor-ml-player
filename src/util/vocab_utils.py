@@ -14,6 +14,7 @@ import logging
 from util.config_utils import get_dir_cfg
 import os.path
 import os
+from util.train_history_utils import add_vocab_history
 
 logger = logging.getLogger(__name__)
 
@@ -86,6 +87,9 @@ def create_vocab(url, filename, type, country, player_id, previous_vocab_date):
     logger.info('get from aws '+tail)
     #need to load the file from aws potentially
     get_aws_file(vocab_path, tail)
+
+
+  add_vocab_history(key=country)
 
   return filename
 

@@ -68,17 +68,24 @@ def create(type, country, train, label, label_values, model_dir, train_filename,
 
         logger.info(label_values)
 
-        (train_x, train_y), (test_x, test_y) = match_dataset.load_data(
-            train_path=local_dir+train_filename,
-            test_path=local_dir+test_filename,
-            y_name=label,
-            convert=label_values)
+        if learning_cfg['evaluate'] and test_filename is not None:
+            (train_x, train_y), (test_x, test_y) = match_dataset.load_data(
+                train_path=local_dir+train_filename,
+                test_path=local_dir+test_filename,
+                y_name=label,
+                convert=label_values)
+
+        else:
+            (train_x, train_y) = match_dataset.load_train_data(
+                train_path=local_dir+train_filename,
+                y_name=label,
+                convert=label_values)
 
         # Train the Model.
         classifier.train(
             input_fn=lambda:dataset_utils.train_input_fn(train_x, train_y,learning_cfg['batch_size']),steps=learning_cfg['steps'])
 
-        if learning_cfg['evaluate']:
+        if learning_cfg['evaluate'] and test_filename is not None:
          # Evaluate the model.   not much use anymore.  but could use the first test file.  makes sense
          eval_result = classifier.evaluate(
              input_fn=lambda:dataset_utils.eval_input_fn(test_x, test_y,learning_cfg['batch_size']))
