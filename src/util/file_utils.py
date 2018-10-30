@@ -74,6 +74,8 @@ def get_aws_file(path, filename):
     with open(local_dir+path+filename, 'wb') as f:
       f.write(response.content)
 
+    return os.path.getsize(local_dir+path+filename) > 0
+
 
 def put_aws_files_from_dir(path):
   logger.info('getting indexes for '+local_dir+path)

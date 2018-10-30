@@ -81,18 +81,16 @@ def create_csv(url, filename, range, aws_path):
     if is_on_file(filename):
         logger.info("csv file already created "+filename)
         head, tail = os.path.split(filename)
-        get_aws_file(head.replace(local_dir,'')+'/',tail)
-        return True
+        return get_aws_file(head.replace(local_dir,'')+'/',tail)
     else:
 
      data = requests.get(url+range, headers={'application-token': auth()})
      has_data = write_csv(filename, data)
 
-     if has_data:
-      logger.info ('created csv')
-      head, tail = os.path.split(filename)
-      put_aws_file_with_path(aws_path,tail)
-      write_filenames_index_from_filename(filename)
+     logger.info ('created csv')
+     head, tail = os.path.split(filename)
+     put_aws_file_with_path(aws_path,tail)
+     write_filenames_index_from_filename(filename)
 
      return has_data
 
