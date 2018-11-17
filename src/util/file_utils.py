@@ -71,8 +71,11 @@ def get_aws_file(path, filename):
    if aws:
     logger.info('getting aws file '+aws_url+filename)
     response = get_file(url=aws_url+path+filename, retry_count=3)
-    with open(local_dir+path+filename, 'wb') as f:
+    if response.status_code == 200:
+     with open(local_dir+path+filename, 'wb') as f:
       f.write(response.content)
+    elif response.status_code == 404:
+      open(local_dir+path+filename, 'a').close()
 
     return os.path.getsize(local_dir+path+filename) > 0
 
