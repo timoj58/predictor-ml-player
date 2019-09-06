@@ -6,13 +6,17 @@ import requests
 import logging
 import csv
 import time
+import boto3
+from botocore.exceptions import ClientError
 
 
 logger = logging.getLogger(__name__)
 
+s3_client = boto3.client('s3')
 
 aws = get_dir_cfg()['aws']
 aws_url = get_dir_cfg()['aws_url']
+aws_bucket = get_dir_cfg()['aws_bucket']
 
 local_dir = get_dir_cfg()['local']
 
@@ -70,12 +74,13 @@ def write_filenames_index(path):
 def get_aws_file(path, filename):
    if aws:
     logger.info('getting aws file '+aws_url+filename)
-    response = get_file(url=aws_url+path+filename, retry_count=3)
-    if response.status_code == 200:
-     with open(local_dir+path+filename, 'wb') as f:
-      f.write(response.content)
-    elif response.status_code == 404:
-      open(local_dir+path+filename, 'a').close()
+    download_file(path+filename, local_dir+path+filename, retry_count=3)
+ #   response = get_file(url=aws_url+path+filename, retry_count=3)
+ #   if response.status_code == 200:
+ #    with open(local_dir+path+filename, 'wb') as f:
+ #     f.write(response.content)
+ #   elif response.status_code == 404:
+ #     open(local_dir+path+filename, 'a').close()
 
     return os.path.getsize(local_dir+path+filename) > 0
 
@@ -92,8 +97,10 @@ def put_aws_file_with_path(aws_path, filename):
         head, tail = os.path.split(filename)
         logger.info('putting file to aws - '+aws_url+aws_path+tail)
 
-        with open(local_dir+aws_path+filename,'rb') as filedata:
-          s3_call_with_error_handling(aws_url+aws_path+tail, filedata)
+        s3_call_with_error_handling(filename)
+
+       # with open(local_dir+aws_path+filename,'rb') as filedata:
+       #   s3_call_with_error_handling(aws_url+aws_path+tail, filedata)
           #requests.put(aws_url+aws_path+tail, data=filedata, headers={})
 
 
@@ -101,8 +108,10 @@ def put_aws_file(filename):
     if aws:
      head, tail = os.path.split(filename)
      logger.info('putting file to aws - '+aws_url+tail)
-     with open(filename, 'rb') as filedata:
-         s3_call_with_error_handling(aws_url+tail, filedata)
+
+     s3_call_with_error_handling(filename)
+     #with open(filename, 'rb') as filedata:
+     #    s3_call_with_error_handling(aws_url+tail, filedata)
          #requests.put(aws_url+tail, data=filedata, headers={})
 
 def is_on_file(filename):
@@ -133,44 +142,59 @@ def write_csv(filename, data):
     return has_data
 
 
-def put_file(url, filedata):
-    try:
-        requests.put(url, data=filedata, headers={})
-        return None
-    except requests.exceptions.HTTPError as err:
-        logger.info('put failed')
-        return err
-    except requests.exceptions.ConnectionError as conn_err:
-        logger.info('put failed')
-        return conn_err
+#def put_file(url, filedata):
+#    try:
+#        requests.put(url, data=filedata, headers={})
+#        return None
+#    except requests.exceptions.HTTPError as err:
+#        logger.info('put failed')
+#        return err
+#    except requests.exceptions.ConnectionError as conn_err:
+#        logger.info('put failed')
+#        return conn_err
 
+#def get_file(url, retry_count):
+#    try:
+#        response = requests.get(url, headers={})
+#        return response
+#    except requests.exceptions.HTTPError as err:
+#        logger.info('put failed')
+#        time.sleep(1)
+#        if retry_count > 0:
+#            return get_file(url, retry_count - 1)
+#        else:
+#            raise err
+#    except requests.exceptions.ConnectionError as conn_err:
+#        logger.info('put failed')
+#        time.sleep(1)
+#        if retry_count > 0:
+#            return get_file(url, retry_count - 1)
+#        else:
+#            raise conn_err
 
-def get_file(url, retry_count):
-    try:
-        response = requests.get(url, headers={})
-        return response
-    except requests.exceptions.HTTPError as err:
-        logger.info('put failed')
-        time.sleep(1)
-        if retry_count > 0:
-            return get_file(url, retry_count - 1)
-        else:
-            raise err
-    except requests.exceptions.ConnectionError as conn_err:
-        logger.info('put failed')
-        time.sleep(1)
-        if retry_count > 0:
-            return get_file(url, retry_count - 1)
-        else:
-            raise conn_err
+#def s3_call_with_error_handling(url, filedata):
+#    retry_count = 0
+#
+#    result = False
+#
+#    while retry_count < 3 and result is not None:
+#        result = put_file(url, filedata)
+#        if result is not None:
+#            time.sleep(1)
+#
+#        retry_count = retry_count + 1
+#
+#    if result is not None:
+#        raise result
 
-def s3_call_with_error_handling(url, filedata):
+def s3_call_with_error_handling(filename):
     retry_count = 0
 
     result = False
 
     while retry_count < 3 and result is not None:
-        result = put_file(url, filedata)
+        # result = put_file(url, filedata)
+        result = upload_file(filename)
         if result is not None:
             time.sleep(1)
 
@@ -178,6 +202,27 @@ def s3_call_with_error_handling(url, filedata):
 
     if result is not None:
         raise result
+
+
+#replacment s3 client utils
+def download_file(key, filepath, retry_count):
+    try:
+      s3_client.download_file(aws_bucket, key, filepath)
+    except ClientError as e:
+        logger.info('get failed')
+        time.sleep(1)
+        if retry_count > 0:
+            return download_file(key, filepath, retry_count - 1)
+        else:
+            raise err
+
+#need download equivalent.  can reduce code a lot.
+def upload_file(filename):
+    try:
+        s3_client.upload_file(filename, aws_bucket, filename.replace(local_dir, ''))
+        return None
+    except ClientError as e:
+        raise err
 
 
 

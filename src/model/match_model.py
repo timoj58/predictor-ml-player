@@ -32,7 +32,7 @@ def create(type, country, train, label, label_values, model_dir, train_filename,
         type=type,
         country=country,
         player_id=None,
-        previous_vocab_date="XX-XX-XXXX");
+        previous_vocab_date=previous_vocab_date);
     logger.info('team vocab completed')
     logger.info ('player vocab started...')
     player_file = vocab_utils.create_vocab(

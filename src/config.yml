@@ -1,7 +1,8 @@
 base:
-  aws: False
+  aws: True
   aws_url: ""
-  local: "/home/timmytime/IdeaProjects/predictor-ml-model/res/"
+  aws_bucket: "tabiiki-test"
+  local: "/home/timmytime/"
   docker_host: "http://ec2-34-229-85-188.compute-1.amazonaws.com"
   train_path: "train/<type>/<key>/"
   vocab_path: "vocab/<type>/<key>/"
