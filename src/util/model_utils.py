@@ -24,11 +24,7 @@ logger = logging.getLogger(__name__)
 docker_host = get_dir_cfg()['docker_host']
 local_dir = get_dir_cfg()['local']
 
-
-PLAYER_MODEL_URL = docker_host+get_analysis_cfg()['player_model_url']
 EVENT_MODEL_URL = docker_host+get_analysis_cfg()['team_model_url']
-
-player_historic_range = '/01-08-2009/14-07-2018'
 
 
 def real_time_range(start_day, start_month, start_year):

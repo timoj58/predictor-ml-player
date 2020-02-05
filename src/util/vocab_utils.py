@@ -23,35 +23,23 @@ docker_host = get_dir_cfg()['docker_host']
 
 
 TEAMS_URL = docker_host+get_vocab_cfg()['team_vocab_url']
-PLAYERS_URL = docker_host+get_vocab_cfg()['player_vocab_url']
-PLAYERS_BY_COUNTRY_URL = docker_host+get_vocab_cfg()['player_by_country_vocab_url']
 
 
 local_dir = get_dir_cfg()['local']
 TEAMS_FILE = 'team-vocab'
-PLAYERS_FILE = 'player-vocab'
-PLAYERS_BY_COUNTRY_FILE = 'player-by-country-vocab'
 
 
 def create_vocab(url, filename, type, country, player_id, previous_vocab_date):
 
   vocab_path = get_dir_cfg()['vocab_path']
 
-  if url == PLAYERS_URL:
-    url = url+"?player-id="+player_id
-    vocab_path = vocab_path.replace('<type>', type)
-    vocab_path = vocab_path.replace('<key>', player_id)
+  url = url+"?type="+type+"&country="+country
 
-    previous_filename = local_dir+vocab_path+filename+"-"+previous_vocab_date+".txt"
-    filename =  local_dir+vocab_path+filename+"-"+str(datetime.date.today())+".txt"
-  else:
-    url = url+"?type="+type+"&country="+country
+  vocab_path = vocab_path.replace('<type>', type)
+  vocab_path = vocab_path.replace('<key>', country)
 
-    vocab_path = vocab_path.replace('<type>', type)
-    vocab_path = vocab_path.replace('<key>', country)
-
-    previous_filename =  local_dir+vocab_path+filename+"-"+previous_vocab_date+".txt"
-    filename =  local_dir+vocab_path+filename+"-"+str(datetime.date.today())+".txt"
+  previous_filename =  local_dir+vocab_path+filename+"-"+previous_vocab_date+".txt"
+  filename =  local_dir+vocab_path+filename+"-"+str(datetime.date.today())+".txt"
 
   logger.info('checking for '+filename)
 

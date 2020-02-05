@@ -9,7 +9,6 @@ docker_host = get_dir_cfg()['docker_host']
 
 TYPES_URL = docker_host+get_analysis_cfg()['types_url']
 COUNTRIES_URL = docker_host+get_analysis_cfg()['countries_url']
-PLAYERS_BY_TEAM_URL = docker_host+get_analysis_cfg()['players_by_team_url']
 COMPETITIONS_BY_COUNTRY_URL = docker_host+get_analysis_cfg()['comps_by_country_url']
 
 
@@ -56,16 +55,3 @@ def get_competitions_per_country(url, type, country):
     response = requests.get(url+"?type="+type+"&country="+country, headers={'application-token': auth()})
     return response.json()['count']
 
-def get_players(url, team):
-
-    response = requests.get(url.replace("<team>", team), headers={'application-token': auth()})
-    values = response.json()
-
-    teams = []
-
-    for value in values:
-        label = value['id']
-        if label is not None:
-            teams.append(label.encode('unicode_escape'))
-
-    return teams
