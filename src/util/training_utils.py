@@ -21,27 +21,21 @@ logger = logging.getLogger(__name__)
 local_dir = get_dir_cfg()['local']
 
 
-def create_train_path(type, country):
+def create_train_path(player):
     train_path = get_dir_cfg()['train_path']
-    train_path = train_path.replace('<type>', type)
-    train_path = train_path.replace('<key>', country)
+    train_path = train_path.replace('<player>', player)
 
     return train_path
 
-def create_data_range(learning_cfg, history_file, type, country):
-    competition_count = cache_utils.get_competitions_per_country(cache_utils.COMPETITIONS_BY_COUNTRY_URL, type, country)
+def create_data_range(learning_cfg, history_file, player):
 
     if learning_cfg['historic']:
       data_range = model_utils.create_range(int(learning_cfg['months_per_cycle']), learning_cfg)
-
-      if competition_count > 2:
-        data_range = model_utils.create_range(int(learning_cfg['months_per_cycle']/2), learning_cfg)
-
     else:
      data_range = model_utils.real_time_range(
-        start_day=train_history_utils.get_history(filename=history_file, key=country)['end_day'],
-        start_month=train_history_utils.get_history(filename=history_file, key=country)['end_month'],
-        start_year=train_history_utils.get_history(filename=history_file, key=country)['end_year'])
+        start_day=train_history_utils.get_history(filename=history_file, key=player)['end_day'],
+        start_month=train_history_utils.get_history(filename=history_file, key=player)['end_month'],
+        start_year=train_history_utils.get_history(filename=history_file, key=player)['end_year'])
 
     return data_range
 
@@ -71,12 +65,12 @@ def get_next_in_range(range, data):
 
     return data
 
-def train_match(type, country, data_range, label, label_values, model_dir, train_path, receipt, history, previous_vocab_date, show_outcome, history_file):
+def train(player, data_range, label, label_values, model_dir, train_path, receipt, history, previous_vocab_date, history_file):
 
   for data in data_range:
 
 
-    learning_cfg = get_learning_cfg(country, model_dir)
+    learning_cfg = get_learning_cfg(player, model_dir)
 
 
     train_filename = "train-matches"+data.replace('/','-')+".csv"
@@ -86,7 +80,7 @@ def train_match(type, country, data_range, label, label_values, model_dir, train
 
 
     has_data = model_utils.create_csv(
-        url=model_utils.EVENT_MODEL_URL + type+"/"+country,
+        url=model_utils.EVENT_MODEL_URL + "/"+player,
         filename=train_file_path,
         range=data,
         aws_path=train_path)
@@ -94,7 +88,7 @@ def train_match(type, country, data_range, label, label_values, model_dir, train
     if learning_cfg['evaluate']:
 
      has_test_data = model_utils.create_csv(
-        url=model_utils.EVENT_MODEL_URL + type+"/"+country,
+        url=model_utils.EVENT_MODEL_URL + "/"+player,
         filename=evaluate_file_path,
         range=get_next_in_range(data_range,data),
         aws_path=train_path)
@@ -117,15 +111,13 @@ def train_match(type, country, data_range, label, label_values, model_dir, train
         #    get_aws_file(train_path,  test_filename)
 
         match_model.create(
-            type=type,
-            country=country,
+            player=player,
             train=True,
             label=label,
             label_values=label_values,
             model_dir=model_dir,
             train_filename=train_filename,
             test_filename=evaluate_filename,
-            outcome=show_outcome,
             previous_vocab_date=previous_vocab_date)
     else:
         logger.info ('no data to train')
@@ -133,11 +125,11 @@ def train_match(type, country, data_range, label, label_values, model_dir, train
     #write the history...
     start_day, start_month, start_year, end_day, end_month, end_year = get_range_details(data)
     history = train_history_utils.create_history('Success - Partial', start_day, start_month, start_year, end_day, end_month, end_year)
-    train_history_utils.add_history(history_file, country, history)
+    train_history_utils.add_history(history_file, player, history)
 
   if receipt is not None:
     receipt_utils.put_receipt(receipt_utils.TRAIN_RECEIPT_URL, receipt, None)
 
   history['status'] = "Success - Full"
-  train_history_utils.add_history(history_file, country, history)
+  train_history_utils.add_history(history_file, player, history)
 

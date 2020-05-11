@@ -8,48 +8,31 @@ local_dir = get_dir_cfg()['local']
 logger = logging.getLogger(__name__)
 
 
-def predict(data, type, country, label, label_values,  model_dir, outcome, previous_vocab_date, receipt):
+def predict(data, player, label, label_values,  model_dir, previous_vocab_date, receipt):
 
 #def create(type, country, train, label, label_values, model_dir, train_filename, test_filename, outcome, previous_vocab_date):
     # there is no guarantee the predict is on same day as the train.  so we need the history
     classifier =  match_model.create(
-                   type=type,
-                   country=country,
+                   player=player,
                    train=False,
                    label=label,
                    label_values=label_values,
                    model_dir=model_dir,
                    train_filename='',
                    test_filename='',
-                   outcome=outcome,
                    previous_vocab_date=previous_vocab_date)
 
     home = []
     away = []
-    outcomes = []
 
     # Generate predictions from the model
     home.append(data['home'])
     away.append(data['away'])
 
-    if outcome:
-      outcomes.append(data['outcome'])
-    #print(data)
-
-
-    expected = [0]
-    if outcome:
-        predict_x = {
-            'home': home,
-            'away': away,
-            'outcome' : outcomes
-        }
-    else:
-     predict_x = {
+    predict_x = {
         'home': home,
         'away': away
     }
-
 
     response = model_utils.predict(
         classifier=classifier,

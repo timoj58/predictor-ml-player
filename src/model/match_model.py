@@ -16,12 +16,12 @@ import json
 logger = logging.getLogger(__name__)
 local_dir = get_dir_cfg()['local']
 
-def create(type, country, train, label, label_values, model_dir, train_filename, test_filename, outcome, previous_vocab_date):
+def create(player, train, label, label_values, model_dir, train_filename, test_filename, previous_vocab_date):
 
-    aws_model_dir = 'models/'+model_dir+'/'+type+'/'+country
+    aws_model_dir = 'models/'+model_dir+'/'+'/'+player
     tf_models_dir = local_dir+'/'+aws_model_dir
 
-    learning_cfg = get_learning_cfg(country, model_dir)
+    learning_cfg = get_learning_cfg(player, model_dir)
 
     logger.info(learning_cfg)
 
@@ -39,9 +39,7 @@ def create(type, country, train, label, label_values, model_dir, train_filename,
     # and review checkpoints, to only train with the newest data?  or build from scratch.  lets see.
     #need to add the label field too.
 
-    feature_columns = match_featureset.create_feature_columns(
-        team_vocab=team_file,
-        outcome=outcome)
+    feature_columns = match_featureset.create_feature_columns(team_vocab=team_file)
 
 
 
