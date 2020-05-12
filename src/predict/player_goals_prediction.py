@@ -1,16 +1,16 @@
-from predict.player_predict import predict as predict_process
-import dataset.player_dataset as player_dataset
+from predict.match_predict import predict as predict_process
+import dataset.match_dataset as match_dataset
+import util.train_history_utils as train_history_utils
 
+def predict(player, receipt):
 
-def predict(data, type, country, player, receipt):
+    previous_vocab_date=train_history_utils.get_previous_vocab_date(player)
 
-     predict_process(
-         data=data,
-         type=type,
-         country=country,
-         player=player,
-         label='goals',
-         label_values=player_dataset.GOALS_OUTCOMES,
-         model_dir="player_goals",
-         convert=False,
-         receipt=receipt)
+    return predict_process(
+        data=data,
+        player=player,
+        label='goals',
+        label_values=match_dataset.NUMERICS,
+        model_dir="goals",
+        previous_vocab_date=previous_vocab_date,
+        receipt=receipt)
