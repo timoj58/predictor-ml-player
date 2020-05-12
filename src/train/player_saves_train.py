@@ -26,7 +26,7 @@ def train_saves(player, receipt):
                         player=player,
                         data_range=training_utils.create_data_range(learning_cfg=learning_cfg, history_file=history_file, player=player),
                         label='saves',
-                        label_values=match_dataset.OUTCOMES,
+                        label_values=match_dataset.NUMERICS,
                         model_dir="saves",
                         train_path=training_utils.create_train_path(player),
                         receipt=receipt,

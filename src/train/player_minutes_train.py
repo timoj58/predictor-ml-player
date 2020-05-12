@@ -26,7 +26,7 @@ def train_minutes(player, receipt):
                         player=player,
                         data_range=training_utils.create_data_range(learning_cfg=learning_cfg, history_file=history_file, player=player),
                         label='minutes',
-                        label_values=match_dataset.OUTCOMES,
+                        label_values=match_dataset.NUMERICS,
                         model_dir="minutes",
                         train_path=training_utils.create_train_path(player),
                         receipt=receipt,

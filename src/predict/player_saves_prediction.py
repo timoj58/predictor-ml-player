@@ -10,12 +10,10 @@ def predict(player, receipt):
 
  predict_process(
     data=data,
-    type=type,
-    country=country,
-    label='outcome',
-    label_values=match_dataset.OUTCOMES,
-    model_dir="match_result",
-    outcome=False,
+    player=player,
+    label='saves',
+    label_values=match_dataset.NUMERICS,
+    model_dir="saves",
     previous_vocab_date=previous_vocab_date,
     receipt=receipt)
 

@@ -27,12 +27,10 @@ def create(player, train, label, label_values, model_dir, train_filename, test_f
 
     logger.info('team vocab started...')
     team_file = vocab_utils.create_vocab(
-        url=vocab_utils.TEAMS_URL,
+        url=vocab_utils.ALL_TEAMS_URL,
         filename=vocab_utils.TEAMS_FILE,
-        type=type,
-        country=country,
-        player_id=None,
-        previous_vocab_date=previous_vocab_date);
+        previous_vocab_date=previous_vocab_date,
+        player =player);
     logger.info('team vocab completed')
 
     # and the other numerics.  they will be read from a CSV / or direct from mongo more likely.  yes.  from mongo.

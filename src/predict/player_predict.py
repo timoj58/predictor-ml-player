@@ -26,12 +26,12 @@ def predict(data, player, label, label_values,  model_dir, previous_vocab_date, 
     away = []
 
     # Generate predictions from the model
-    home.append(data['home'])
-    away.append(data['away'])
+    home.append(data['opponent'])
+    away.append(data['home'])
 
     predict_x = {
-        'home': home,
-        'away': away
+        'opponent': home,
+        'home': away
     }
 
     response = model_utils.predict(
@@ -40,5 +40,5 @@ def predict(data, player, label, label_values,  model_dir, previous_vocab_date, 
         label_values=label_values)
 
 
-    match_model.tidy_up(local_dir+'/models/'+model_dir+'/'+type+'/'+country,None, None, None)
+    match_model.tidy_up(local_dir+'/models/'+model_dir+'/'+player,None, None, None)
     receipt_utils.put_receipt(receipt_utils.PREDICT_RECEIPT_URL, receipt,response)

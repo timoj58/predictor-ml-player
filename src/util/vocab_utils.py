@@ -19,21 +19,17 @@ logger = logging.getLogger(__name__)
 
 
 
-TEAMS_URL = get_vocab_cfg()['team_vocab_url']
+ALL_TEAMS_URL = get_vocab_cfg()['team_vocab_url']
 
 
 local_dir = get_dir_cfg()['local']
 TEAMS_FILE = 'team-vocab'
 
 
-def create_vocab(url, filename, type, country, player_id, previous_vocab_date):
+def create_vocab(url, filename, previous_vocab_date, player):
 
   vocab_path = get_dir_cfg()['vocab_path']
 
-  url = url+"?type="+type+"&country="+country
-
-  vocab_path = vocab_path.replace('<type>', type)
-  vocab_path = vocab_path.replace('<key>', country)
 
   previous_filename =  local_dir+vocab_path+filename+"-"+previous_vocab_date+".txt"
   filename =  local_dir+vocab_path+filename+"-"+str(datetime.date.today())+".txt"
@@ -74,7 +70,7 @@ def create_vocab(url, filename, type, country, player_id, previous_vocab_date):
     get_aws_file(vocab_path, tail)
 
 
-  add_vocab_history(key=country)
+  add_vocab_history(key=player)
 
   return filename
 
