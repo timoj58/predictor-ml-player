@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 local_dir = get_dir_cfg()['local']
 history_file = get_dir_cfg()['player_assists_train_history_file']
 
-def train_assists(player, receipt):
+def train(player, receipt):
 
    learning_cfg = get_learning_cfg("assists")
 
@@ -25,7 +25,7 @@ def train_assists(player, receipt):
                         player=player,
                         data_range=training_utils.create_data_range(learning_cfg=learning_cfg, history_file=history_file, player=player),
                         label='assists',
-                        label_values=match_dataset.NUMERICS,
+                        label_values=match_dataset.SCORE,
                         model_dir="assists",
                         train_path=training_utils.create_train_path(player),
                         receipt=receipt,

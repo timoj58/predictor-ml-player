@@ -15,18 +15,18 @@ local_dir = get_dir_cfg()['local']
 history_file = get_dir_cfg()['player_conceded_train_history_file']
 
 
-def train_conceded(player, receipt):
+def train(player, receipt):
 
    learning_cfg = get_learning_cfg("conceded")
 
    previous_vocab_date=train_history_utils.get_previous_vocab_date(player)
    history = train_history_utils.init_history('in progress',learning_cfg)
 
-   training_utils.train_match(
+   training_utils.train(
                         player=player,
                         data_range=training_utils.create_data_range(learning_cfg=learning_cfg, history_file=history_file, player=player),
                         label='conceded',
-                        label_values=match_dataset.NUMERICS,
+                        label_values=match_dataset.SCORE,
                         model_dir="conceded",
                         train_path=training_utils.create_train_path(player),
                         receipt=receipt,

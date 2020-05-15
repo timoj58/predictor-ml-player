@@ -27,12 +27,4 @@ def create_category_column(key, filename):
         vocabulary_size=None)
 
 
-def create_teams(team_vocab):
-
-    home = create_category_column('home', team_vocab)
-    away = create_category_column('away', team_vocab)
-
-    return tf.feature_column.crossed_column(
-        [home, away], 5000)
-
 

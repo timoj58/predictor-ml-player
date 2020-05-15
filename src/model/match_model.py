@@ -18,10 +18,10 @@ local_dir = get_dir_cfg()['local']
 
 def create(player, train, label, label_values, model_dir, train_filename, test_filename, previous_vocab_date):
 
-    aws_model_dir = 'models/'+model_dir+'/'+'/'+player
+    aws_model_dir = 'models/'+model_dir+'/'+player
     tf_models_dir = local_dir+'/'+aws_model_dir
 
-    learning_cfg = get_learning_cfg(player, model_dir)
+    learning_cfg = get_learning_cfg(model_dir)
 
     logger.info(learning_cfg)
 

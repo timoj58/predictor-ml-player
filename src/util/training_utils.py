@@ -1,9 +1,7 @@
 import util.receipt_utils as receipt_utils
 import util.cache_utils as cache_utils
-import dataset.player_dataset as player_dataset
 import util.model_utils as model_utils
 import model.match_model as match_model
-import model.player_model as player_model
 import util.train_history_utils as train_history_utils
 
 
@@ -23,7 +21,7 @@ local_dir = get_dir_cfg()['local']
 
 def create_train_path(player):
     train_path = get_dir_cfg()['train_path']
-    train_path = train_path.replace('<player>', player)
+    train_path = train_path.replace('<key>', player)
 
     return train_path
 
@@ -70,17 +68,17 @@ def train(player, data_range, label, label_values, model_dir, train_path, receip
   for data in data_range:
 
 
-    learning_cfg = get_learning_cfg(player, model_dir)
+    learning_cfg = get_learning_cfg(model_dir)
 
 
-    train_filename = "train-matches"+data.replace('/','-')+".csv"
-    evaluate_filename = "train-matches"+get_next_in_range(data_range, data).replace('/','-')+".csv"
+    train_filename = "train-players"+data.replace('/','-')+".csv"
+    evaluate_filename = "train-players"+get_next_in_range(data_range, data).replace('/','-')+".csv"
     train_file_path = local_dir+train_path+train_filename
     evaluate_file_path = local_dir+train_path+evaluate_filename
 
 
     has_data = model_utils.create_csv(
-        url=model_utils.EVENT_MODEL_URL + "/"+player,
+        url=model_utils.EVENT_MODEL_URL+player,
         filename=train_file_path,
         range=data,
         aws_path=train_path)
@@ -88,7 +86,7 @@ def train(player, data_range, label, label_values, model_dir, train_path, receip
     if learning_cfg['evaluate']:
 
      has_test_data = model_utils.create_csv(
-        url=model_utils.EVENT_MODEL_URL + "/"+player,
+        url=model_utils.EVENT_MODEL_URL+player,
         filename=evaluate_file_path,
         range=get_next_in_range(data_range,data),
         aws_path=train_path)

@@ -1,12 +1,9 @@
 import pandas as pd
 
-# need to map homeWin, draw, awayWin
-
 CSV_COLUMN_NAMES = ['opponent', 'home', 'minutes', 'saves', 'conceded', 'goals', 'assists']
 
-## fix me.  needs to be an array generated of 0 to 90 integers.
-NUMERICS = range(0, 100)
-# minutes can go much higher...to confirm if needed.
+SCORE = list(range(0, 15))
+MINUTES = list(range(0, 100))
 
 def load_train_data(train_path, y_name, convert):
     train = pd.read_csv(train_path, names=CSV_COLUMN_NAMES, header=None)

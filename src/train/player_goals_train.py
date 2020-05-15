@@ -15,7 +15,7 @@ local_dir = get_dir_cfg()['local']
 history_file = get_dir_cfg()['player_goals_train_history_file']
 
 
-def train_goals(player, receipt):
+def train(player, receipt):
 
     learning_cfg = get_learning_cfg("goals")
 
@@ -23,11 +23,11 @@ def train_goals(player, receipt):
     history = train_history_utils.init_history('in progress',learning_cfg)
 
 
-    training_utils.train_match(
+    training_utils.train(
         player=player,
         data_range=training_utils.create_data_range(learning_cfg=learning_cfg, history_file=history_file, player=player),
         label='goals',
-        label_values=match_dataset.NUMERICS,
+        label_values=match_dataset.SCORE,
         model_dir="goals",
         train_path=training_utils.create_train_path(player),
         receipt=receipt,

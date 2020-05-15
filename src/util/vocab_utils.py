@@ -18,9 +18,7 @@ from util.train_history_utils import add_vocab_history
 logger = logging.getLogger(__name__)
 
 
-
 ALL_TEAMS_URL = get_vocab_cfg()['team_vocab_url']
-
 
 local_dir = get_dir_cfg()['local']
 TEAMS_FILE = 'team-vocab'
@@ -38,7 +36,7 @@ def create_vocab(url, filename, previous_vocab_date, player):
 
   if not is_on_file(filename):
 
-    response = requests.get(url,headers={'groups': 'ROLE_AUTOMATION'})
+    response = requests.get(url,headers={'groups': 'ROLE_AUTOMATION,', 'username': 'machine-learning'})
     values = response.json()
 
 
