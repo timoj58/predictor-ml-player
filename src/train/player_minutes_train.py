@@ -19,16 +19,15 @@ def train(player, receipt):
 
    learning_cfg = get_learning_cfg("minutes")
 
-   previous_vocab_date=train_history_utils.get_previous_vocab_date(player)
+   previous_vocab_date=train_history_utils.get_previous_vocab_date('default')
    history = train_history_utils.init_history('in progress',learning_cfg)
 
    training_utils.train(
-                        player=player,
-                        data_range=training_utils.create_data_range(learning_cfg=learning_cfg, history_file=history_file, player=player),
+                        data_range=training_utils.create_data_range(learning_cfg=learning_cfg, history_file=history_file),
                         label='minutes',
                         label_values=match_dataset.MINUTES,
                         model_dir="minutes",
-                        train_path=training_utils.create_train_path(player),
+                        train_path=training_utils.create_train_path(),
                         receipt=receipt,
                         history=history,
                         previous_vocab_date=previous_vocab_date,

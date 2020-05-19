@@ -16,9 +16,9 @@ import json
 logger = logging.getLogger(__name__)
 local_dir = get_dir_cfg()['local']
 
-def create(player, train, label, label_values, model_dir, train_filename, test_filename, previous_vocab_date):
+def create(train, label, label_values, model_dir, train_filename, test_filename, previous_vocab_date):
 
-    aws_model_dir = 'models/'+model_dir+'/'+player
+    aws_model_dir = 'models/'+model_dir
     tf_models_dir = local_dir+'/'+aws_model_dir
 
     learning_cfg = get_learning_cfg(model_dir)
@@ -30,15 +30,23 @@ def create(player, train, label, label_values, model_dir, train_filename, test_f
         url=vocab_utils.ALL_TEAMS_URL,
         filename=vocab_utils.TEAMS_FILE,
         previous_vocab_date=previous_vocab_date,
-        player =player);
+        player='default');
     logger.info('team vocab completed')
+
+
+    logger.info('player vocab started...')
+    player_file = vocab_utils.create_vocab(
+     url=vocab_utils.PLAYERS_URL,
+     filename=vocab_utils.PLAYERS_FILE,
+     previous_vocab_date=previous_vocab_date,
+     player='default');
+    logger.info('[player vocab completed')
 
     # and the other numerics.  they will be read from a CSV / or direct from mongo more likely.  yes.  from mongo.
     # and review checkpoints, to only train with the newest data?  or build from scratch.  lets see.
     #need to add the label field too.
 
-    feature_columns = match_featureset.create_feature_columns(team_vocab=team_file)
-
+    feature_columns = match_featureset.create_feature_columns(team_vocab=team_file, player_vocab=player_file)
 
 
     # Build 2 hidden layer DNN with 10, 10 units respectively.  (from example will enrich at some point).

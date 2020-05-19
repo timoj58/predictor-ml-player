@@ -19,21 +19,20 @@ logger = logging.getLogger(__name__)
 local_dir = get_dir_cfg()['local']
 
 
-def create_train_path(player):
+def create_train_path():
     train_path = get_dir_cfg()['train_path']
-    train_path = train_path.replace('<key>', player)
 
     return train_path
 
-def create_data_range(learning_cfg, history_file, player):
+def create_data_range(learning_cfg, history_file):
 
     if learning_cfg['historic']:
-      data_range = model_utils.create_range(int(learning_cfg['months_per_cycle']), learning_cfg)
+     data_range = model_utils.create_range(int(learning_cfg['months_per_cycle']), learning_cfg)
     else:
      data_range = model_utils.real_time_range(
-        start_day=train_history_utils.get_history(filename=history_file, key=player)['end_day'],
-        start_month=train_history_utils.get_history(filename=history_file, key=player)['end_month'],
-        start_year=train_history_utils.get_history(filename=history_file, key=player)['end_year'])
+        start_day=train_history_utils.get_history(filename=history_file,key='default')['end_day'],
+        start_month=train_history_utils.get_history(filename=history_file,key='default')['end_month'],
+        start_year=train_history_utils.get_history(filename=history_file,key='default')['end_year'])
 
     return data_range
 
@@ -63,7 +62,7 @@ def get_next_in_range(range, data):
 
     return data
 
-def train(player, data_range, label, label_values, model_dir, train_path, receipt, history, previous_vocab_date, history_file):
+def train(data_range, label, label_values, model_dir, train_path, receipt, history, previous_vocab_date, history_file):
 
   for data in data_range:
 
@@ -78,7 +77,7 @@ def train(player, data_range, label, label_values, model_dir, train_path, receip
 
 
     has_data = model_utils.create_csv(
-        url=model_utils.EVENT_MODEL_URL+player,
+        url=model_utils.EVENT_MODEL_URL,
         filename=train_file_path,
         range=data,
         aws_path=train_path)
@@ -86,13 +85,15 @@ def train(player, data_range, label, label_values, model_dir, train_path, receip
     if learning_cfg['evaluate']:
 
      has_test_data = model_utils.create_csv(
-        url=model_utils.EVENT_MODEL_URL+player,
+        url=model_utils.EVENT_MODEL_URL,
         filename=evaluate_file_path,
         range=get_next_in_range(data_range,data),
         aws_path=train_path)
 
      if has_data == True and has_test_data == False:
       evaluate_filename = None
+     else:
+      logger.info('we can evaluate')
 
     if has_data:
 
@@ -109,7 +110,6 @@ def train(player, data_range, label, label_values, model_dir, train_path, receip
         #    get_aws_file(train_path,  test_filename)
 
         match_model.create(
-            player=player,
             train=True,
             label=label,
             label_values=label_values,
@@ -123,11 +123,11 @@ def train(player, data_range, label, label_values, model_dir, train_path, receip
     #write the history...
     start_day, start_month, start_year, end_day, end_month, end_year = get_range_details(data)
     history = train_history_utils.create_history('Success - Partial', start_day, start_month, start_year, end_day, end_month, end_year)
-    train_history_utils.add_history(history_file, player, history)
+    train_history_utils.add_history(history_file, 'default', history)
 
   if receipt is not None:
     receipt_utils.put_receipt(receipt_utils.TRAIN_RECEIPT_URL, receipt, None)
 
   history['status'] = "Success - Full"
-  train_history_utils.add_history(history_file, player, history)
+  train_history_utils.add_history(history_file, history)
 

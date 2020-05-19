@@ -19,15 +19,16 @@ logger = logging.getLogger(__name__)
 
 
 ALL_TEAMS_URL = get_vocab_cfg()['team_vocab_url']
+PLAYERS_URL = get_vocab_cfg()['player_vocab_url']
 
 local_dir = get_dir_cfg()['local']
 TEAMS_FILE = 'team-vocab'
+PLAYERS_FILE = 'players-vocab'
 
 
 def create_vocab(url, filename, previous_vocab_date, player):
 
   vocab_path = get_dir_cfg()['vocab_path']
-
 
   previous_filename =  local_dir+vocab_path+filename+"-"+previous_vocab_date+".txt"
   filename =  local_dir+vocab_path+filename+"-"+str(datetime.date.today())+".txt"

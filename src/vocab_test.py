@@ -1,5 +1,5 @@
 import util.vocab_utils as vocab_utils
-
+import train.player_goals_train as train
 
 #vocab_utils.create_vocab(
 #    url='http://ec2-34-229-85-188.compute-1.amazonaws.com:8090/api/prediction/players/by-country-dict',
