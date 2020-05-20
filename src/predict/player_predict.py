@@ -8,7 +8,7 @@ local_dir = get_dir_cfg()['local']
 logger = logging.getLogger(__name__)
 
 
-def predict(data, player, label, label_values,  model_dir, previous_vocab_date, receipt):
+def predict(data, player, label, label_values,  model_dir, receipt):
 
 #def create(type, country, train, label, label_values, model_dir, train_filename, test_filename, outcome, previous_vocab_date):
     # there is no guarantee the predict is on same day as the train.  so we need the history
@@ -18,8 +18,7 @@ def predict(data, player, label, label_values,  model_dir, previous_vocab_date, 
                    label_values=label_values,
                    model_dir=model_dir,
                    train_filename='',
-                   test_filename='',
-                   previous_vocab_date=previous_vocab_date)
+                   test_filename='')
 
     player = []
     home = []

@@ -16,7 +16,7 @@ import json
 logger = logging.getLogger(__name__)
 local_dir = get_dir_cfg()['local']
 
-def create(train, label, label_values, model_dir, train_filename, test_filename, previous_vocab_date):
+def create(train, label, label_values, model_dir, train_filename, test_filename):
 
     aws_model_dir = 'models/'+model_dir
     tf_models_dir = local_dir+'/'+aws_model_dir
@@ -29,7 +29,6 @@ def create(train, label, label_values, model_dir, train_filename, test_filename,
     team_file = vocab_utils.create_vocab(
         url=vocab_utils.ALL_TEAMS_URL,
         filename=vocab_utils.TEAMS_FILE,
-        previous_vocab_date=previous_vocab_date,
         player='default');
     logger.info('team vocab completed')
 
@@ -38,7 +37,6 @@ def create(train, label, label_values, model_dir, train_filename, test_filename,
     player_file = vocab_utils.create_vocab(
      url=vocab_utils.PLAYERS_URL,
      filename=vocab_utils.PLAYERS_FILE,
-     previous_vocab_date=previous_vocab_date,
      player='default');
     logger.info('[player vocab completed')
 

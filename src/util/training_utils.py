@@ -62,7 +62,7 @@ def get_next_in_range(range, data):
 
     return data
 
-def train(data_range, label, label_values, model_dir, train_path, receipt, history, previous_vocab_date, history_file):
+def train(data_range, label, label_values, model_dir, train_path, receipt, history, history_file):
 
   for data in data_range:
 
@@ -115,8 +115,7 @@ def train(data_range, label, label_values, model_dir, train_path, receipt, histo
             label_values=label_values,
             model_dir=model_dir,
             train_filename=train_filename,
-            test_filename=evaluate_filename,
-            previous_vocab_date=previous_vocab_date)
+            test_filename=evaluate_filename)
     else:
         logger.info ('no data to train')
 

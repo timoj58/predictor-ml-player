@@ -74,16 +74,3 @@ def init_history(status, learning_cfg):
 
 def init_vocab_history():
     return create_vocab_history(str(datetime.date.today()))
-
-def get_previous_vocab_date(key):
-
-   previous_history = get_history(
-        filename=vocab_file,
-        key=key)
-
-   previous_vocab_date="XX-XX-XXXX" #default when cant find
-
-   if 'vocab_date' in previous_history:
-    previous_vocab_date=previous_history['vocab_date']
-
-   return previous_vocab_date

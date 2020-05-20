@@ -6,7 +6,6 @@ import util.train_history_utils as train_history_utils
 
 def predict(data, player, receipt):
 
- previous_vocab_date=train_history_utils.get_previous_vocab_date(player)
 
  predict_process(
     data=data,
@@ -14,6 +13,5 @@ def predict(data, player, receipt):
     label='assists',
     label_values=match_dataset.SCORE,
     model_dir="assists",
-    previous_vocab_date=previous_vocab_date,
     receipt=receipt)
 
