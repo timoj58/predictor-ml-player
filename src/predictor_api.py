@@ -5,12 +5,16 @@ import predict.player_assists_prediction as player_assists_prediction
 import predict.player_saves_prediction as player_saves_prediction
 import predict.player_minutes_prediction as player_minutes_prediction
 import predict.player_conceded_prediction as player_conceded_prediction
+import predict.player_red_card_prediction as player_red_card_prediction
+import predict.player_yellow_card_prediction as player_yellow_card_prediction
 
 import train.player_saves_train as player_saves_train
 import train.player_goals_train as player_goals_train
 import train.player_assists_train as player_assists_train
 import train.player_minutes_train as player_minutes_train
 import train.player_conceded_train as player_conceded_train
+import train.player_red_card_train as player_red_card_train
+import train.player_yellow_card_train as player_yellow_card_train
 from util.config_utils import get_dir_cfg
 
 import json
@@ -92,6 +96,24 @@ def predict_conceded(player, receipt):
     return json.dumps(done_response())
 
 
+@app.route('/predict/red-card/<player>/<receipt>',  methods=['POST'])
+def predict_red(player, receipt):
+    thread = threading.Thread(target=player_red_card_prediction.predict,
+                              args=(json.loads(request.data), player, receipt))
+    process(thread)
+
+    return json.dumps(done_response())
+
+
+@app.route('/predict/yellow-card/<player>/<receipt>',  methods=['POST'])
+def predict_yellow(player, receipt):
+    thread = threading.Thread(target=player_yellow_card_prediction.predict,
+                              args=(json.loads(request.data), player, receipt))
+    process(thread)
+
+    return json.dumps(done_response())
+
+
 # need to also schedule this -- this is for me to get it started.
 @app.route('/train/conceded/<player>/<receipt>', methods=['POST'])
 def train_goals_conceded(player, receipt):
@@ -128,6 +150,23 @@ def train_assists(player, receipt):
 @app.route('/train/minutes/<player>/<receipt>', methods=['POST'])
 def train_minutes(player, receipt):
     thread = threading.Thread(target=player_minutes_train.train,
+                              args=(player, receipt))
+    process(thread)
+
+    return json.dumps(done_response())
+
+@app.route('/train/red-card/<player>/<receipt>', methods=['POST'])
+def train_red(player, receipt):
+    thread = threading.Thread(target=player_red_card_train.train,
+                              args=(player, receipt))
+    process(thread)
+
+    return json.dumps(done_response())
+
+
+@app.route('/train/yellow-card/<player>/<receipt>', methods=['POST'])
+def train_yellow(player, receipt):
+    thread = threading.Thread(target=player_yellow_card_train.train,
                               args=(player, receipt))
     process(thread)
 

@@ -1,11 +1,12 @@
 import pandas as pd
 
-CSV_COLUMN_NAMES = ['player','opponent', 'home', 'minutes', 'saves', 'conceded', 'goals', 'assists']
+CSV_COLUMN_NAMES = ['player','opponent', 'home', 'minutes', 'saves', 'conceded', 'goals', 'assists', 'red', 'yellow']
 
 SCORE = list(range(0, 10))
 CONCEDED = list(range(0, 12))
 SAVES = list(range(0, 25))
 MINUTES = list(range(0, 91))
+CARDS = [0,1,2]
 
 def load_train_data(train_path, y_name, convert):
     train = pd.read_csv(train_path, names=CSV_COLUMN_NAMES, header=None)

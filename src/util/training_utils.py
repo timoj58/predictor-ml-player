@@ -128,5 +128,5 @@ def train(data_range, label, label_values, model_dir, train_path, receipt, histo
     receipt_utils.put_receipt(receipt_utils.TRAIN_RECEIPT_URL, receipt, None)
 
   history['status'] = "Success - Full"
-  train_history_utils.add_history(history_file, history)
+  train_history_utils.add_history(history_file, 'default', history)
 
