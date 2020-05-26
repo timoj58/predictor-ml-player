@@ -10,22 +10,27 @@ logger = logging.getLogger(__name__)
 local_dir = get_dir_cfg()['local']
 
 
-def create(feature_columns, classes, model_dir, learning_cfg):
+def init_models(model_dir):
+    indexes = get_indexes(local_dir+model_dir)
+    for attribute, value in indexes.items():
+        if(value['active'] == True):
+            get_aws_file(model_dir+'/', attribute)
+
+    indexes = get_indexes(local_dir+model_dir+'/eval')
+    for attribute, value in indexes.items():
+        if(value['active'] == True):
+            get_aws_file(model_dir+'/eval/', attribute)
+
+
+
+def create(feature_columns, classes, model_dir, learning_cfg, init):
 
     logger.info ('model dir for classifier '+local_dir+model_dir)
 
     logger.info('tensorflow version '+tf.__version__)
 
-    indexes = get_indexes(local_dir+model_dir)
-    for attribute, value in indexes.items():
-       if(value['active'] == True):
-        get_aws_file(model_dir+'/', attribute)
-
-    indexes = get_indexes(local_dir+model_dir+'/eval')
-    for attribute, value in indexes.items():
-        if(value['active'] == True):
-         get_aws_file(model_dir+'/eval/', attribute)
-
+    if init:
+        init_models(model_dir)
 
     return tf.estimator.DNNClassifier(
         feature_columns=feature_columns,

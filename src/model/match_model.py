@@ -16,7 +16,7 @@ import json
 logger = logging.getLogger(__name__)
 local_dir = get_dir_cfg()['local']
 
-def create(train, label, label_values, model_dir, train_filename, test_filename):
+def create(train, label, label_values, model_dir, train_filename, test_filename, init):
 
     aws_model_dir = 'models/'+model_dir
     tf_models_dir = local_dir+'/'+aws_model_dir
@@ -52,7 +52,8 @@ def create(train, label, label_values, model_dir, train_filename, test_filename)
         feature_columns=feature_columns,
         classes=len(label_values),
         model_dir=aws_model_dir,
-        learning_cfg=learning_cfg)
+        learning_cfg=learning_cfg,
+        init=init)
 
     if train:
 
@@ -92,8 +93,8 @@ def create(train, label, label_values, model_dir, train_filename, test_filename)
              predict_x=sample,
              label_values=label_values)
 
-
-        tidy_up(
+        if init:
+         tidy_up(
             tf_models_dir=tf_models_dir,
             aws_model_dir=aws_model_dir,
             team_file=team_file,

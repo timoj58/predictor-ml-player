@@ -115,7 +115,8 @@ def train(data_range, label, label_values, model_dir, train_path, receipt, histo
             label_values=label_values,
             model_dir=model_dir,
             train_filename=train_filename,
-            test_filename=evaluate_filename)
+            test_filename=evaluate_filename,
+            init=True)
     else:
         logger.info ('no data to train')
 

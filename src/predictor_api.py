@@ -8,6 +8,9 @@ import predict.player_conceded_prediction as player_conceded_prediction
 import predict.player_red_card_prediction as player_red_card_prediction
 import predict.player_yellow_card_prediction as player_yellow_card_prediction
 
+import util.classifier_utils as classifier_utils
+import util.model_utils as model_utils
+
 import train.player_saves_train as player_saves_train
 import train.player_goals_train as player_goals_train
 import train.player_assists_train as player_assists_train
@@ -27,6 +30,7 @@ app = Flask(__name__)
 logging.basicConfig(filename=get_dir_cfg()['local']+'predictor.log',level=logging.NOTSET)
 logger = logging.getLogger(__name__)
 
+local_dir = get_dir_cfg()['local']
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
@@ -50,65 +54,83 @@ def test_app():
     return json.dumps(done_response())
 
 
+@app.route('/predict/init/<type>',  methods=['POST'])
+def predict_init(type):
+   # load all the models ready. TODO.  saves lots of time when predicting thousands of events.
+   classifier_utils.init_models(model_dir=type)
+   return json.dumps(done_response())
 
-@app.route('/predict/goals/<player>/<receipt>',  methods=['POST'])
-def predict_goals(player, receipt):
+@app.route('/predict/clear-down/<type>',  methods=['POST'])
+def predict_clear_down(type):
+   # clear down all the models. TODO .. clear up space..happens on machine shut down anyway.
+   model_utils.tidy_up(
+       tf_models_dir=local_dir+'/models/'+type,
+       aws_model_dir=None,
+       team_file=None,
+       train_filename=None
+   )
+
+   return json.dumps(done_response())
+
+
+@app.route('/predict/goals/<init>/<receipt>',  methods=['POST'])
+def predict_goals(init, receipt):
     thread = threading.Thread(target=player_goals_prediction.predict,
-                              args=(json.loads(request.data), player, receipt))
+                              args=(json.loads(request.data), init, receipt))
     process(thread)
 
     return json.dumps(done_response())
 
 
-@app.route('/predict/saves/<player>/<receipt>',  methods=['POST'])
-def predict_saves(player, receipt):
+@app.route('/predict/saves/<init>/<receipt>',  methods=['POST'])
+def predict_saves(init, receipt):
     thread = threading.Thread(target=player_saves_prediction.predict,
-                              args=(json.loads(request.data), player, receipt))
+                              args=(json.loads(request.data), init, receipt))
     process(thread)
 
     return json.dumps(done_response())
 
 
-@app.route('/predict/assists/<player>/<receipt>',  methods=['POST'])
-def predict_assists(player, receipt):
+@app.route('/predict/assists/<init>/<receipt>',  methods=['POST'])
+def predict_assists(init, receipt):
     thread = threading.Thread(target=player_assists_prediction.predict,
-                              args=(json.loads(request.data), player, receipt))
+                              args=(json.loads(request.data), init, receipt))
     process(thread)
 
     return json.dumps(done_response())
 
 
-@app.route('/predict/minutes/<player>/<receipt>',  methods=['POST'])
-def predict_minutes(player, receipt):
+@app.route('/predict/minutes/<init>/<receipt>',  methods=['POST'])
+def predict_minutes(init, receipt):
     thread = threading.Thread(target=player_minutes_prediction.predict,
-                              args=(json.loads(request.data), player, receipt))
+                              args=(json.loads(request.data), init, receipt))
     process(thread)
 
     return json.dumps(done_response())
 
 
-@app.route('/predict/conceded/<player>/<receipt>',  methods=['POST'])
-def predict_conceded(player, receipt):
+@app.route('/predict/conceded/<init>/<receipt>',  methods=['POST'])
+def predict_conceded(init, receipt):
     thread = threading.Thread(target=player_conceded_prediction.predict,
-                              args=(json.loads(request.data), player, receipt))
+                              args=(json.loads(request.data), init, receipt))
     process(thread)
 
     return json.dumps(done_response())
 
 
-@app.route('/predict/red-card/<player>/<receipt>',  methods=['POST'])
-def predict_red(player, receipt):
+@app.route('/predict/red-card/<init>/<receipt>',  methods=['POST'])
+def predict_red(init, receipt):
     thread = threading.Thread(target=player_red_card_prediction.predict,
-                              args=(json.loads(request.data), player, receipt))
+                              args=(json.loads(request.data), init, receipt))
     process(thread)
 
     return json.dumps(done_response())
 
 
-@app.route('/predict/yellow-card/<player>/<receipt>',  methods=['POST'])
-def predict_yellow(player, receipt):
+@app.route('/predict/yellow-card/<init>/<receipt>',  methods=['POST'])
+def predict_yellow(init, receipt):
     thread = threading.Thread(target=player_yellow_card_prediction.predict,
-                              args=(json.loads(request.data), player, receipt))
+                              args=(json.loads(request.data), init, receipt))
     process(thread)
 
     return json.dumps(done_response())
