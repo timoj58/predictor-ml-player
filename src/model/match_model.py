@@ -11,6 +11,7 @@ from util.model_utils import predict
 
 import logging
 import json
+import time
 
 
 logger = logging.getLogger(__name__)
@@ -99,6 +100,8 @@ def create(train, label, label_values, model_dir, train_filename, test_filename,
             aws_model_dir=aws_model_dir,
             team_file=team_file,
             train_filename=train_filename)
+
+         time.sleep(30)
 
 
     return classifier
