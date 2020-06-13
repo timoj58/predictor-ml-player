@@ -35,6 +35,13 @@ local_dir = get_dir_cfg()['local']
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
 
+def set_init(init):
+  if init == 'true':
+    return True
+  else:
+    return False
+
+
 
 ##doesnt seem to do anything, should catch interrupted tho.
 def process(thread):
@@ -54,29 +61,28 @@ def test_app():
     return json.dumps(done_response())
 
 
-@app.route('/predict/init/<type>',  methods=['POST'])
+@app.route('/predict/init/<type>',  methods=['PUT'])
 def predict_init(type):
    # load all the models ready. TODO.  saves lots of time when predicting thousands of events.
-   classifier_utils.init_models(model_dir=type)
-   return json.dumps(done_response())
+   classifier_utils.init_models(model_dir='models/'+type)
+   return 'Ok'
 
-@app.route('/predict/clear-down/<type>',  methods=['POST'])
+@app.route('/predict/clear-down/<type>',  methods=['PUT'])
 def predict_clear_down(type):
    # clear down all the models. TODO .. clear up space..happens on machine shut down anyway.
-   model_utils.tidy_up(
+   return model_utils.tidy_up(
        tf_models_dir=local_dir+'/models/'+type,
        aws_model_dir=None,
        team_file=None,
        train_filename=None
    )
 
-   return json.dumps(done_response())
 
 
 @app.route('/predict/goals/<init>/<receipt>',  methods=['POST'])
 def predict_goals(init, receipt):
     thread = threading.Thread(target=player_goals_prediction.predict,
-                              args=(json.loads(request.data), init, receipt))
+                              args=(json.loads(request.data), set_init(init), receipt))
     process(thread)
 
     return json.dumps(done_response())
@@ -85,7 +91,7 @@ def predict_goals(init, receipt):
 @app.route('/predict/saves/<init>/<receipt>',  methods=['POST'])
 def predict_saves(init, receipt):
     thread = threading.Thread(target=player_saves_prediction.predict,
-                              args=(json.loads(request.data), init, receipt))
+                              args=(json.loads(request.data), set_init(init), receipt))
     process(thread)
 
     return json.dumps(done_response())
@@ -94,7 +100,7 @@ def predict_saves(init, receipt):
 @app.route('/predict/assists/<init>/<receipt>',  methods=['POST'])
 def predict_assists(init, receipt):
     thread = threading.Thread(target=player_assists_prediction.predict,
-                              args=(json.loads(request.data), init, receipt))
+                              args=(json.loads(request.data), set_init(init), receipt))
     process(thread)
 
     return json.dumps(done_response())
@@ -103,7 +109,7 @@ def predict_assists(init, receipt):
 @app.route('/predict/minutes/<init>/<receipt>',  methods=['POST'])
 def predict_minutes(init, receipt):
     thread = threading.Thread(target=player_minutes_prediction.predict,
-                              args=(json.loads(request.data), init, receipt))
+                              args=(json.loads(request.data), set_init(init), receipt))
     process(thread)
 
     return json.dumps(done_response())
@@ -112,7 +118,7 @@ def predict_minutes(init, receipt):
 @app.route('/predict/conceded/<init>/<receipt>',  methods=['POST'])
 def predict_conceded(init, receipt):
     thread = threading.Thread(target=player_conceded_prediction.predict,
-                              args=(json.loads(request.data), init, receipt))
+                              args=(json.loads(request.data), set_init(init), receipt))
     process(thread)
 
     return json.dumps(done_response())
@@ -121,7 +127,7 @@ def predict_conceded(init, receipt):
 @app.route('/predict/red-card/<init>/<receipt>',  methods=['POST'])
 def predict_red(init, receipt):
     thread = threading.Thread(target=player_red_card_prediction.predict,
-                              args=(json.loads(request.data), init, receipt))
+                              args=(json.loads(request.data), set_init(init), receipt))
     process(thread)
 
     return json.dumps(done_response())
@@ -130,7 +136,7 @@ def predict_red(init, receipt):
 @app.route('/predict/yellow-card/<init>/<receipt>',  methods=['POST'])
 def predict_yellow(init, receipt):
     thread = threading.Thread(target=player_yellow_card_prediction.predict,
-                              args=(json.loads(request.data), init, receipt))
+                              args=(json.loads(request.data), set_init(init), receipt))
     process(thread)
 
     return json.dumps(done_response())

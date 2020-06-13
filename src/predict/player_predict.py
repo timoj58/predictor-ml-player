@@ -42,6 +42,8 @@ def predict(data, init, label, label_values,  model_dir, receipt):
         predict_x=predict_x,
         label_values=label_values)
 
+    if init:
+     logger.info('tidying up')
+     match_model.tidy_up(local_dir+'/models/'+model_dir,None, None, None)
 
-    match_model.tidy_up(local_dir+'/models/'+model_dir,None, None, None)
     receipt_utils.put_receipt(receipt_utils.PREDICT_RECEIPT_URL, receipt,response)

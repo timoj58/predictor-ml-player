@@ -11,6 +11,7 @@ local_dir = get_dir_cfg()['local']
 
 
 def init_models(model_dir):
+    logger.info('calling init')
     indexes = get_indexes(local_dir+model_dir)
     for attribute, value in indexes.items():
         if(value['active'] == True):
@@ -20,8 +21,6 @@ def init_models(model_dir):
     for attribute, value in indexes.items():
         if(value['active'] == True):
             get_aws_file(model_dir+'/eval/', attribute)
-
-
 
 def create(feature_columns, classes, model_dir, learning_cfg, init):
 

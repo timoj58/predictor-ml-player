@@ -104,6 +104,8 @@ def tidy_up(tf_models_dir, aws_model_dir, team_file, train_filename):
     if train_filename is not None:
         clear_directory(os.path.dirname(local_dir+train_filename))
 
+    return 'Ok'
+
 
 def predict(classifier, predict_x, label_values):
     logger.info('predict data '+json.dumps(predict_x))

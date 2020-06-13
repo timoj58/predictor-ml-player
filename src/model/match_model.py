@@ -30,7 +30,7 @@ def create(train, label, label_values, model_dir, train_filename, test_filename,
     team_file = vocab_utils.create_vocab(
         url=vocab_utils.ALL_TEAMS_URL,
         filename=vocab_utils.TEAMS_FILE,
-        player='default');
+        player='default')
     logger.info('team vocab completed')
 
 
@@ -38,7 +38,7 @@ def create(train, label, label_values, model_dir, train_filename, test_filename,
     player_file = vocab_utils.create_vocab(
      url=vocab_utils.PLAYERS_URL,
      filename=vocab_utils.PLAYERS_FILE,
-     player='default');
+     player='default')
     logger.info('[player vocab completed')
 
     # and the other numerics.  they will be read from a CSV / or direct from mongo more likely.  yes.  from mongo.
@@ -95,6 +95,7 @@ def create(train, label, label_values, model_dir, train_filename, test_filename,
              label_values=label_values)
 
         if init:
+         logger.info('tidying up')
          tidy_up(
             tf_models_dir=tf_models_dir,
             aws_model_dir=aws_model_dir,
